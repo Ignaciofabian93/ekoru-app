@@ -1,26 +1,47 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Primary Brand Colors */
+  --color-primary: #71b64a; /* Main brand color */
+  --color-primary-dark: #2d5016; /* Darker primary for contrast */
+  --color-primary-light: #9cd270; /* Lighter primary for subtle elements */
+
+  /* Secondary Colors */
+  --color-secondary: #9bc53d; /* Accent color */
+  --color-accent: #8b4513; /* Additional accent */
+
+  /* Neutral Colors */
+  --color-neutral-light: #f4e4bc; /* Light neutral backgrounds */
+  --color-neutral: #696969; /* Medium neutral for borders/icons */
+  --color-neutral-dark: #2c2c2c; /* Dark neutral */
+
+  /* Complementary Colors */
+  --color-info: #87ceeb; /* Info/light blue */
+  --color-success: #71b64a; /* Success (same as primary) */
+  --color-warning: #f59e0b; /* Warning yellow */
+  --color-error: #dc2626; /* Error red */
+
+  /* Text Colors */
+  --color-white: #ffffff; /* Pure white background */
+  --color-black: #1a1a1a; /* Softer black text */
+  --color-text-primary: #1f2937; /* High contrast dark text */
+  --color-text-secondary: #6b7280; /* Medium contrast text */
+  --color-text-muted: #9ca3af; /* Low contrast text */
+  --color-text-inverse: #ffffff; /* White text for dark backgrounds */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+button {
+  cursor: pointer;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
