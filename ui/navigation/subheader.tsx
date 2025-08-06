@@ -13,18 +13,23 @@ export default function Subheader() {
   const [isHovering, setIsHovering] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleMouseEnter = (title: string) => {
+  const handleClick = (title: string) => {
     if (
       ["Mercado", "Tiendas", "Servicios", "Comunidad", "Blog"].includes(title)
     ) {
-      setActiveDropdown(title);
+      // Toggle dropdown: close if same item clicked, open if different item
+      setActiveDropdown(activeDropdown === title ? null : title);
       setIsHovering(true);
     }
   };
 
-  const handleMouseLeave = () => {
+  const handleMegaMenuMouseEnter = () => {
+    setIsHovering(true);
+  };
+
+  const handleMegaMenuMouseLeave = () => {
     setIsHovering(false);
-    // Delay closing to allow navigation to mega menu
+    // Close dropdown when mouse leaves mega menu area
     setTimeout(() => {
       if (!isHovering) {
         setActiveDropdown(null);
@@ -56,7 +61,6 @@ export default function Subheader() {
           "h-10 flex items-center justify-center",
           "text-sm font-medium"
         )}
-        onMouseLeave={handleMouseLeave}
       >
         {subnavigationLinks.map((link) => (
           <div key={link.title} className="relative">
@@ -64,7 +68,7 @@ export default function Subheader() {
               link.title
             ) ? (
               <button
-                onMouseEnter={() => handleMouseEnter(link.title)}
+                onClick={() => handleClick(link.title)}
                 className={clsx(
                   "block px-4 py-2 text-text-primary hover:text-primary transition-colors duration-200",
                   activeDropdown === link.title && "text-primary bg-primary/5"
@@ -108,8 +112,8 @@ export default function Subheader() {
       <AnimatePresence>
         {activeDropdown && (
           <div
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
+            onMouseEnter={handleMegaMenuMouseEnter}
+            onMouseLeave={handleMegaMenuMouseLeave}
           >
             <MegaMenu
               activeTab={activeDropdown}
