@@ -1,3 +1,4 @@
+import Footer from "../footer/footer";
 import Navbar from "../navigation/navbar";
 
 export default function MainLayout({
@@ -9,6 +10,7 @@ export default function MainLayout({
     <main className="w-full min-h-screen h-full bg-white">
       <Navbar />
       {children}
+      <Footer />
     </main>
   );
 }

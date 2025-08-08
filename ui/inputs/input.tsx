@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LucideIcon, Eye, EyeOff, Lock } from "lucide-react";
+import clsx from "clsx";
 
 type Props = React.HTMLAttributes<HTMLInputElement> & {
   label?: string;
@@ -56,7 +57,10 @@ export default function Input({
             onFocus={() => setFocusedField("password")}
             onBlur={() => setFocusedField(null)}
             required
-            className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+            className={clsx(
+              "w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white",
+              "placeholder:text-gray-400"
+            )}
             placeholder={placeholder}
           />
           {type === "password" && (

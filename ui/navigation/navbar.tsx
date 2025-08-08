@@ -1,6 +1,4 @@
 "use client";
-import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -17,12 +15,14 @@ import {
   Users,
   BookOpen,
 } from "lucide-react";
-import Subheader from "./subheader";
 import {
   marketplaceDepartments,
   storeCategories,
   serviceCategories,
 } from "@/constants/navigation/data";
+import Image from "next/image";
+import Link from "next/link";
+import Subheader from "./subheader";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -53,7 +53,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="bg-gradient-to-r from-white via-primary to-primary-dark shadow-md border-b border-neutral/20 sticky top-0 z-50">
+      <header className="bg-gradient-to-r from-primary-light via-primary to-primary-dark shadow-md border-b border-neutral/20 sticky top-0 z-50">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Main Navigation */}
           <div className="flex justify-between items-center h-16">
@@ -65,7 +65,7 @@ export default function Navbar() {
                   alt="EKORU"
                   width={100}
                   height={50}
-                  className="h-full max-h-[50px] w-auto"
+                  className="h-full max-h-[50px] w-auto drop-shadow-xs drop-shadow-slate-900/20"
                 />
               </Link>
             </div>

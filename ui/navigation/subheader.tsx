@@ -52,7 +52,6 @@ export default function Subheader() {
 
   return (
     <div className="relative">
-      {/* Desktop Subheader */}
       <div
         className={clsx(
           "hidden lg:flex w-full bg-white",
@@ -88,27 +87,6 @@ export default function Subheader() {
         ))}
       </div>
 
-      {/* Mobile Subheader */}
-      <div className="lg:hidden bg-white border-b border-neutral/20 sticky top-[64px] z-40">
-        <div className="flex items-center justify-between px-4 h-12">
-          <span className="text-sm font-medium text-text-primary">
-            Categorías
-          </span>
-          <button
-            onClick={toggleMobileMenu}
-            className="p-2 text-neutral hover:text-primary transition-colors duration-200"
-            aria-label="Toggle categories menu"
-          >
-            {isMobileMenuOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Desktop Mega Menu */}
       <AnimatePresence>
         {activeDropdown && (
           <div
@@ -120,13 +98,6 @@ export default function Subheader() {
               onClose={handleMegaMenuClose}
             />
           </div>
-        )}
-      </AnimatePresence>
-
-      {/* Mobile Mega Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <MobileMegaMenu isOpen={isMobileMenuOpen} onClose={closeMobileMenu} />
         )}
       </AnimatePresence>
     </div>
