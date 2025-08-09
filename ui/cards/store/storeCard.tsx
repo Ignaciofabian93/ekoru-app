@@ -6,7 +6,7 @@ import {
   CardContent,
   CardFooter,
   CardImage,
-} from "../product/index";
+} from "../_components/index";
 import MainButton from "../../buttons/mainButton";
 import {
   MapPin,

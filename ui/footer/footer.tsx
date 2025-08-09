@@ -26,7 +26,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col gap-8">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center">
+            <Link href="/feed" className="flex items-center">
               <Image
                 src="/brand/logo.webp"
                 alt="EKORU"

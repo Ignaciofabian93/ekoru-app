@@ -1,12 +1,6 @@
 "use client";
 import MainButton from "@/ui/buttons/mainButton";
-import {
-  CarouselCard,
-  CompactCard,
-  ContentCard,
-  SimpleCard,
-} from "@/ui/cards/product/examples";
-import ProductCard from "@/ui/cards/product/productCard";
+import ProductCard from "@/ui/cards/_components/productCard";
 import StoreCard from "@/ui/cards/store/storeCard";
 
 export default function Home() {
@@ -23,10 +17,6 @@ export default function Home() {
             <MainButton text="Continuar" variant="warning" />
           </div>
           <div>
-            <SimpleCard />
-            <CarouselCard />
-            <ContentCard />
-            <CompactCard />
             <ProductCard
               title="Guitarra"
               description="Usada"
