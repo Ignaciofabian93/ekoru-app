@@ -2,16 +2,14 @@
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { subnavigationLinks } from "@/constants/navigation/data";
+import { useCatalogStore } from "@/store/catalog";
 import clsx from "clsx";
-import Link from "next/link";
-import { Menu, X } from "lucide-react";
 import MegaMenu from "./megaMenu";
-import MobileMegaMenu from "./mobileMegaMenu";
 
 export default function Subheader() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isHovering, setIsHovering] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { marketData, storeData } = useCatalogStore();
 
   const handleClick = (title: string) => {
     if (
@@ -42,14 +40,6 @@ export default function Subheader() {
     setIsHovering(false);
   };
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
-  };
-
   return (
     <div className="relative">
       <div
@@ -61,28 +51,22 @@ export default function Subheader() {
           "text-sm font-medium"
         )}
       >
-        {subnavigationLinks.map((link) => (
-          <div key={link.title} className="relative">
-            {["Mercado", "Tiendas", "Servicios", "Comunidad", "Blog"].includes(
-              link.title
-            ) ? (
-              <button
-                onClick={() => handleClick(link.title)}
-                className={clsx(
-                  "block px-4 py-2 text-text-primary hover:text-primary transition-colors duration-200",
-                  activeDropdown === link.title && "text-primary bg-primary/5"
-                )}
-              >
-                {link.title}
-              </button>
-            ) : (
-              <Link
-                href={link.href}
-                className="block px-4 py-2 text-text-primary hover:text-primary hover:bg-neutral-light transition-colors"
-              >
-                {link.title}
-              </Link>
-            )}
+        {subnavigationLinks.map(({ title, enabled }) => (
+          <div key={title} className="relative">
+            <button
+              onClick={() => handleClick(title)}
+              disabled={!enabled}
+              className={clsx(
+                "block px-4 py-2 text-text-primary transition-colors duration-200",
+                activeDropdown === title && "text-primary bg-primary/20",
+                {
+                  "opacity-50 cursor-not-allowed": !enabled,
+                  "hover:text-primary": enabled,
+                }
+              )}
+            >
+              {title}
+            </button>
           </div>
         ))}
       </div>
@@ -96,6 +80,16 @@ export default function Subheader() {
             <MegaMenu
               activeTab={activeDropdown}
               onClose={handleMegaMenuClose}
+              marketData={
+                Array.isArray(marketData)
+                  ? { marketCatalog: marketData }
+                  : marketData
+              }
+              storeData={
+                Array.isArray(storeData)
+                  ? { storeCatalog: storeData }
+                  : storeData
+              }
             />
           </div>
         )}

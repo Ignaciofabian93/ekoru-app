@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cabin } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
+import AppWrapper from "./appWrapper";
 
 const cabin = Cabin({
   variable: "--font-cabin",
@@ -28,7 +29,7 @@ export default function RootLayout({
           position="top-center"
           closeOnClick
         />
-        {children}
+        <AppWrapper>{children}</AppWrapper>
       </body>
     </html>
   );

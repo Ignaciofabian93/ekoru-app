@@ -16,22 +16,23 @@ import {
   BookOpen,
 } from "lucide-react";
 import {
-  marketplaceDepartments,
   storeCategories,
   serviceCategories,
 } from "@/constants/navigation/data";
 import Image from "next/image";
 import Link from "next/link";
 import Subheader from "./subheader";
+import { useCatalogStore } from "@/store/catalog";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const { marketData } = useCatalogStore();
 
   // Mobile accordion states
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
-  const [openDepartment, setOpenDepartment] = useState<string | null>(null);
-  const [openCategory, setOpenCategory] = useState<string | null>(null);
+  const [openDepartment, setOpenDepartment] = useState<number | null>(null);
+  const [openCategory, setOpenCategory] = useState<number | null>(null);
 
   const toggleAccordion = (section: string) => {
     setOpenAccordion(openAccordion === section ? null : section);
@@ -42,14 +43,16 @@ export default function Navbar() {
     }
   };
 
-  const toggleDepartment = (departmentId: string) => {
+  const toggleDepartment = (departmentId: number) => {
     setOpenDepartment(openDepartment === departmentId ? null : departmentId);
     setOpenCategory(null); // Reset category when switching departments
   };
 
-  const toggleCategory = (categoryId: string) => {
+  const toggleCategory = (categoryId: number) => {
     setOpenCategory(openCategory === categoryId ? null : categoryId);
   };
+
+  console.log("market data:: ", marketData);
 
   return (
     <>
@@ -124,32 +127,32 @@ export default function Navbar() {
                       href="/profile"
                       className="block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
                     >
-                      My Profile
+                      Mi Perfil
                     </Link>
                     <Link
                       href="/profile/orders"
                       className="block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
                     >
-                      Orders
+                      Mis Órdenes
                     </Link>
                     <Link
                       href="/profile/impact-dashboard"
                       className="block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
                     >
-                      Impact Dashboard
+                      Mi Impacto
                     </Link>
                     <Link
                       href="/profile/settings"
                       className="block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
                     >
-                      Settings
+                      Ajustes
                     </Link>
                     <hr className="my-2 border-neutral/20" />
                     <Link
                       href="/login"
                       className="block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
                     >
-                      Sign In
+                      Iniciar Sesión
                     </Link>
                   </div>
                 </div>
@@ -174,7 +177,7 @@ export default function Navbar() {
               </div>
               <input
                 type="search"
-                placeholder="Search products..."
+                placeholder="Buscar en EKORU..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="block w-full pl-10 pr-3 py-2 border border-neutral/30 rounded-lg 
@@ -315,89 +318,107 @@ export default function Navbar() {
                           transition={{ duration: 0.2 }}
                           className="overflow-hidden bg-neutral-light/20 rounded-lg mt-1"
                         >
-                          {marketplaceDepartments.map((department) => (
-                            <div
-                              key={department.id}
-                              className="border-b border-neutral/5 last:border-b-0"
-                            >
-                              <button
-                                onClick={() => toggleDepartment(department.id)}
-                                className="w-full flex items-center justify-between p-2 pl-6 text-left hover:bg-white/50 transition-colors"
-                              >
-                                <span className="text-sm text-text-secondary">
-                                  {department.title}
-                                </span>
-                                <ChevronRight
-                                  className={`h-3 w-3 text-neutral transition-transform duration-200 ${
-                                    openDepartment === department.id
-                                      ? "rotate-90"
-                                      : ""
-                                  }`}
-                                />
-                              </button>
-
-                              <AnimatePresence>
-                                {openDepartment === department.id && (
-                                  <motion.div
-                                    initial={{ height: 0 }}
-                                    animate={{ height: "auto" }}
-                                    exit={{ height: 0 }}
-                                    transition={{ duration: 0.2 }}
-                                    className="overflow-hidden bg-white/30"
+                          {Array.isArray(marketData) &&
+                            marketData.map(
+                              ({
+                                id,
+                                departmentName,
+                                departmentCategories,
+                              }) => (
+                                <div
+                                  key={id}
+                                  className="border-b border-neutral/5 last:border-b-0"
+                                >
+                                  <button
+                                    onClick={() => toggleDepartment(id)}
+                                    className="w-full flex items-center justify-between p-2 pl-6 text-left hover:bg-white/50 transition-colors"
                                   >
-                                    {department.categories.map((category) => (
-                                      <div key={category.id}>
-                                        <button
-                                          onClick={() =>
-                                            toggleCategory(category.id)
-                                          }
-                                          className="w-full flex items-center justify-between p-2 pl-10 text-left hover:bg-white/50 transition-colors"
-                                        >
-                                          <span className="text-xs text-text-muted">
-                                            {category.title}
-                                          </span>
-                                          <ChevronRight
-                                            className={`h-3 w-3 text-neutral transition-transform duration-200 ${
-                                              openCategory === category.id
-                                                ? "rotate-90"
-                                                : ""
-                                            }`}
-                                          />
-                                        </button>
+                                    <span className="text-sm text-text-secondary">
+                                      {departmentName}
+                                    </span>
+                                    <ChevronRight
+                                      className={`h-3 w-3 text-neutral transition-transform duration-200 ${
+                                        openDepartment === id ? "rotate-90" : ""
+                                      }`}
+                                    />
+                                  </button>
 
-                                        <AnimatePresence>
-                                          {openCategory === category.id && (
-                                            <motion.div
-                                              initial={{ height: 0 }}
-                                              animate={{ height: "auto" }}
-                                              exit={{ height: 0 }}
-                                              transition={{ duration: 0.2 }}
-                                              className="overflow-hidden bg-white/50"
-                                            >
-                                              {category.subcategories.map(
-                                                (subcategory) => (
-                                                  <Link
-                                                    key={subcategory.id}
-                                                    href={subcategory.href}
-                                                    onClick={() =>
-                                                      setIsMobileMenuOpen(false)
-                                                    }
-                                                    className="block p-2 pl-14 text-xs text-text-muted hover:text-primary hover:bg-primary/5 transition-colors"
+                                  <AnimatePresence>
+                                    {openDepartment === id && (
+                                      <motion.div
+                                        initial={{ height: 0 }}
+                                        animate={{ height: "auto" }}
+                                        exit={{ height: 0 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="overflow-hidden bg-white/30"
+                                      >
+                                        {departmentCategories.map(
+                                          ({
+                                            departmentCategoryName,
+                                            productCategories,
+                                            id,
+                                          }) => (
+                                            <div key={id}>
+                                              <button
+                                                onClick={() =>
+                                                  toggleCategory(id)
+                                                }
+                                                className="w-full flex items-center justify-between p-2 pl-10 text-left hover:bg-white/50 transition-colors"
+                                              >
+                                                <span className="text-xs text-text-muted">
+                                                  {departmentCategoryName}
+                                                </span>
+                                                <ChevronRight
+                                                  className={`h-3 w-3 text-neutral transition-transform duration-200 ${
+                                                    openCategory === id
+                                                      ? "rotate-90"
+                                                      : ""
+                                                  }`}
+                                                />
+                                              </button>
+
+                                              <AnimatePresence>
+                                                {openCategory === id && (
+                                                  <motion.div
+                                                    initial={{ height: 0 }}
+                                                    animate={{ height: "auto" }}
+                                                    exit={{ height: 0 }}
+                                                    transition={{
+                                                      duration: 0.2,
+                                                    }}
+                                                    className="overflow-hidden bg-white/50"
                                                   >
-                                                    {subcategory.title}
-                                                  </Link>
-                                                )
-                                              )}
-                                            </motion.div>
-                                          )}
-                                        </AnimatePresence>
-                                      </div>
-                                    ))}
-                                  </motion.div>
-                                )}
-                              </AnimatePresence>
-                            </div>
-                          ))}
+                                                    {productCategories.map(
+                                                      ({
+                                                        id,
+                                                        productCategoryName,
+                                                      }) => (
+                                                        <Link
+                                                          key={id}
+                                                          href={`/market/category/${id}`}
+                                                          onClick={() =>
+                                                            setIsMobileMenuOpen(
+                                                              false
+                                                            )
+                                                          }
+                                                          className="block p-2 pl-14 text-xs text-text-muted hover:text-primary hover:bg-primary/5 transition-colors"
+                                                        >
+                                                          {productCategoryName}
+                                                        </Link>
+                                                      )
+                                                    )}
+                                                  </motion.div>
+                                                )}
+                                              </AnimatePresence>
+                                            </div>
+                                          )
+                                        )}
+                                      </motion.div>
+                                    )}
+                                  </AnimatePresence>
+                                </div>
+                              )
+                            )}
                         </motion.div>
                       )}
                     </AnimatePresence>

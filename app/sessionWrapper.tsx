@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
-import { useLazyQuery } from "@apollo/client";
-import { usePathname, useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
-import useAlert from "@/hooks/useAlert";
+// import { useLazyQuery } from "@apollo/client";
+import {
+  usePathname,
+  // useRouter
+} from "next/navigation";
+// import useAlert from "@/hooks/useAlert";
 import { RefreshToken } from "./api/auth/auth";
+import { Loader2 } from "lucide-react";
+// import { GET_PROFILE } from "@/graphql/session/queries"; // Uncomment and adjust if needed
+// import useSessionStore from "@/store/session"; // Uncomment and adjust if needed
 
 export default function SessionWrapper({
   children,
@@ -16,135 +20,95 @@ export default function SessionWrapper({
   refreshToken: string | undefined;
 }) {
   const [loading, setLoading] = useState<boolean>(true);
-  const [animationDone, setAnimationDone] = useState<boolean>(false);
-  const [triedUserData, setTriedUserData] = useState(false);
-  const router = useRouter();
+  // const [isGuest, setIsGuest] = useState<boolean>(false);
+  const [userFetched, setUserFetched] = useState<boolean>(false);
+  // const router = useRouter();
   const pathname = usePathname();
-
-  const authLoading = false; // Placeholder for auth loading state
-
+  // const { notifyError } = useAlert();
   // const { handleSession, data } = useSessionStore();
-  const { notifyError } = useAlert();
-
-  // const [GetMe, { error: authError, loading: authLoading }] =
-  //   useLazyQuery(GET_PROFILE);
-
-  // const handleUserData = async () => {
-  //   try {
-  //     const { data: userData, error } = await GetMe();
-  //     if (userData) {
-  //       handleSession(userData.me);
-  //       return true;
-  //     }
-
-  //     // If 401, try refresh
-  //     if (
-  //       error &&
-  //       error.networkError &&
-  //       "statusCode" in error.networkError &&
-  //       error.networkError.statusCode === 401
-  //     ) {
-  //       const refreshResponse = await RefreshToken();
-  //       if (refreshResponse?.success) {
-  //         const { data: refreshedData } = await GetMe();
-  //         handleSession(refreshedData.me);
-  //         return true;
-  //       }
-  //     }
-  //     // If still not authenticated, redirect to auth page
-  //     notifyError(
-  //       "Error al intentar obtener los datos del usuario. Redirigiendo a la página de inicio de sesión."
-  //     );
-  //     router.replace("/auth");
-  //     return false;
-  //   } catch (error) {
-  //     console.error(error, authError);
-  //     notifyError("Sesión expirada. Redirigiendo...");
-  //     router.replace("/auth");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  // const [GetMe, { error: authError, loading: authLoading }] = useLazyQuery(GET_PROFILE);
 
   useEffect(() => {
-    // If no token but refreshToken exists, try to refresh
-    if (!token && refreshToken && animationDone) {
+    // If both tokens are missing, assume guest user
+    if (!token && !refreshToken) {
+      // setIsGuest(true);
+      setLoading(false);
+      return;
+    }
+
+    // If token is missing but refreshToken exists, try to refresh
+    if (!token && refreshToken) {
       (async () => {
         try {
           const refreshResponse = await RefreshToken();
           if (refreshResponse?.success) {
             window.location.href = pathname; // Reload the page to apply the new token
-            return; // Prevent further execution
+            return;
           }
         } catch (error) {
           console.error("Error al intentar renovar el token:", error);
         }
         setLoading(false);
-        router.replace("/auth");
       })();
-      return; // Prevent further execution
-    }
-
-    // If neither token nor refreshToken, redirect
-    if (!token && !refreshToken && animationDone) {
-      setLoading(false);
-      router.replace("/auth");
       return;
     }
 
-    // If token exists but no user data, fetch user (only once)
-    // if (token && !data.id && !triedUserData) {
-    //   setTriedUserData(true);
-    //   handleUserData();
-    // } else if (token && data.id) {
-    //   setLoading(false);
-    // }
-  }, [
-    token,
-    refreshToken,
-    animationDone,
-    // data,
-    triedUserData,
-  ]);
+    // If token exists, fetch user data (only once)
+    if (token && !userFetched) {
+      setUserFetched(true);
+      // Uncomment and adjust below to fetch user data
+      // (async () => {
+      //   try {
+      //     const { data: userData, error } = await GetMe();
+      //     if (userData) {
+      //       handleSession(userData.me);
+      //       setLoading(false);
+      //       return;
+      //     }
+      //     // If 401, try refresh
+      //     if (
+      //       error &&
+      //       error.networkError &&
+      //       "statusCode" in error.networkError &&
+      //       error.networkError.statusCode === 401
+      //     ) {
+      //       const refreshResponse = await RefreshToken();
+      //       if (refreshResponse?.success) {
+      //         const { data: refreshedData } = await GetMe();
+      //         handleSession(refreshedData.me);
+      //         setLoading(false);
+      //         return;
+      //       }
+      //     }
+      //     // If still not authenticated, assume guest
+      //     setIsGuest(true);
+      //     setLoading(false);
+      //   } catch (error) {
+      //     console.error(error, authError);
+      //     setIsGuest(true);
+      //     setLoading(false);
+      //   }
+      // })();
+      // For now, just simulate fetch
+      setTimeout(() => setLoading(false), 500);
+      return;
+    }
+    // If token exists and user already fetched
+    if (token && userFetched) {
+      setLoading(false);
+      return;
+    }
+  }, [token, refreshToken, userFetched, pathname]);
 
-  useEffect(() => {
-    const fallback = setTimeout(() => {
-      if (!animationDone) setAnimationDone(true);
-    }, 3000);
-    return () => clearTimeout(fallback);
-  }, []);
-
-  if ((loading || authLoading) && pathname === "/") {
-    return (
-      <main className="w-full h-screen flex flex-col items-center justify-center">
-        <AnimatePresence mode="wait">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0.8, filter: "brightness(90%)" }}
-            animate={{ scale: 1, opacity: 1, filter: "brightness(120%)" }}
-            transition={{ duration: 2, ease: "easeInOut" }}
-            onAnimationComplete={() => setAnimationDone(true)}
-          >
-            <Image
-              src={"/branding/logo.webp"}
-              alt="Logo EKORU"
-              priority
-              width={4096}
-              height={2048}
-              className="w-[40%] mx-auto"
-            />
-          </motion.div>
-        </AnimatePresence>
-      </main>
-    );
-  }
-
-  if (loading || authLoading) {
+  // Optionally show loading spinner
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-white">
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent border-solid rounded-full animate-spin"></div>
+        <Loader2 className="w-16 h-16 animate-spin text-primary" />
       </div>
     );
   }
 
+  // Optionally pass guest state to children via context or props
   return <>{children}</>;
 }

@@ -1,7 +1,5 @@
 # Ekoru - Ecological Ecommerce Site Folder Structure
 
-## Proposed Folder Structure
-
 ```
 ekoru-app/
 ├── app/

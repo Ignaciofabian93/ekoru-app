@@ -3,6 +3,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import "@/lib/apolloSetup";
 import { GRAPHQL_URL } from "@/config/endpoints";
 import SessionWrapper from "./sessionWrapper";
+import InitialDataProvider from "@/providers/initialData";
 
 export default function Providers({
   children,
@@ -23,7 +24,7 @@ export default function Providers({
   return (
     <ApolloProvider client={client}>
       <SessionWrapper token={token} refreshToken={refreshToken}>
-        {children}
+        <InitialDataProvider>{children}</InitialDataProvider>
       </SessionWrapper>
     </ApolloProvider>
   );

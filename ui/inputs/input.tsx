@@ -37,9 +37,6 @@ export default function Input({
       <div className="relative">
         <motion.div
           initial={false}
-          animate={{
-            scale: focusedField === name ? 1.02 : 1,
-          }}
           transition={{ duration: 0.2 }}
           className="relative"
         >

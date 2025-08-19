@@ -7,11 +7,31 @@ export const navigationLinks = [
 ];
 
 export const subnavigationLinks = [
-  { title: "Mercado", href: "/departments" },
-  { title: "Tiendas", href: "/stores" },
-  { title: "Servicios", href: "/services" },
-  { title: "Comunidad", href: "/community" },
-  { title: "Blog", href: "/blog" },
+  {
+    title: "Mercado",
+    href: "/departments",
+    enabled: process.env.NEXT_PUBLIC_ENABLE_MARKET === "true",
+  },
+  {
+    title: "Tiendas",
+    href: "/stores",
+    enabled: process.env.NEXT_PUBLIC_ENABLE_STORES === "true",
+  },
+  {
+    title: "Servicios",
+    href: "/services",
+    enabled: process.env.NEXT_PUBLIC_ENABLE_SERVICES === "true",
+  },
+  {
+    title: "Comunidad",
+    href: "/community",
+    enabled: process.env.NEXT_PUBLIC_ENABLE_COMMUNITY === "true",
+  },
+  {
+    title: "Blog",
+    href: "/blog",
+    enabled: process.env.NEXT_PUBLIC_ENABLE_BLOG === "true",
+  },
 ];
 
 // Marketplace navigation structure
