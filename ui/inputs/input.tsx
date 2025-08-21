@@ -15,6 +15,8 @@ type Props = React.HTMLAttributes<HTMLInputElement> & {
   setShowPassword?: (show: boolean) => void;
   name?: string;
   togglePasswordVisibility?: () => void;
+  maxLength?: number;
+  minLength?: number;
 };
 
 export default function Input({
@@ -27,6 +29,8 @@ export default function Input({
   showPassword,
   togglePasswordVisibility,
   icon: Icon = Lock,
+  maxLength = 50,
+  minLength = 2,
 }: Props) {
   const [focusedField, setFocusedField] = useState<string | null>(null);
   return (
@@ -54,6 +58,8 @@ export default function Input({
             onFocus={() => setFocusedField("password")}
             onBlur={() => setFocusedField(null)}
             required
+            minLength={minLength}
+            maxLength={maxLength}
             className={clsx(
               "w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg outline-0 focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200 bg-gray-50 focus:bg-white",
               "placeholder:text-gray-400"

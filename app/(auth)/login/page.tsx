@@ -1,32 +1,21 @@
 "use client";
-
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Input from "@/ui/inputs/input";
 import MainButton from "@/ui/buttons/mainButton";
 import Link from "next/link";
+import useLogin from "./_hooks/useLogin";
 
 export default function LoginPage() {
-  // const { login, formData, handleFormData } = useAuth();
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      // await login();
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const {
+    formData,
+    showPassword,
+    isLoading,
+    togglePasswordVisibility,
+    handleFormData,
+    handleSubmit,
+  } = useLogin();
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 py-8">
@@ -70,20 +59,24 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Email Field */}
               <Input
+                name="email"
                 label="Correo Electrónico"
-                value=""
-                onChange={() => {}}
+                value={formData.email}
+                onChange={handleFormData}
                 type="email"
                 icon={Mail}
                 placeholder="Ingresa tu correo electrónico"
+                minLength={10}
+                maxLength={100}
               />
 
               {/* Password Field */}
               <Input
+                name="password"
                 label="Contraseña"
                 placeholder="Ingresa tu contraseña"
-                value=""
-                onChange={() => {}}
+                value={formData.password}
+                onChange={handleFormData}
                 type="password"
                 togglePasswordVisibility={togglePasswordVisibility}
                 showPassword={showPassword}
@@ -92,6 +85,7 @@ export default function LoginPage() {
 
               {/* Submit Button */}
               <MainButton
+                type="submit"
                 isLoading={isLoading}
                 loadingText="Iniciando sesión..."
                 text="Entrar"

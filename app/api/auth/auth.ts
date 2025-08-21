@@ -1,6 +1,6 @@
 import { REST_URL } from "@/config/endpoints";
 
-export default async function Login({
+export async function Login({
   email,
   password,
 }: {
