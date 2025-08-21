@@ -1,46 +1,27 @@
 "use client";
-
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, UserRound, ArrowRight, BadgeInfo } from "lucide-react";
+import { SellerType } from "@/types/enums";
 import Image from "next/image";
 import Input from "@/ui/inputs/input";
 import Select from "@/ui/inputs/select";
 import MainButton from "@/ui/buttons/mainButton";
 import Link from "next/link";
-
-import { type SellerType } from "@/types/enums";
+import useRegister from "./_hooks/useRegister";
 
 export default function RegisterPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    sellerType: "PERSON" as SellerType,
-  });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleFormData = (e: React.ChangeEvent<any>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
-  const toggleConfirmPasswordVisibility = () =>
-    setShowConfirmPassword((prev) => !prev);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    // Registration logic here
-    setTimeout(() => setIsLoading(false), 1000);
-  };
+  const {
+    formData,
+    showPassword,
+    showConfirmPassword,
+    registerPersonLoading,
+    registerStoreLoading,
+    handleFormData,
+    handleAccountTypeChange,
+    togglePasswordVisibility,
+    toggleConfirmPasswordVisibility,
+    handleSubmit,
+  } = useRegister();
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 py-8">
@@ -88,7 +69,7 @@ export default function RegisterPage() {
                 name="sellerType"
                 value={formData.sellerType}
                 icon={BadgeInfo}
-                onChange={handleFormData}
+                onChange={(e) => handleAccountTypeChange(e as SellerType)}
                 options={[
                   { value: "PERSON", label: "Persona" },
                   { value: "STORE", label: "Tienda" },
@@ -102,8 +83,8 @@ export default function RegisterPage() {
                     ? "Nombre"
                     : "Nombre de la tienda"
                 }
-                name="name"
-                value={formData.name}
+                name="firstName"
+                value={formData.firstName}
                 onChange={handleFormData}
                 type="text"
                 icon={UserRound}
@@ -112,6 +93,17 @@ export default function RegisterPage() {
                     ? "Ingresa tu nombre"
                     : "Ingresa el nombre de la tienda"
                 }
+              />
+
+              {/* LastName Field */}
+              <Input
+                label={"Apellido"}
+                name="lastName"
+                value={formData.lastName ?? ""}
+                onChange={handleFormData}
+                type="text"
+                icon={UserRound}
+                placeholder={"Ingresa tu apellido"}
               />
 
               {/* Email Field */}
@@ -153,7 +145,8 @@ export default function RegisterPage() {
 
               {/* Submit Button */}
               <MainButton
-                isLoading={isLoading}
+                type="submit"
+                isLoading={registerPersonLoading || registerStoreLoading}
                 loadingText="Creando cuenta..."
                 text="Registrarse"
                 hasIcon

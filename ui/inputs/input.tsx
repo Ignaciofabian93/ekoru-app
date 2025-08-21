@@ -42,7 +42,7 @@ export default function Input({
         >
           <Icon
             className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
-              focusedField === "password" ? "text-blue-600" : "text-gray-400"
+              focusedField === "password" ? "text-primary" : "text-gray-400"
             }`}
           />
           <input
@@ -55,7 +55,7 @@ export default function Input({
             onBlur={() => setFocusedField(null)}
             required
             className={clsx(
-              "w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white",
+              "w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg outline-0 focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200 bg-gray-50 focus:bg-white",
               "placeholder:text-gray-400"
             )}
             placeholder={placeholder}

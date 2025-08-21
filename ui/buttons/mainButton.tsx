@@ -42,11 +42,10 @@ export default function MainButton({
     <motion.button
       type={type}
       disabled={isLoading}
-      whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className={clsx(
         "w-full min-w-[140px]",
-        "py-3 px-4 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200",
+        "py-3 px-4 rounded-lg font-medium shadow-md transition-all duration-200",
         "flex items-center justify-center space-x-2 disabled:opacity-70 disabled:cursor-not-allowed",
         getVariantStyles(variant)
       )}

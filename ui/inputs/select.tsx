@@ -43,7 +43,6 @@ export default function Select({
 }: SelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [focusedField, setFocusedField] = useState<string | null>(null);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
   const containerRef = useRef<HTMLDivElement>(null);
   const listboxId = `${name}-listbox`;
@@ -154,10 +153,8 @@ export default function Select({
             aria-controls={listboxId}
             onClick={() => setIsOpen(!isOpen)}
             onKeyDown={handleKeyDown}
-            onFocus={() => setFocusedField(name || null)}
-            onBlur={() => setFocusedField(null)}
             className={clsx(
-              "w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white text-left",
+              "w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200 bg-gray-50 focus:bg-white text-left",
               "placeholder:text-gray-400",
               disabled && "opacity-50 cursor-not-allowed"
             )}
@@ -187,7 +184,7 @@ export default function Select({
                     : undefined
                 }
                 tabIndex={-1}
-                className="absolute top-full left-0 z-50 mt-1 w-full bg-white border border-primary rounded-xl shadow-2xl"
+                className="absolute top-full left-0 z-50 mt-1 w-full bg-white border-2 border-primary rounded-xl shadow-2xl"
               >
                 <input
                   type="text"

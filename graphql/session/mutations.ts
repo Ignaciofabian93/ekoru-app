@@ -3,20 +3,11 @@ import { gql } from "@apollo/client";
 export const REGISTER_PERSON = gql`
   mutation RegisterPerson($input: RegisterPersonInput!) {
     registerPerson(input: $input) {
-      id
       email
+      firstName
       sellerType
-      isActive
-      isVerified
       createdAt
       updatedAt
-      address
-      phone
-      website
-      preferredContactMethod
-      socialMediaLinks
-      accountType
-      points
     }
   }
 `;

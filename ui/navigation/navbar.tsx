@@ -23,11 +23,14 @@ import Image from "next/image";
 import Link from "next/link";
 import Subheader from "./subheader";
 import { useCatalogStore } from "@/store/catalog";
+import useSessionStore from "@/store/session";
+import AccountMenu from "./account";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { marketData } = useCatalogStore();
+  const { data } = useSessionStore();
 
   // Mobile accordion states
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
@@ -51,8 +54,6 @@ export default function Navbar() {
   const toggleCategory = (categoryId: number) => {
     setOpenCategory(openCategory === categoryId ? null : categoryId);
   };
-
-  console.log("market data:: ", marketData);
 
   return (
     <>
@@ -103,60 +104,21 @@ export default function Navbar() {
               </Link>
 
               {/* Shopping Cart */}
-              <Link
-                href="/cart"
-                className="relative p-2 text-white hover:text-primary transition-colors duration-200"
+              {/* Change back to Link when enabling Cart */}
+              <div
+                // href="/cart"
+                // className="relative p-2 text-white hover:text-primary transition-colors duration-200"
+                className="relative p-2 text-white opacity-50"
                 aria-label="Shopping Cart"
               >
                 <ShoppingCart className="h-6 w-6" />
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {/* <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   3
-                </span>
-              </Link>
+                </span> */}
+              </div>
 
               {/* User Account */}
-              <div className="relative group">
-                <button className="flex items-center space-x-1 p-2 text-white hover:text-primary transition-colors duration-200">
-                  <UserRound className="h-6 w-6" />
-                </button>
-
-                {/* Dropdown Menu */}
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-neutral/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  <div className="py-2">
-                    <Link
-                      href="/profile"
-                      className="block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
-                    >
-                      Mi Perfil
-                    </Link>
-                    <Link
-                      href="/profile/orders"
-                      className="block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
-                    >
-                      Mis Órdenes
-                    </Link>
-                    <Link
-                      href="/profile/impact-dashboard"
-                      className="block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
-                    >
-                      Mi Impacto
-                    </Link>
-                    <Link
-                      href="/profile/settings"
-                      className="block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
-                    >
-                      Ajustes
-                    </Link>
-                    <hr className="my-2 border-neutral/20" />
-                    <Link
-                      href="/login"
-                      className="block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
-                    >
-                      Iniciar Sesión
-                    </Link>
-                  </div>
-                </div>
-              </div>
+              <AccountMenu isLoggedIn={!!data.id} />
 
               {/* Mobile Menu Button */}
               <button
