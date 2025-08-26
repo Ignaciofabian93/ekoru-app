@@ -6,18 +6,18 @@ import {
   ads,
   bestRankedStores,
   bestStoreProducts,
-  exchangeableProducts,
+  // exchangeableProducts,
   featuredCategories,
 } from "./mockups/data";
 import NewsLetter from "@/ui/newsletter/newsletter";
 import HorizontalScrollSection from "@/ui/layout/horizontalScrollSection";
 import AdBanner from "@/ui/banners/adBanner";
-import { getBadgeColor } from "@/utils/badgeColor";
+// import { getBadgeColor } from "@/utils/badgeColor";
 import SmallStoreCard from "@/ui/cards/store/smallStoreCard";
 import HeroCarousel from "@/ui/carousel/hero";
 import ProductCard from "@/ui/cards/product/productCard";
-import SecondHandCard from "@/ui/cards/product/secondhand";
-import ExchangeCard from "@/ui/cards/product/exchange";
+// import SecondHandCard from "@/ui/cards/product/secondhand";
+// import ExchangeCard from "@/ui/cards/product/exchange";
 
 export default function FeedPage() {
   return (
