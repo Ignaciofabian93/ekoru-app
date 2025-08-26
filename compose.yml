@@ -1,0 +1,17 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    container_name: web-app
+    ports:
+      - "8100:3000"
+    env_file:
+      - .env
+    networks:
+      - ekoru-network
+
+networks:
+  ekoru-network:
+    external: true
