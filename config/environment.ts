@@ -1,1 +1,1 @@
-export const ENVIRONMENT = process.env.NODE_ENV || "development";
+export const ENVIRONMENT = process.env.ENVIRONMENT || "development";
