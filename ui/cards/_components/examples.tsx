@@ -85,7 +85,7 @@ export function ContentCard() {
         </div>
       </CardContent>
       <CardFooter>
-        <MainButton text="Get Started" variant="success" />
+        <MainButton text="Get Started" />
       </CardFooter>
     </Card>
   );
