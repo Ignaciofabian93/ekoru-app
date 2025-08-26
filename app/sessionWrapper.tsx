@@ -1,14 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-// import { useLazyQuery } from "@apollo/client";
-import {
-  usePathname,
-  // useRouter
-} from "next/navigation";
-// import useAlert from "@/hooks/useAlert";
+import { usePathname } from "next/navigation";
 import { RefreshToken } from "./api/auth/auth";
 import { Loader2 } from "lucide-react";
-// import { GET_PROFILE } from "@/graphql/session/queries"; // Uncomment and adjust if needed
-// import useSessionStore from "@/store/session"; // Uncomment and adjust if needed
+import { useLazyQuery } from "@apollo/client";
+import { GET_ME } from "@/graphql/session/queries";
+import useSessionStore from "@/store/session";
 
 export default function SessionWrapper({
   children,
@@ -20,18 +17,15 @@ export default function SessionWrapper({
   refreshToken: string | undefined;
 }) {
   const [loading, setLoading] = useState<boolean>(true);
-  // const [isGuest, setIsGuest] = useState<boolean>(false);
   const [userFetched, setUserFetched] = useState<boolean>(false);
-  // const router = useRouter();
   const pathname = usePathname();
-  // const { notifyError } = useAlert();
-  // const { handleSession, data } = useSessionStore();
-  // const [GetMe, { error: authError, loading: authLoading }] = useLazyQuery(GET_PROFILE);
+  const { handleSession } = useSessionStore();
+
+  const [GetMe, { loading: userLoading }] = useLazyQuery(GET_ME);
 
   useEffect(() => {
     // If both tokens are missing, assume guest user
     if (!token && !refreshToken) {
-      // setIsGuest(true);
       setLoading(false);
       return;
     }
@@ -57,38 +51,39 @@ export default function SessionWrapper({
     if (token && !userFetched) {
       setUserFetched(true);
       // Uncomment and adjust below to fetch user data
-      // (async () => {
-      //   try {
-      //     const { data: userData, error } = await GetMe();
-      //     if (userData) {
-      //       handleSession(userData.me);
-      //       setLoading(false);
-      //       return;
-      //     }
-      //     // If 401, try refresh
-      //     if (
-      //       error &&
-      //       error.networkError &&
-      //       "statusCode" in error.networkError &&
-      //       error.networkError.statusCode === 401
-      //     ) {
-      //       const refreshResponse = await RefreshToken();
-      //       if (refreshResponse?.success) {
-      //         const { data: refreshedData } = await GetMe();
-      //         handleSession(refreshedData.me);
-      //         setLoading(false);
-      //         return;
-      //       }
-      //     }
-      //     // If still not authenticated, assume guest
-      //     setIsGuest(true);
-      //     setLoading(false);
-      //   } catch (error) {
-      //     console.error(error, authError);
-      //     setIsGuest(true);
-      //     setLoading(false);
-      //   }
-      // })();
+      (async () => {
+        try {
+          const { data: userData, error } = await GetMe();
+          console.log("user", userData);
+          console.log("GraphQL error:", error);
+
+          if (userData) {
+            handleSession(userData.me);
+            setLoading(false);
+            return;
+          }
+          // If 401, try refresh
+          if (
+            error &&
+            error.networkError &&
+            "statusCode" in error.networkError &&
+            error.networkError.statusCode === 401
+          ) {
+            const refreshResponse = await RefreshToken();
+            if (refreshResponse?.success) {
+              const { data: refreshedData } = await GetMe();
+              handleSession(refreshedData.me);
+              setLoading(false);
+              return;
+            }
+          }
+          // If still not authenticated, assume guest
+          setLoading(false);
+        } catch (error) {
+          console.error(error);
+          setLoading(false);
+        }
+      })();
       // For now, just simulate fetch
       setTimeout(() => setLoading(false), 500);
       return;
@@ -101,7 +96,7 @@ export default function SessionWrapper({
   }, [token, refreshToken, userFetched, pathname]);
 
   // Optionally show loading spinner
-  if (loading) {
+  if (loading || userLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-white">
         <Loader2 className="w-16 h-16 animate-spin text-primary" />

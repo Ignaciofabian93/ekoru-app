@@ -1,4 +1,5 @@
 import Footer from "../footer/footer";
+import ProductModal from "../modals/product";
 import Navbar from "../navigation/navbar";
 
 export default function MainLayout({
@@ -9,6 +10,7 @@ export default function MainLayout({
   return (
     <main className="w-full min-h-screen h-full bg-white">
       <Navbar />
+      <ProductModal />
       {children}
       <Footer />
     </main>

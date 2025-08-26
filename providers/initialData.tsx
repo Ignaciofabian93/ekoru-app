@@ -17,11 +17,11 @@ export default function InitialDataProvider({
     fetchCatalogs(
       async () => {
         const { data: storeData } = await StoreCatalog();
-        return storeData as StoreProfile[];
+        return { storeCatalog: storeData as StoreProfile[] };
       },
       async () => {
         const { data: marketData } = await MarketCatalog();
-        return marketData as Department[];
+        return { marketCatalog: marketData as Department[] };
       }
     );
   }, [fetchCatalogs, StoreCatalog, MarketCatalog]);

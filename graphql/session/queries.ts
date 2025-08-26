@@ -17,34 +17,36 @@ export const GET_ME = gql`
       socialMediaLinks
       accountType
       points
-      storeProfile {
-        id
-        sellerId
-        businessName
-        displayName
-        description
-        logo
-        coverImage
-        businessType
-        taxId
-        businessRegistration
-        allowExchanges
-        minOrderAmount
-        shippingPolicy
-        returnPolicy
-        businessHours
-      }
-      personProfile {
-        id
-        sellerId
-        firstName
-        lastName
-        displayName
-        bio
-        birthday
-        profileImage
-        coverImage
-        allowExchanges
+      profile {
+        ... on PersonProfile {
+          id
+          sellerId
+          firstName
+          lastName
+          displayName
+          bio
+          birthday
+          profileImage
+          coverImage
+          allowExchanges
+        }
+        ... on StoreProfile {
+          id
+          sellerId
+          businessName
+          displayName
+          description
+          logo
+          coverImage
+          businessType
+          taxId
+          businessRegistration
+          allowExchanges
+          minOrderAmount
+          shippingPolicy
+          returnPolicy
+          businessHours
+        }
       }
       userCategory {
         id

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -9,10 +10,10 @@ export default function InitApp() {
 
   // Redirect when both are loaded
   useEffect(() => {
-    if (initialized && storeData && marketData) {
+    if (initialized && (marketData || storeData)) {
       router.replace("/feed");
     }
-  }, [initialized, storeData, marketData, router]);
+  }, [initialized, storeData, marketData]);
 
   return null;
 }

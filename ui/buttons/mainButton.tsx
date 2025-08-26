@@ -20,6 +20,7 @@ export default function MainButton({
   hasIcon = true,
   icon: Icon = ArrowRight,
   variant = "primary",
+  onClick,
 }: Props) {
   const getVariantStyles = (variant: string) => {
     switch (variant) {
@@ -43,6 +44,7 @@ export default function MainButton({
       type={type}
       disabled={isLoading}
       whileTap={{ scale: 0.98 }}
+      onClick={onClick}
       className={clsx(
         "w-full min-w-[140px]",
         "py-3 px-4 rounded-lg font-medium shadow-md transition-all duration-200",

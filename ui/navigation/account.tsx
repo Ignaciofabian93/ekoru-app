@@ -1,41 +1,60 @@
-import { UserRound } from "lucide-react";
+import { LogOut, Package, UserRound } from "lucide-react";
 import Link from "next/link";
 import MainButton from "@/ui/buttons/mainButton";
+import { useProductStore } from "@/store/product";
 
 type Props = {
   isLoggedIn?: boolean;
 };
 
 const LoggedInMenu = () => {
+  const { openModal } = useProductStore();
   return (
-    <>
+    <div className="flex flex-col items-center space-y-3 px-2 py-2">
       <Link
         href="/profile"
-        className="block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
+        className="w-full rounded-sm block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
       >
         Mi Perfil
       </Link>
       <Link
         href="/profile/orders"
-        className="block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
+        className="w-full rounded-sm block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
       >
         Mis Órdenes
       </Link>
       <Link
         href="/profile/impact-dashboard"
-        className="block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
+        className="w-full rounded-sm block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
       >
         Mi Impacto
       </Link>
       <Link
         href="/profile/settings"
-        className="block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
+        className="w-full rounded-sm block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
       >
         Ajustes
       </Link>
       <hr className="my-2 border-neutral/20" />
-      <button>Cerrar Sesión</button>
-    </>
+      <MainButton
+        type="button"
+        text="Subir Producto"
+        variant="primary"
+        hasIcon
+        icon={Package}
+        onClick={() => {
+          console.log("opening modal");
+
+          openModal("create");
+        }}
+      />
+      <MainButton
+        text="Cerrar Sesión"
+        variant="destructive"
+        hasIcon
+        icon={LogOut}
+      />
+    </div>
   );
 };
 
@@ -63,7 +82,7 @@ export default function AccountMenu({ isLoggedIn }: Props) {
       </button>
 
       {/* Dropdown Menu */}
-      <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-neutral/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+      <div className="absolute right-0 z-50 mt-2 w-48 bg-white rounded-lg shadow-lg border border-neutral/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
         <div className="py-2">
           {isLoggedIn ? <LoggedInMenu /> : <NotLoggedInMenu />}
         </div>
