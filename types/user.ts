@@ -18,6 +18,7 @@ export type Seller = {
   isVerified: boolean;
   createdAt: string;
   updatedAt: string;
+  profile: PersonProfile | StoreProfile;
 
   // Location information
   address: string;

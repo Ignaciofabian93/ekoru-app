@@ -8,11 +8,11 @@ export default function useCatalog() {
   const [
     StoreCatalog,
     { data: StoreData, loading: storeLoading, error: storeError },
-  ] = useLazyQuery(GET_STORE_CATALOG);
+  ] = useLazyQuery(GET_STORE_CATALOG, { fetchPolicy: "cache-first" });
   const [
     MarketCatalog,
     { data: MarketData, loading: marketLoading, error: marketError },
-  ] = useLazyQuery(GET_MARKET_CATALOG);
+  ] = useLazyQuery(GET_MARKET_CATALOG, { fetchPolicy: "cache-first" });
 
   return {
     StoreCatalog,

@@ -25,18 +25,22 @@ import {
   CreditCard,
 } from "lucide-react";
 import MainLayout from "@/ui/layout/mainLayout";
+import useSessionStore from "@/store/session";
 
 export default function ProfilePage() {
-  const [user] = useState({
-    name: "María González",
-    email: "maria.gonzalez@email.com",
-    phone: "+1 234 567 8900",
-    location: "Barcelona, España",
-    joinDate: "Marzo 2024",
-    avatar: "/brand/icon.webp", // Using existing brand icon as placeholder
-    bio: "Apasionada por la sostenibilidad y el consumo consciente. Me encanta descubrir productos ecológicos que hacen la diferencia.",
-    verified: true,
-  });
+  const { data } = useSessionStore();
+  console.log("data:: ", data);
+
+  // const [user] = useState({
+  //   name: "María González",
+  //   email: "maria.gonzalez@email.com",
+  //   phone: "+1 234 567 8900",
+  //   location: "Barcelona, España",
+  //   joinDate: "Marzo 2024",
+  //   avatar: "/brand/icon.webp", // Using existing brand icon as placeholder
+  //   bio: "Apasionada por la sostenibilidad y el consumo consciente. Me encanta descubrir productos ecológicos que hacen la diferencia.",
+  //   verified: true,
+  // });
 
   // Mock data for stats
   const stats = {
@@ -126,19 +130,19 @@ export default function ProfilePage() {
               {/* Profile Picture */}
               <div className="relative">
                 <div className="w-32 h-32 rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/30 flex items-center justify-center overflow-hidden">
-                  <Image
+                  {/* <Image
                     src={user.avatar}
                     alt={user.name}
                     width={120}
                     height={120}
                     className="w-full h-full object-cover"
-                  />
+                  /> */}
                 </div>
-                {user.verified && (
+                {/* {user.verified && (
                   <div className="absolute -bottom-2 -right-2 bg-success rounded-full p-2 border-4 border-white">
                     <Shield className="w-4 h-4 text-white" />
                   </div>
-                )}
+                )} */}
                 <button className="absolute top-0 right-0 bg-black/20 backdrop-blur-sm rounded-full p-2 hover:bg-black/30 transition-colors">
                   <Edit3 className="w-4 h-4" />
                 </button>
@@ -147,18 +151,20 @@ export default function ProfilePage() {
               {/* Profile Info */}
               <div className="flex-1 text-center md:text-left">
                 <div className="flex flex-col md:flex-row md:items-center gap-2 mb-2">
-                  <h1 className="text-3xl font-bold">{user.name}</h1>
-                  {user.verified && (
+                  <h1 className="text-3xl font-bold">
+                    {data?.profile?.displayName}
+                  </h1>
+                  {/* {user.verified && (
                     <span className="inline-flex items-center px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">
                       <Shield className="w-4 h-4 mr-1" />
                       Verificado
                     </span>
-                  )}
+                  )} */}
                 </div>
-                <p className="text-white/80 text-lg mb-4 max-w-2xl">
+                {/* <p className="text-white/80 text-lg mb-4 max-w-2xl">
                   {user.bio}
-                </p>
-                <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm text-white/70">
+                </p> */}
+                {/* <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm text-white/70">
                   <div className="flex items-center">
                     <Mail className="w-4 h-4 mr-1" />
                     {user.email}
@@ -175,7 +181,7 @@ export default function ProfilePage() {
                     <Calendar className="w-4 h-4 mr-1" />
                     Miembro desde {user.joinDate}
                   </div>
-                </div>
+                </div> */}
               </div>
 
               {/* Action Buttons */}
@@ -432,7 +438,7 @@ export default function ProfilePage() {
                     <span className="text-text-muted">Miembro desde</span>
                     <div className="flex items-center text-text-primary">
                       <Calendar className="w-4 h-4 mr-1" />
-                      <span className="font-medium">{user.joinDate}</span>
+                      {/* <span className="font-medium">{user.joinDate}</span> */}
                     </div>
                   </div>
                   <div className="flex items-center justify-between">

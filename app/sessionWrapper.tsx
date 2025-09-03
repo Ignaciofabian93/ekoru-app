@@ -54,7 +54,7 @@ export default function SessionWrapper({
       (async () => {
         try {
           const { data: userData, error } = await GetMe();
-          console.log("user", userData);
+          console.log("user session wrapper", userData);
           console.log("GraphQL error:", error);
 
           if (userData) {
@@ -72,6 +72,8 @@ export default function SessionWrapper({
             const refreshResponse = await RefreshToken();
             if (refreshResponse?.success) {
               const { data: refreshedData } = await GetMe();
+              console.log("refreshed user session wrapper", refreshedData);
+
               handleSession(refreshedData.me);
               setLoading(false);
               return;

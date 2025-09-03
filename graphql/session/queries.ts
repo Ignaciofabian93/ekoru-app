@@ -47,6 +47,29 @@ export const GET_ME = gql`
           returnPolicy
           businessHours
         }
+        ... on ServiceProfile {
+          id
+          sellerId
+          businessName
+          displayName
+          description
+          logo
+          coverImage
+          businessType
+          taxId
+          businessRegistration
+          allowExchanges
+          minOrderAmount
+          serviceArea
+          serviceHours
+          yearsOfExperience
+          licenseNumber
+          insuranceInfo
+          certifications
+          emergencyService
+          travelRadius
+          responsiveness
+        }
       }
       userCategory {
         id

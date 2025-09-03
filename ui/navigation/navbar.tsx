@@ -118,7 +118,7 @@ export default function Navbar() {
               </div>
 
               {/* User Account */}
-              <AccountMenu isLoggedIn={!!data.id} />
+              <AccountMenu isLoggedIn={!!data?.id} />
 
               {/* Mobile Menu Button */}
               <button

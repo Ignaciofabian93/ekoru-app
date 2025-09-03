@@ -1,34 +1,6 @@
-@import "tailwindcss";
-
-@theme {
-  /* Primary Brand Colors */
-  --color-primary: #71b64a; /* Main brand color */
-  --color-primary-dark: #2d5016; /* Darker primary for contrast */
-  --color-primary-light: #d8f999; /* Lighter primary for subtle elements */
-
-  /* Secondary Colors */
-  --color-secondary: #9bc53d; /* Accent color */
-  --color-accent: #8b4513; /* Additional accent */
-
-  /* Neutral Colors */
-  --color-neutral-light: #f4e4bc; /* Light neutral backgrounds */
-  --color-neutral: #696969; /* Medium neutral for borders/icons */
-  --color-neutral-dark: #2c2c2c; /* Dark neutral */
-
-  /* Complementary Colors */
-  --color-info: #87ceeb; /* Info/light blue */
-  --color-success: #71b64a; /* Success (same as primary) */
-  --color-warning: #f59e0b; /* Warning yellow */
-  --color-error: #dc2626; /* Error red */
-
-  /* Text Colors */
-  --color-white: #ffffff; /* Pure white background */
-  --color-black: #1a1a1a; /* Softer black text */
-  --color-text-primary: #1f2937; /* High contrast dark text */
-  --color-text-secondary: #6b7280; /* Medium contrast text */
-  --color-text-muted: #9ca3af; /* Low contrast text */
-  --color-text-inverse: #ffffff; /* White text for dark backgrounds */
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 button {
   cursor: pointer;
