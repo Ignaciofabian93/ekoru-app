@@ -2,13 +2,21 @@ import { LogOut, Package, UserRound } from "lucide-react";
 import Link from "next/link";
 import MainButton from "@/ui/buttons/mainButton";
 import { useProductStore } from "@/store/product";
+import { useRouter } from "next/navigation";
 
 type Props = {
   isLoggedIn?: boolean;
 };
 
 const LoggedInMenu = () => {
+  const router = useRouter();
   const { openModal } = useProductStore();
+
+  const handleLogout = async () => {
+    await fetch("/api/logout", { method: "POST", credentials: "include" });
+    router.refresh();
+  };
+
   return (
     <div className="flex flex-col items-center space-y-3 px-2 py-2">
       <Link
@@ -43,8 +51,6 @@ const LoggedInMenu = () => {
         hasIcon
         icon={Package}
         onClick={() => {
-          console.log("opening modal");
-
           openModal("create");
         }}
       />
@@ -53,6 +59,7 @@ const LoggedInMenu = () => {
         variant="destructive"
         hasIcon
         icon={LogOut}
+        onClick={handleLogout}
       />
     </div>
   );

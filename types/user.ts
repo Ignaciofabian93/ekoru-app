@@ -42,6 +42,7 @@ export type Seller = {
 };
 
 export type PersonProfile = {
+  __typename: "PersonProfile";
   id: string;
   sellerId: string;
   firstName: string;
@@ -57,6 +58,7 @@ export type PersonProfile = {
 };
 
 export type StoreProfile = {
+  __typename: "StoreProfile";
   id: string;
   sellerId: string;
   businessName: string;
@@ -76,6 +78,12 @@ export type StoreProfile = {
 
   // Business hours
   businessHours?: Record<string, { open: string; close: string }>; // {monday: {open: "9:00", close: "17:00"}, etc}
+};
+
+export type ServiceProfile = {
+  __typename: "ServiceProfile";
+  description?: string;
+  businessName?: string;
 };
 
 export type UserCategory = {

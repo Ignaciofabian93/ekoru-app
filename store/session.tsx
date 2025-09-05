@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Seller } from "../types/user";
+import type { PersonProfile, Seller } from "../types/user";
 
 type SessionStore = {
   data: Seller;
@@ -23,6 +23,7 @@ const defaultSeller: Seller = {
   accountType: "FREE", // or your default AccountType
   points: 0,
   userCategoryId: undefined,
+  profile: {} as PersonProfile,
 };
 
 const useSessionStore = create<SessionStore>((set) => ({

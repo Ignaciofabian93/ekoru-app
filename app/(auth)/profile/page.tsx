@@ -1,124 +1,48 @@
 "use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  User,
   Settings,
-  Heart,
-  ShoppingBag,
-  BarChart3,
-  Package,
   Calendar,
   Award,
-  Leaf,
-  TrendingUp,
   Eye,
-  Clock,
   MapPin,
   Mail,
   Phone,
   Edit3,
   Bell,
   Shield,
-  CreditCard,
+  Save,
 } from "lucide-react";
 import MainLayout from "@/ui/layout/mainLayout";
 import useSessionStore from "@/store/session";
+import { PersonProfile, ServiceProfile, StoreProfile } from "@/types/user";
+import { profileMenu } from "./_constants/data";
+import clsx from "clsx";
+import Modal from "@/ui/modals/modal";
+import { motion } from "framer-motion";
+import MainButton from "@/ui/buttons/mainButton";
+import usePersonalInfoStore from "./_store/personalInfo";
+import QuickActions from "./_ui/quickActions";
+import ImpactSummary from "./_ui/impactSummary";
+import RecentActivity from "./_ui/recentActivity";
 
 export default function ProfilePage() {
   const { data } = useSessionStore();
+  const { mode, isOpen, onClose, openModal } = usePersonalInfoStore();
   console.log("data:: ", data);
 
-  // const [user] = useState({
-  //   name: "María González",
-  //   email: "maria.gonzalez@email.com",
-  //   phone: "+1 234 567 8900",
-  //   location: "Barcelona, España",
-  //   joinDate: "Marzo 2024",
-  //   avatar: "/brand/icon.webp", // Using existing brand icon as placeholder
-  //   bio: "Apasionada por la sostenibilidad y el consumo consciente. Me encanta descubrir productos ecológicos que hacen la diferencia.",
-  //   verified: true,
-  // });
+  const profileImage =
+    data.profile?.__typename === "PersonProfile"
+      ? data.profile?.profileImage
+      : "/brand/icon.webp";
+  const logo =
+    data.profile?.__typename !== "PersonProfile"
+      ? data.profile?.logo
+      : "/brand/icon.webp";
+  // const coverImage = data.profile?.coverImage || "/brand/cover-photo.jpg";
 
-  // Mock data for stats
-  const stats = {
-    orders: 12,
-    favorites: 45,
-    impact: {
-      co2Saved: 127.5,
-      waterSaved: 2340,
-      wasteDiverted: 18.2,
-    },
-    listings: 3,
-  };
-
-  const recentActivity = [
-    {
-      id: 1,
-      type: "purchase",
-      title: "Compró Detergente Ecológico Orgánico 1L",
-      date: "Hace 2 días",
-      icon: ShoppingBag,
-    },
-    {
-      id: 2,
-      type: "favorite",
-      title: "Añadió Jabón Natural de Lavanda a favoritos",
-      date: "Hace 4 días",
-      icon: Heart,
-    },
-    {
-      id: 3,
-      type: "review",
-      title: "Escribió una reseña para Bolsas Reutilizables de Algodón",
-      date: "Hace 1 semana",
-      icon: Award,
-    },
-    {
-      id: 4,
-      type: "listing",
-      title: "Publicó Macetas de Bambú (intercambio)",
-      date: "Hace 2 semanas",
-      icon: Package,
-    },
-  ];
-
-  const quickActions = [
-    {
-      title: "Mis Pedidos",
-      description: `${stats.orders} pedidos realizados`,
-      href: "/profile/orders",
-      icon: ShoppingBag,
-      color: "bg-blue-500",
-      stats: stats.orders,
-    },
-    {
-      title: "Favoritos",
-      description: `${stats.favorites} productos guardados`,
-      href: "/profile/favorites",
-      icon: Heart,
-      color: "bg-red-500",
-      stats: stats.favorites,
-    },
-    {
-      title: "Dashboard de Impacto",
-      description: `${stats.impact.co2Saved} kg CO₂ ahorrado`,
-      href: "/profile/impact-dashboard",
-      icon: Leaf,
-      color: "bg-green-500",
-      stats: `${stats.impact.co2Saved}kg`,
-    },
-    {
-      title: "Mis Productos",
-      description: `${stats.listings} productos publicados`,
-      href: "/profile/my-products",
-      icon: Package,
-      color: "bg-purple-500",
-      stats: stats.listings,
-    },
-  ];
+  const isPerson = data.sellerType === "PERSON";
 
   return (
     <MainLayout>
@@ -130,19 +54,23 @@ export default function ProfilePage() {
               {/* Profile Picture */}
               <div className="relative">
                 <div className="w-32 h-32 rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/30 flex items-center justify-center overflow-hidden">
-                  {/* <Image
-                    src={user.avatar}
-                    alt={user.name}
+                  <Image
+                    src={
+                      isPerson
+                        ? profileImage ?? "/brand/icon.webp"
+                        : logo ?? "/brand/icon.webp"
+                    }
+                    alt={data.profile?.displayName || "Profile Image"}
                     width={120}
                     height={120}
                     className="w-full h-full object-cover"
-                  /> */}
+                  />
                 </div>
-                {/* {user.verified && (
+                {data.isVerified && (
                   <div className="absolute -bottom-2 -right-2 bg-success rounded-full p-2 border-4 border-white">
                     <Shield className="w-4 h-4 text-white" />
                   </div>
-                )} */}
+                )}
                 <button className="absolute top-0 right-0 bg-black/20 backdrop-blur-sm rounded-full p-2 hover:bg-black/30 transition-colors">
                   <Edit3 className="w-4 h-4" />
                 </button>
@@ -152,36 +80,43 @@ export default function ProfilePage() {
               <div className="flex-1 text-center md:text-left">
                 <div className="flex flex-col md:flex-row md:items-center gap-2 mb-2">
                   <h1 className="text-3xl font-bold">
-                    {data?.profile?.displayName}
+                    {isPerson
+                      ? (data.profile as PersonProfile)?.displayName ||
+                        (data.profile as PersonProfile)?.firstName
+                      : (data.profile as StoreProfile | ServiceProfile)
+                          ?.businessName}
                   </h1>
-                  {/* {user.verified && (
+                  {data.isVerified && (
                     <span className="inline-flex items-center px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">
                       <Shield className="w-4 h-4 mr-1" />
                       Verificado
                     </span>
-                  )} */}
+                  )}
                 </div>
-                {/* <p className="text-white/80 text-lg mb-4 max-w-2xl">
-                  {user.bio}
-                </p> */}
-                {/* <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm text-white/70">
+                <p className="text-white/80 text-lg mb-4 max-w-2xl">
+                  {isPerson
+                    ? (data.profile as PersonProfile)?.bio || "Sin biografía."
+                    : (data.profile as StoreProfile | ServiceProfile)
+                        ?.description || "Sin descripción."}
+                </p>
+                <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm text-white/70">
                   <div className="flex items-center">
                     <Mail className="w-4 h-4 mr-1" />
-                    {user.email}
+                    {data.email}
                   </div>
                   <div className="flex items-center">
                     <Phone className="w-4 h-4 mr-1" />
-                    {user.phone}
+                    {data.phone || "Sin teléfono registrado"}
                   </div>
                   <div className="flex items-center">
                     <MapPin className="w-4 h-4 mr-1" />
-                    {user.location}
+                    {data.address || "Sin dirección registrada"}
                   </div>
                   <div className="flex items-center">
                     <Calendar className="w-4 h-4 mr-1" />
-                    Miembro desde {user.joinDate}
+                    Miembro desde {data.createdAt.split("T")[0]}
                   </div>
-                </div> */}
+                </div>
               </div>
 
               {/* Action Buttons */}
@@ -208,129 +143,13 @@ export default function ProfilePage() {
             {/* Left Column - Quick Actions & Stats */}
             <div className="lg:col-span-2 space-y-8">
               {/* Quick Actions Grid */}
-              <div>
-                <h2 className="text-2xl font-bold text-text-primary mb-6">
-                  Acceso Rápido
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {quickActions.map((action) => {
-                    const IconComponent = action.icon;
-                    return (
-                      <Link
-                        key={action.title}
-                        href={action.href}
-                        className="group bg-white rounded-xl shadow-sm border border-neutral/20 p-6 hover:shadow-md hover:border-primary/30 transition-all duration-200"
-                      >
-                        <div className="flex items-center justify-between mb-4">
-                          <div className={`${action.color} rounded-lg p-3`}>
-                            <IconComponent className="w-6 h-6 text-white" />
-                          </div>
-                          <span className="text-2xl font-bold text-text-primary group-hover:text-primary transition-colors">
-                            {action.stats}
-                          </span>
-                        </div>
-                        <h3 className="font-semibold text-text-primary mb-1 group-hover:text-primary transition-colors">
-                          {action.title}
-                        </h3>
-                        <p className="text-text-muted text-sm">
-                          {action.description}
-                        </p>
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
+              <QuickActions />
 
               {/* Environmental Impact Summary */}
-              <div className="bg-gradient-to-r from-primary/5 to-success/5 rounded-xl p-6 border border-primary/20">
-                <div className="flex items-center mb-6">
-                  <div className="bg-primary rounded-lg p-3 mr-4">
-                    <Leaf className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-text-primary">
-                      Tu Impacto Ecológico
-                    </h3>
-                    <p className="text-text-muted">
-                      Contribución al medio ambiente este mes
-                    </p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-primary mb-1">
-                      {stats.impact.co2Saved} kg
-                    </div>
-                    <div className="text-sm text-text-muted">CO₂ Ahorrado</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-info mb-1">
-                      {stats.impact.waterSaved} L
-                    </div>
-                    <div className="text-sm text-text-muted">Agua Ahorrada</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-success mb-1">
-                      {stats.impact.wasteDiverted} kg
-                    </div>
-                    <div className="text-sm text-text-muted">
-                      Residuos Evitados
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-4 pt-4 border-t border-primary/20">
-                  <Link
-                    href="/profile/impact-dashboard"
-                    className="inline-flex items-center text-primary hover:text-primary-dark font-medium transition-colors"
-                  >
-                    Ver impacto detallado
-                    <TrendingUp className="w-4 h-4 ml-1" />
-                  </Link>
-                </div>
-              </div>
+              <ImpactSummary />
 
               {/* Recent Activity */}
-              <div>
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-text-primary">
-                    Actividad Reciente
-                  </h2>
-                  <Link
-                    href="/profile/activity"
-                    className="text-primary hover:text-primary-dark font-medium transition-colors"
-                  >
-                    Ver todo
-                  </Link>
-                </div>
-                <div className="bg-white rounded-xl shadow-sm border border-neutral/20">
-                  {recentActivity.map((activity, index) => {
-                    const IconComponent = activity.icon;
-                    return (
-                      <div
-                        key={activity.id}
-                        className={`p-4 flex items-center ${
-                          index !== recentActivity.length - 1
-                            ? "border-b border-neutral/10"
-                            : ""
-                        }`}
-                      >
-                        <div className="bg-neutral-light rounded-lg p-2 mr-4">
-                          <IconComponent className="w-5 h-5 text-primary" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-medium text-text-primary">
-                            {activity.title}
-                          </p>
-                          <div className="flex items-center text-text-muted text-sm">
-                            <Clock className="w-4 h-4 mr-1" />
-                            {activity.date}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+              <RecentActivity />
             </div>
 
             {/* Right Column - Profile Navigation & Additional Info */}
@@ -341,56 +160,45 @@ export default function ProfilePage() {
                   Gestionar Perfil
                 </h3>
                 <nav className="space-y-2">
-                  {[
-                    {
-                      title: "Información Personal",
-                      href: "/profile/settings",
-                      icon: User,
-                    },
-                    {
-                      title: "Pedidos",
-                      href: "/profile/orders",
-                      icon: ShoppingBag,
-                    },
-                    {
-                      title: "Lista de Deseos",
-                      href: "/profile/favorites",
-                      icon: Heart,
-                    },
-                    {
-                      title: "Mis Productos",
-                      href: "/profile/my-products",
-                      icon: Package,
-                    },
-                    {
-                      title: "Dashboard de Impacto",
-                      href: "/profile/impact-dashboard",
-                      icon: BarChart3,
-                    },
-                    {
-                      title: "Métodos de Pago",
-                      href: "/profile/payment-methods",
-                      icon: CreditCard,
-                    },
-                    {
-                      title: "Configuración",
-                      href: "/profile/settings",
-                      icon: Settings,
-                    },
-                  ].map((item) => {
+                  {profileMenu.map((item) => {
                     const IconComponent = item.icon;
-                    return (
-                      <Link
-                        key={item.title}
-                        href={item.href}
-                        className="flex items-center p-3 rounded-lg hover:bg-neutral-light/50 transition-colors group"
-                      >
-                        <IconComponent className="w-5 h-5 mr-3 text-neutral group-hover:text-primary transition-colors" />
-                        <span className="font-medium text-text-secondary group-hover:text-primary transition-colors">
-                          {item.title}
-                        </span>
-                      </Link>
-                    );
+                    if (item.name === "personalInfo") {
+                      return (
+                        <button
+                          key={item.name}
+                          onClick={openModal}
+                          className={clsx(
+                            "flex w-full items-center p-3 rounded-lg hover:bg-neutral-light/50 transition-colors group",
+                            {
+                              "opacity-50 pointer-events-none": !item.enabled,
+                            }
+                          )}
+                        >
+                          <IconComponent className="w-5 h-5 mr-3 text-neutral group-hover:text-primary transition-colors" />
+                          <span className="font-medium text-text-secondary group-hover:text-primary transition-colors">
+                            {item.title}
+                          </span>
+                        </button>
+                      );
+                    } else {
+                      return (
+                        <Link
+                          key={item.title}
+                          href={item.href}
+                          className={clsx(
+                            "flex items-center p-3 rounded-lg hover:bg-neutral-light/50 transition-colors group",
+                            {
+                              "opacity-50 pointer-events-none": !item.enabled,
+                            }
+                          )}
+                        >
+                          <IconComponent className="w-5 h-5 mr-3 text-neutral group-hover:text-primary transition-colors" />
+                          <span className="font-medium text-text-secondary group-hover:text-primary transition-colors">
+                            {item.title}
+                          </span>
+                        </Link>
+                      );
+                    }
                   })}
                 </nav>
               </div>
@@ -454,6 +262,51 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        title={"Editar Perfil"}
+        size="lg"
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.3 }}
+          className="space-y-6"
+        >
+          <div className="text-sm text-gray-600">
+            {mode === "create"
+              ? "Fill in the details to add a new product to your store."
+              : "Update the product information below."}
+          </div>
+          <p>jashsjhasjas</p>
+
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.3 }}
+            className="flex justify-end space-x-3 pt-4 border-t border-gray-200"
+          >
+            <MainButton
+              text="Cancelar"
+              onClick={onClose}
+              disabled={false}
+              variant="outline"
+              hasIcon={false}
+            />
+            <MainButton
+              text={"Actualizar Perfil"}
+              variant="primary"
+              onClick={() => {
+                console.log("Main button clicked");
+              }}
+              hasIcon
+              icon={Save}
+            />
+          </motion.div>
+        </motion.div>
+      </Modal>
     </MainLayout>
   );
 }
