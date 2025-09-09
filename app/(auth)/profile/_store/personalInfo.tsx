@@ -7,7 +7,6 @@ type PersonalInfoStore = {
   isOpen: boolean;
   openModal: () => void;
   onClose: () => void;
-  mode: "create" | "edit";
 };
 
 const usePersonalInfoStore = create<PersonalInfoStore>((set) => ({
@@ -15,7 +14,6 @@ const usePersonalInfoStore = create<PersonalInfoStore>((set) => ({
   setProfile: (profile) => set({ profile }),
   isOpen: false,
   openModal: () => set({ isOpen: true }),
-  mode: "create",
   onClose: () => set({ isOpen: false }),
 }));
 
