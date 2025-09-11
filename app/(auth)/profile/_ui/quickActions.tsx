@@ -49,7 +49,7 @@ const quickActions = [
 
 export default function QuickActions() {
   return (
-    <div>
+    <article>
       <h2 className="text-2xl font-bold text-text-primary mb-6">
         Acceso Rápido
       </h2>
@@ -78,6 +78,6 @@ export default function QuickActions() {
           );
         })}
       </div>
-    </div>
+    </article>
   );
 }

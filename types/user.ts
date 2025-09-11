@@ -18,7 +18,7 @@ export type Seller = {
   isVerified: boolean;
   createdAt: string;
   updatedAt: string;
-  profile: PersonProfile | StoreProfile;
+  profile: PersonProfile | StoreProfile | ServiceProfile;
 
   // Location information
   address: string;
@@ -39,6 +39,11 @@ export type Seller = {
   accountType: AccountType;
   points: number;
   userCategoryId?: number;
+  county: { id: number; county: string } | null;
+  region: { id: number; region: string } | null;
+  country: { id: number; country: string } | null;
+  city: { id: number; city: string } | null;
+  userCategory?: UserCategory | null;
 };
 
 export type PersonProfile = {
@@ -82,8 +87,25 @@ export type StoreProfile = {
 
 export type ServiceProfile = {
   __typename: "ServiceProfile";
+  id: string;
+  sellerId: string;
+  businessName: string;
+  displayName?: string; // Custom display name
   description?: string;
-  businessName?: string;
+  logo?: string;
+  coverImage?: string;
+  businessType?: string; // "retail", "manufacturer", etc.
+  taxId?: string;
+  businessRegistration?: string;
+
+  // Store-specific settings
+  allowExchanges: boolean; // Stores typically don't exchange
+  minOrderAmount?: number; // Minimum order amount in cents
+  shippingPolicy?: string;
+  returnPolicy?: string;
+
+  // Business hours
+  businessHours?: Record<string, { open: string; close: string }>; // {monday: {open: "9:00", close: "17:00"}, etc}
 };
 
 export type UserCategory = {

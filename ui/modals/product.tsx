@@ -18,7 +18,6 @@ type ProductFormData = {
 
 export default function ProductModal() {
   const { isOpen, onClose, mode, selectedProductId } = useProductStore();
-  console.log("is opened:: ", isOpen);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
