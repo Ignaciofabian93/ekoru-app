@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Calendar,
   Camera,
@@ -6,13 +7,12 @@ import {
   MapPin,
   Phone,
   Shield,
-  X,
 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
 import useCoverImage from "../_hooks/useCoverImage";
 import useProfileImage from "../_hooks/useProfileImage";
 import usePersonalInfo from "../_hooks/usePersonalInfo";
+import ImageViewer from "@/ui/modals/imageViewer";
 
 export default function ProfileHeader() {
   const { username, bio, location, email, phone, memberSince, isVerified } =
@@ -34,8 +34,36 @@ export default function ProfileHeader() {
 
   const [showImageModal, setShowImageModal] = useState(false);
 
-  const openImageModal = () => setShowImageModal(true);
-  const closeImageModal = () => setShowImageModal(false);
+  const openImageModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowImageModal(true);
+  };
+
+  const closeImageModal = () => {
+    setShowImageModal(false);
+  };
+
+  // Handle body scroll lock and escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeImageModal();
+      }
+    };
+
+    if (showImageModal) {
+      document.body.style.overflow = "hidden";
+      document.addEventListener("keydown", handleEscape);
+    } else {
+      document.body.style.overflow = "unset";
+      document.removeEventListener("keydown", handleEscape);
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [showImageModal]);
 
   console.log("cover image:: ", coverImage);
 
@@ -61,7 +89,7 @@ export default function ProfileHeader() {
         <button
           onClick={triggerFileUpload}
           disabled={isUploading}
-          className="absolute top-4 right-4 z-30 bg-black/40 backdrop-blur-sm text-white rounded-lg p-3 hover:bg-black/60 transition-colors duration-200 disabled:opacity-50"
+          className="absolute top-4 right-4 z-20 bg-black/40 backdrop-blur-sm text-white rounded-lg p-3 hover:bg-black/60 transition-colors duration-200 disabled:opacity-50"
           title="Cambiar imagen de portada"
         >
           {isUploading ? (
@@ -81,7 +109,7 @@ export default function ProfileHeader() {
         />
 
         {/* Profile Content Overlaid on Cover Image */}
-        <div className="absolute inset-0 z-20 flex items-center">
+        <div className="absolute inset-0 z-10 flex items-center">
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 sm:gap-6">
               {/* Profile Picture */}
@@ -101,7 +129,7 @@ export default function ProfileHeader() {
                 <button
                   onClick={triggerProfileFileUpload}
                   disabled={isProfileImageUploading}
-                  className="absolute top-0 right-0 bg-black/40 text-white backdrop-blur-sm rounded-full p-1.5 sm:p-2 hover:bg-black/60 transition-colors z-10"
+                  className="absolute top-0 right-0 bg-black/40 text-white backdrop-blur-sm rounded-full p-1.5 sm:p-2 hover:bg-black/60 transition-colors"
                 >
                   <Edit3 className="w-3 h-3 sm:w-4 sm:h-4" />
                 </button>
@@ -154,47 +182,23 @@ export default function ProfileHeader() {
               </div>
 
               {/* Action Buttons */}
-              {/* <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 flex-shrink-0">
-                <button className="inline-flex items-center px-4 py-2 sm:px-6 sm:py-3 bg-white/20 backdrop-blur-sm text-white font-medium rounded-lg hover:bg-white/30 transition-colors duration-200 border border-white/30 text-sm sm:text-base">
-                  <Bell className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                  Notificaciones
-                </button>
-              </div> */}
             </div>
           </div>
         </div>
       </div>
 
       {/* Profile Image Modal */}
-      {showImageModal && (
-        <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-300"
-          onClick={closeImageModal}
-        >
-          <div className="relative max-w-2xl max-h-[80vh] w-full h-full flex items-center justify-center">
-            {/* Close Button */}
-            <button
-              onClick={closeImageModal}
-              className="absolute top-4 right-4 z-60 bg-black/40 backdrop-blur-sm text-white rounded-full p-3 hover:bg-black/60 transition-colors duration-200"
-              title="Cerrar"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            {/* Large Profile Image */}
-            <div className="relative w-full h-full max-w-md max-h-md aspect-square animate-in zoom-in duration-300">
-              <Image
-                src={profileImage}
-                alt={username || "Profile Image"}
-                fill
-                className="object-cover rounded-2xl shadow-2xl"
-                sizes="(max-width: 768px) 90vw, 512px"
-                priority
-              />
-            </div>
-          </div>
-        </div>
-      )}
+      <ImageViewer isOpen={showImageModal} onClose={closeImageModal}>
+        {/* Large Profile Image */}
+        <Image
+          src={profileImage}
+          alt={username || "Profile Image"}
+          fill
+          className="object-cover rounded-2xl shadow-2xl"
+          sizes="(max-width: 768px) 90vw, 512px"
+          priority
+        />
+      </ImageViewer>
     </section>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { Loader2, ArrowRight, type LucideIcon } from "lucide-react";
 import clsx from "clsx";
 
@@ -66,7 +66,7 @@ export default function MainButton({
           </motion.div>
         ) : (
           <motion.div
-            key="sign-in"
+            key="text"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

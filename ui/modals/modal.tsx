@@ -1,5 +1,6 @@
-import { motion, AnimatePresence } from "framer-motion";
+"use client";
 import { useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 
 type Props = {
   isOpen: boolean;
@@ -23,7 +24,7 @@ export default function Modal({
   title,
   size = "md",
 }: Props) {
-  // Close modal on escape key
+  // Close modal on escape key and handle body scroll
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -33,48 +34,52 @@ export default function Modal({
 
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
+      // Store original overflow
+      const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
+
+      return () => {
+        document.removeEventListener("keydown", handleEscape);
+        document.body.style.overflow = originalOverflow || "unset";
+      };
     }
 
     return () => {
       document.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "unset";
     };
   }, [isOpen, onClose]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait" initial={false}>
       {isOpen && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          key="modal"
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
         >
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={onClose}
           />
 
           {/* Modal Content */}
           <motion.div
-            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+            initial={{ scale: 0.9, opacity: 0, y: 30 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+            exit={{ scale: 0.9, opacity: 0, y: 30 }}
             transition={{
               type: "spring",
               damping: 25,
               stiffness: 300,
-              duration: 0.3,
             }}
+            onClick={(e) => e.stopPropagation()}
             className={`
               relative w-full ${sizeClasses[size]} max-h-[90vh] 
-              bg-white rounded-lg shadow-xl overflow-hidden
+              bg-white rounded-lg shadow-2xl overflow-hidden z-10
             `}
           >
             {/* Header */}

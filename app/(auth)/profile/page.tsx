@@ -2,7 +2,7 @@
 import { Calendar, Award, Eye, Save } from "lucide-react";
 import MainLayout from "@/ui/layout/mainLayout";
 import Modal from "@/ui/modals/modal";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import MainButton from "@/ui/buttons/mainButton";
 import QuickActions from "./_ui/quickActions";
 import ImpactSummary from "./_ui/impactSummary";
