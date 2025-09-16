@@ -8,7 +8,7 @@ type SessionStore = {
   toggleEdit: () => void;
 };
 
-const defaultSeller: Seller = {
+export const defaultSeller: Seller = {
   id: "",
   email: "",
   password: "",
@@ -24,6 +24,10 @@ const defaultSeller: Seller = {
   points: 0,
   userCategoryId: undefined,
   profile: {} as PersonProfile,
+  county: { id: 0, county: "", cityId: 0 },
+  region: { id: 0, region: "", countryId: 0 },
+  country: { id: 0, country: "" },
+  city: { id: 0, city: "", regionId: 0 },
 };
 
 const useSessionStore = create<SessionStore>((set) => ({

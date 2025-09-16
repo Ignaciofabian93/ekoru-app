@@ -1,12 +1,29 @@
-import clsx from "clsx";
+import { motion } from "motion/react";
+import { Save } from "lucide-react";
 import { profileMenu } from "../_constants/data";
+import clsx from "clsx";
 import Link from "next/link";
+import useProfileForm from "../_hooks/useProfileForm";
+import Modal from "@/ui/modals/modal";
+import MainButton from "@/ui/buttons/mainButton";
+import UserForm from "./forms/userForm";
 
-type Props = {
-  openModal: () => void;
-};
+export default function ProfileNavigation() {
+  const {
+    form,
+    isOpen,
+    openModal,
+    closeModal,
+    countiesData,
+    regionsData,
+    citiesData,
+    countriesData,
+    countiesLoading,
+    countriesLoading,
+    regionsLoading,
+    citiesLoading,
+  } = useProfileForm();
 
-export default function ProfileNavigation({ openModal }: Props) {
   return (
     <section className="bg-white rounded-xl shadow-sm border border-neutral/20 p-6">
       <h3 className="text-lg font-bold text-text-primary mb-4">
@@ -54,6 +71,65 @@ export default function ProfileNavigation({ openModal }: Props) {
           }
         })}
       </nav>
+      <Modal
+        key={"profile-modal"}
+        isOpen={isOpen}
+        onClose={closeModal}
+        title={"Editar Perfil"}
+        size="lg"
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.3 }}
+          className="space-y-6"
+        >
+          {/* MODAL CONTENT - FORM */}
+          <div className="text-sm text-gray-600">
+            <UserForm
+              formData={form}
+              onChange={() => {}}
+              countries={countriesData}
+              regions={regionsData}
+              cities={citiesData}
+              counties={countiesData}
+              handleSubmit={() => {
+                console.log("Form submitted");
+                console.log("Form data: ", form);
+              }}
+              countiesLoading={countiesLoading}
+              citiesLoading={citiesLoading}
+              regionsLoading={regionsLoading}
+              countriesLoading={countriesLoading}
+            />
+          </div>
+
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.3 }}
+            className="flex justify-end space-x-3 pt-4 border-t border-gray-200"
+          >
+            <MainButton
+              text="Cancelar"
+              onClick={closeModal}
+              disabled={false}
+              variant="outline"
+              hasIcon={false}
+            />
+            <MainButton
+              text={"Actualizar Perfil"}
+              variant="primary"
+              onClick={() => {
+                console.log("Main button clicked");
+              }}
+              hasIcon
+              icon={Save}
+            />
+          </motion.div>
+        </motion.div>
+      </Modal>
     </section>
   );
 }

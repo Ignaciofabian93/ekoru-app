@@ -34,7 +34,7 @@ export default function Input({
 }: Props) {
   const [focusedField, setFocusedField] = useState<string | null>(null);
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full">
       <label htmlFor={name} className="text-sm font-medium text-gray-700">
         {label}
       </label>

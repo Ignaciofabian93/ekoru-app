@@ -1,4 +1,5 @@
 import { type AccountType, type ContactMethod, type SellerType } from "./enums";
+import { City, Country, County, Region } from "./location";
 
 export type Admin = {
   id: string;
@@ -39,10 +40,10 @@ export type Seller = {
   accountType: AccountType;
   points: number;
   userCategoryId?: number;
-  county: { id: number; county: string } | null;
-  region: { id: number; region: string } | null;
-  country: { id: number; country: string } | null;
-  city: { id: number; city: string } | null;
+  county: County | null;
+  region: Region | null;
+  country: Country | null;
+  city: City | null;
   userCategory?: UserCategory | null;
 };
 
