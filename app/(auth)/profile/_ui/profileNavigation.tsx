@@ -22,6 +22,10 @@ export default function ProfileNavigation() {
     countriesLoading,
     regionsLoading,
     citiesLoading,
+    updateCountry,
+    updateRegion,
+    updateCity,
+    updateCounty,
   } = useProfileForm();
 
   return (
@@ -101,6 +105,10 @@ export default function ProfileNavigation() {
               citiesLoading={citiesLoading}
               regionsLoading={regionsLoading}
               countriesLoading={countriesLoading}
+              updateCountry={updateCountry}
+              updateRegion={updateRegion}
+              updateCity={updateCity}
+              updateCounty={updateCounty}
             />
           </div>
 
@@ -109,7 +117,7 @@ export default function ProfileNavigation() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.3 }}
-            className="flex justify-end space-x-3 pt-4 border-t border-gray-200"
+            className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4 border-t border-gray-200"
           >
             <MainButton
               text="Cancelar"

@@ -25,28 +25,31 @@ export default function useProfileForm() {
     useLazyQuery(GET_COUNTIES);
 
   console.log("countries data:: ", countriesData);
+  console.log("regions data:: ", regionsData);
+  console.log("cities data:: ", citiesData);
+  console.log("counties data:: ", countiesData);
 
   useEffect(() => {
     Countries();
   }, [Countries]);
 
   useEffect(() => {
-    if (form.countryId) {
-      Regions({ variables: { countryId: form.countryId } });
+    if (form.country?.id) {
+      Regions({ variables: { countryId: form.country.id } });
     }
-  }, [form.countryId, Regions]);
+  }, [form.country?.id, Regions]);
 
   useEffect(() => {
-    if (form.regionId) {
-      Cities({ variables: { regionId: form.regionId } });
+    if (form.region?.id) {
+      Cities({ variables: { regionId: form.region.id } });
     }
-  }, [form.regionId, Cities]);
+  }, [form.region?.id, Cities]);
 
   useEffect(() => {
-    if (form.cityId) {
-      Counties({ variables: { cityId: form.cityId } });
+    if (form.city?.id) {
+      Counties({ variables: { cityId: form.city.id } });
     }
-  }, [form.cityId, Counties]);
+  }, [form.city?.id, Counties]);
 
   useEffect(() => {
     const loadProfile = () => {
@@ -58,6 +61,58 @@ export default function useProfileForm() {
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
+
+  const updateCountry = (countryId: number) => {
+    const country = countriesData.countries.find(
+      (c: Country) => Number(c.id) === countryId
+    );
+    if (country) {
+      setForm({
+        ...form,
+        country,
+        region: { id: 0, region: "", countryId: country.id },
+        city: { id: 0, city: "", regionId: 0 },
+        county: { id: 0, county: "", cityId: 0 },
+      });
+    }
+  };
+
+  const updateRegion = (regionId: number) => {
+    const region = regionsData.regions.find(
+      (r: Region) => Number(r.id) === regionId
+    );
+    if (region) {
+      setForm({
+        ...form,
+        region,
+        city: { id: 0, city: "", regionId: region.id },
+        county: { id: 0, county: "", cityId: 0 },
+      });
+    }
+  };
+
+  const updateCity = (cityId: number) => {
+    const city = citiesData.cities.find((c: City) => Number(c.id) === cityId);
+    if (city) {
+      setForm({
+        ...form,
+        city,
+        county: { id: 0, county: "", cityId: city.id },
+      });
+    }
+  };
+
+  const updateCounty = (countyId: number) => {
+    const county = countiesData.counties.find(
+      (c: County) => Number(c.id) === countyId
+    );
+    if (county) {
+      setForm({
+        ...form,
+        county,
+      });
+    }
+  };
 
   return {
     form,
@@ -72,5 +127,9 @@ export default function useProfileForm() {
     citiesLoading,
     countiesData: (countiesData?.counties as County[]) || [],
     countiesLoading,
+    updateCountry,
+    updateRegion,
+    updateCity,
+    updateCounty,
   };
 }

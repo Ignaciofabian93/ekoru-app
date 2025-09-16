@@ -13,9 +13,19 @@ export type ProductCondition =
   | "USED"
   | "REFURBISHED";
 
-export type TransactionKind = "PURCHASE" | "EXCHANGE" | "GIFT" | "REFERRAL" | "BONUS";
+export type TransactionKind =
+  | "PURCHASE"
+  | "EXCHANGE"
+  | "GIFT"
+  | "REFERRAL"
+  | "BONUS";
 
-export type ShippingStage = "PREPARING" | "SHIPPED" | "DELIVERED" | "RETURNED" | "CANCELED";
+export type ShippingStage =
+  | "PREPARING"
+  | "SHIPPED"
+  | "DELIVERED"
+  | "RETURNED"
+  | "CANCELED";
 
 export type Badge =
   | "POPULAR"
@@ -52,10 +62,23 @@ export type Badge =
   | "IN_HOUSE_PICKUP"
   | "IN_MID_POINT_PICKUP";
 
-export type ContactMethod = "EMAIL" | "WHATSAPP" | "ALL";
+export type ContactMethod =
+  | "EMAIL"
+  | "PHONE"
+  | "INSTAGRAM"
+  | "FACEBOOK"
+  | "TIKTOK"
+  | "WEBSITE"
+  | "WHATSAPP"
+  | "ALL";
 
 export type WeightUnit = "KG" | "LB" | "OZ" | "G";
 
 export type ProductSize = "XS" | "S" | "M" | "L" | "XL";
 
-export type ExchangeStatus = "PENDING" | "ACCEPTED" | "DECLINED" | "COMPLETED" | "CANCELLED";
+export type ExchangeStatus =
+  | "PENDING"
+  | "ACCEPTED"
+  | "DECLINED"
+  | "COMPLETED"
+  | "CANCELLED";

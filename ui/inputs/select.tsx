@@ -184,7 +184,7 @@ export default function Select({
                     : undefined
                 }
                 tabIndex={-1}
-                className="absolute top-full left-0 z-50 mt-1 w-full bg-white border-2 border-primary rounded-xl shadow-2xl"
+                className="absolute top-full left-0 z-50 mt-1 w-full bg-white border-2 border-primary rounded-xl shadow-2xl overflow-hidden"
               >
                 <input
                   type="text"
