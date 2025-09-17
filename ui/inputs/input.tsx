@@ -19,6 +19,8 @@ type Props = React.HTMLAttributes<HTMLInputElement> & {
   maxLength?: number;
   minLength?: number;
   size?: "sm" | "md" | "lg" | "full";
+  isInvalid?: boolean;
+  errorMessage?: string;
 };
 
 export default function Input({
@@ -35,6 +37,8 @@ export default function Input({
   maxLength = 50,
   minLength = 2,
   size = "full",
+  isInvalid = false,
+  errorMessage,
 }: Props) {
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
@@ -80,10 +84,15 @@ export default function Input({
               {
                 "pl-3": !hasIcon,
                 "pl-10": hasIcon,
+                "border-red-600 focus:ring-red-600 focus:border-red-600":
+                  isInvalid,
               }
             )}
             placeholder={placeholder}
           />
+          {isInvalid && (
+            <p className="absolute text-xs text-red-600">{errorMessage}</p>
+          )}
           {type === "password" && (
             <button
               type="button"

@@ -6,9 +6,15 @@ import {
 } from "@/graphql/location/queries";
 import useSessionStore, { defaultSeller } from "@/store/session";
 import { City, Country, County, Region } from "@/types/location";
-import { Seller } from "@/types/user";
+import { Seller, PersonProfile } from "@/types/user";
 import { useLazyQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
+import {
+  formatBirthdayInput,
+  convertToStorageFormat,
+  convertToDisplayFormat,
+  validateBirthday,
+} from "@/utils/dateUtils";
 
 export default function useProfileForm() {
   const { data } = useSessionStore();
@@ -48,7 +54,21 @@ export default function useProfileForm() {
 
   useEffect(() => {
     const loadProfile = () => {
-      setForm({ ...data });
+      const profileData = { ...data };
+
+      // Convert birthday from storage format (YYYY-MM-DD) to display format (DD-MM-YYYY)
+      if (
+        profileData.profile &&
+        "birthday" in profileData.profile &&
+        profileData.profile.birthday
+      ) {
+        profileData.profile = {
+          ...profileData.profile,
+          birthday: convertToDisplayFormat(profileData.profile.birthday),
+        };
+      }
+
+      setForm(profileData);
     };
 
     loadProfile();
@@ -134,6 +154,32 @@ export default function useProfileForm() {
     setForm({ ...form, profile: { ...form.profile, [name]: value } });
   };
 
+  const handleBirthdayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedValue = formatBirthdayInput(e.target.value);
+
+    // Only update if this is a person profile
+    if (form.sellerType === "PERSON" && form.profile) {
+      setForm({
+        ...form,
+        profile: { ...form.profile, birthday: formattedValue } as PersonProfile,
+      });
+    }
+  };
+
+  const getBirthdayForStorage = (): string => {
+    if (form.profile && "birthday" in form.profile && form.profile.birthday) {
+      return convertToStorageFormat(form.profile.birthday);
+    }
+    return "";
+  };
+
+  const validateBirthdayField = (): { isValid: boolean; error?: string } => {
+    if (form.profile && "birthday" in form.profile && form.profile.birthday) {
+      return validateBirthday(form.profile.birthday);
+    }
+    return { isValid: true };
+  };
+
   return {
     form,
     isOpen,
@@ -154,5 +200,8 @@ export default function useProfileForm() {
     handleUpdateUser,
     updatePreferredContactMethod,
     handleUpdateProfile,
+    handleBirthdayChange,
+    getBirthdayForStorage,
+    validateBirthdayField,
   };
 }

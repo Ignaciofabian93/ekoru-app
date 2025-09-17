@@ -46,6 +46,8 @@ type Props = {
       | React.ChangeEvent<HTMLTextAreaElement>
       | React.ChangeEvent<HTMLInputElement>
   ) => void;
+  handleBirthdayChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  validateBirthdayField: () => { isValid: boolean; error?: string };
 };
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -82,6 +84,8 @@ export default function UserForm({
   handleUpdateUser,
   updatePreferredContactMethod,
   handleUpdateProfile,
+  handleBirthdayChange,
+  validateBirthdayField,
 }: Props) {
   console.log("formData:: ", formData);
 
@@ -185,10 +189,11 @@ export default function UserForm({
             label="Fecha de Nacimiento"
             type="text"
             value={(formData.profile as PersonProfile)?.birthday || ""}
-            onChange={
-              handleUpdateProfile as React.ChangeEventHandler<HTMLInputElement>
-            }
-            placeholder="01/12/2000"
+            onChange={handleBirthdayChange}
+            placeholder="DD-MM-YYYY"
+            maxLength={10}
+            isInvalid={!validateBirthdayField().isValid}
+            errorMessage={validateBirthdayField().error}
           />
         )}
         <Select

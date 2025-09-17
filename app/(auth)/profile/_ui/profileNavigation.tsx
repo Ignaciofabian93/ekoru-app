@@ -29,6 +29,8 @@ export default function ProfileNavigation() {
     handleUpdateUser,
     updatePreferredContactMethod,
     handleUpdateProfile,
+    handleBirthdayChange,
+    validateBirthdayField,
   } = useProfileForm();
 
   return (
@@ -115,6 +117,8 @@ export default function ProfileNavigation() {
               handleUpdateUser={handleUpdateUser}
               updatePreferredContactMethod={updatePreferredContactMethod}
               handleUpdateProfile={handleUpdateProfile}
+              handleBirthdayChange={handleBirthdayChange}
+              validateBirthdayField={validateBirthdayField}
             />
           </div>
 
