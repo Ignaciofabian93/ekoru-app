@@ -26,6 +26,9 @@ export default function ProfileNavigation() {
     updateRegion,
     updateCity,
     updateCounty,
+    handleUpdateUser,
+    updatePreferredContactMethod,
+    handleUpdateProfile,
   } = useProfileForm();
 
   return (
@@ -109,6 +112,9 @@ export default function ProfileNavigation() {
               updateRegion={updateRegion}
               updateCity={updateCity}
               updateCounty={updateCounty}
+              handleUpdateUser={handleUpdateUser}
+              updatePreferredContactMethod={updatePreferredContactMethod}
+              handleUpdateProfile={handleUpdateProfile}
             />
           </div>
 

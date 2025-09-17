@@ -1,6 +1,6 @@
 export type AccountType = "FREE" | "PLUS" | "PREMIUM";
 
-export type SellerType = "PERSON" | "STORE";
+export type SellerType = "PERSON" | "STORE" | "SERVICE";
 
 export type ProductCondition =
   | "NEW"

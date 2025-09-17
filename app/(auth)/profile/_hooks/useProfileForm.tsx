@@ -24,11 +24,6 @@ export default function useProfileForm() {
   const [Counties, { data: countiesData, loading: countiesLoading }] =
     useLazyQuery(GET_COUNTIES);
 
-  console.log("countries data:: ", countriesData);
-  console.log("regions data:: ", regionsData);
-  console.log("cities data:: ", citiesData);
-  console.log("counties data:: ", countiesData);
-
   useEffect(() => {
     Countries();
   }, [Countries]);
@@ -114,6 +109,31 @@ export default function useProfileForm() {
     }
   };
 
+  const updatePreferredContactMethod = (method: string) => {
+    setForm({
+      ...form,
+      preferredContactMethod: method as Seller["preferredContactMethod"],
+    });
+  };
+
+  const handleUpdateUser = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleUpdateProfile = (
+    e:
+      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+    setForm({ ...form, profile: { ...form.profile, [name]: value } });
+  };
+
   return {
     form,
     isOpen,
@@ -131,5 +151,8 @@ export default function useProfileForm() {
     updateRegion,
     updateCity,
     updateCounty,
+    handleUpdateUser,
+    updatePreferredContactMethod,
+    handleUpdateProfile,
   };
 }
