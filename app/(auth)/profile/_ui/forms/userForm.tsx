@@ -21,12 +21,10 @@ import TextArea from "@/ui/inputs/textarea";
 
 type Props = {
   formData: Seller;
-  onChange: (field: keyof Seller, value: string) => void;
   countries: Country[];
   regions: Region[];
   cities: City[];
   counties: County[];
-  handleSubmit: () => void;
   countriesLoading: boolean;
   regionsLoading: boolean;
   citiesLoading: boolean;
@@ -47,7 +45,18 @@ type Props = {
       | React.ChangeEvent<HTMLInputElement>
   ) => void;
   handleBirthdayChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handlePhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   validateBirthdayField: () => { isValid: boolean; error?: string };
+  validatePhoneField: () => {
+    isValid: boolean;
+    error?: string;
+    type?: "mobile" | "landline" | "international";
+    isWhatsAppCompatible?: boolean;
+  };
+  handleSocialMediaLinkChange: (
+    platform: "instagram" | "facebook" | "tiktok",
+    url: string
+  ) => void;
 };
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -72,7 +81,6 @@ export default function UserForm({
   regions,
   cities,
   counties,
-  handleSubmit,
   countiesLoading,
   citiesLoading,
   regionsLoading,
@@ -85,14 +93,17 @@ export default function UserForm({
   updatePreferredContactMethod,
   handleUpdateProfile,
   handleBirthdayChange,
+  handlePhoneChange,
   validateBirthdayField,
+  validatePhoneField,
+  handleSocialMediaLinkChange,
 }: Props) {
   console.log("formData:: ", formData);
 
   const sellerType = formData?.sellerType;
 
   return (
-    <form onSubmit={handleSubmit} className="">
+    <form className="">
       <Wrapper>
         <Select
           label="País"
@@ -147,10 +158,11 @@ export default function UserForm({
           label="Celular"
           type="text"
           value={formData.phone}
-          onChange={
-            handleUpdateUser as React.ChangeEventHandler<HTMLInputElement>
-          }
-          placeholder="+56 9 1234 5678"
+          onChange={handlePhoneChange}
+          placeholder="+56-9-12345678"
+          maxLength={20}
+          isInvalid={!validatePhoneField().isValid}
+          errorMessage={validatePhoneField().error}
         />
       </Wrapper>
       <Wrapper>
@@ -215,8 +227,11 @@ export default function UserForm({
           label="Instagram"
           type="text"
           value={formData.socialMediaLinks?.instagram || ""}
-          onChange={
-            handleUpdateUser as React.ChangeEventHandler<HTMLInputElement>
+          onChange={(e) =>
+            handleSocialMediaLinkChange(
+              "instagram",
+              (e.target as HTMLInputElement).value
+            )
           }
           placeholder="Ej: @miusuario"
         />
@@ -226,8 +241,11 @@ export default function UserForm({
           label="Facebook"
           type="text"
           value={formData.socialMediaLinks?.facebook || ""}
-          onChange={
-            handleUpdateUser as React.ChangeEventHandler<HTMLInputElement>
+          onChange={(e) =>
+            handleSocialMediaLinkChange(
+              "facebook",
+              (e.target as HTMLInputElement).value
+            )
           }
           placeholder="Ej: @miusuario"
         />
@@ -237,8 +255,11 @@ export default function UserForm({
           label="TikTok"
           type="text"
           value={formData.socialMediaLinks?.tiktok || ""}
-          onChange={
-            handleUpdateUser as React.ChangeEventHandler<HTMLInputElement>
+          onChange={(e) =>
+            handleSocialMediaLinkChange(
+              "tiktok",
+              (e.target as HTMLInputElement).value
+            )
           }
           placeholder="Ej: @miusuario"
         />

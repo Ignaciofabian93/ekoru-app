@@ -36,7 +36,6 @@ export async function POST(request: NextRequest) {
 
     // Compress image before sending to gateway
     const compressedFile = await compressImage(file);
-    console.log("compressedFile", compressedFile);
 
     // Create FormData to forward to gateway
     const forwardData = new FormData();
@@ -51,7 +50,6 @@ export async function POST(request: NextRequest) {
       body: forwardData,
       credentials: "include",
     });
-    console.log("gateway response", response);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -59,11 +57,6 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await response.json();
-
-    // Log successful upload
-    console.log(
-      `Profile image forwarded to gateway: ${result.fileName} for user: ${userId}`
-    );
 
     return NextResponse.json(result);
   } catch (error) {

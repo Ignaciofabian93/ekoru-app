@@ -16,17 +16,17 @@ export default function usePersonalInfo() {
     const displayName = data.profile?.displayName || "";
     const user =
       userType === "PersonProfile"
-        ? `${data.profile.firstName} ${data.profile.lastName}`
+        ? `${data.profile?.firstName} ${data.profile?.lastName}`
         : "";
     const businessName =
-      userType !== "PersonProfile" ? data.profile.businessName : "";
+      userType !== "PersonProfile" ? data.profile?.businessName : "";
     const address = data.county?.county
       ? `${data.address}, ${data.county?.county}`
       : "Sin dirección registrada";
 
     if (userType === "PersonProfile") {
       setUsername(displayName || user);
-      setBio(data.profile.bio || "Sin biografía");
+      setBio(data.profile?.bio || "Sin biografía");
       setLocation(address);
       setEmail(data.email);
       setPhone(data.phone || "Sin teléfono registrado");

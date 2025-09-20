@@ -59,7 +59,6 @@ export default function ProductForm({
   useEffect(() => {
     if (mode === "edit" && productId) {
       // TODO: Load product data from API
-      console.log("Loading product data for:", productId);
     }
   }, [mode, productId]);
 

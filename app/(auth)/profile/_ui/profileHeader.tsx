@@ -65,8 +65,6 @@ export default function ProfileHeader() {
     };
   }, [showImageModal]);
 
-  console.log("cover image:: ", coverImage);
-
   return (
     <section className="relative overflow-hidden">
       {/* Cover Image or Gradient Background with Overlaid Content */}

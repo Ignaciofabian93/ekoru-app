@@ -9,13 +9,13 @@ export default function useProfileImage() {
   const defaultLogo = "/brand/icon.webp";
 
   useEffect(() => {
-    if (data.profile.__typename === "PersonProfile") {
+    if (data.profile?.__typename === "PersonProfile") {
       setProfileImage(data.profile?.profileImage || defaultLogo);
       setBackupImage(data.profile?.profileImage || defaultLogo);
-    } else if (data.profile.__typename === "StoreProfile") {
+    } else if (data.profile?.__typename === "StoreProfile") {
       setProfileImage(data.profile?.logo || defaultLogo);
       setBackupImage(data.profile?.logo || defaultLogo);
-    } else if (data.profile.__typename === "ServiceProfile") {
+    } else if (data.profile?.__typename === "ServiceProfile") {
       setProfileImage(data.profile?.logo || defaultLogo);
       setBackupImage(data.profile?.logo || defaultLogo);
     } else {
@@ -53,8 +53,6 @@ export default function useProfileImage() {
 
       // Upload file and get URL
       const imageUrl = await uploadProfileImage(file);
-      console.log("imageUrl", imageUrl);
-
       // Update state with permanent URL
       setProfileImage(imageUrl);
     } catch (error) {
@@ -75,7 +73,6 @@ export default function useProfileImage() {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("userId", data.id);
-    console.log("formData", formData);
 
     const response = await fetch("/api/upload/profile-image", {
       method: "POST",

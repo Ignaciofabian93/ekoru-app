@@ -36,12 +36,43 @@ export const convertToStorageFormat = (displayDate: string): string => {
 };
 
 /**
- * Converts YYYY-MM-DD to DD-MM-YYYY for display
+ * Converts DD-MM-YYYY to a proper Date object for backend storage
+ * Creates the date at noon local time to avoid timezone issues
+ */
+export const convertToDateObject = (displayDate: string): Date | null => {
+  if (!displayDate || displayDate.length !== 10) return null;
+
+  const [day, month, year] = displayDate.split("-");
+  if (!day || !month || !year) return null;
+
+  // Create date at noon local time to avoid timezone issues with birthdays
+  const date = new Date(
+    parseInt(year),
+    parseInt(month) - 1,
+    parseInt(day),
+    12,
+    0,
+    0,
+    0
+  );
+
+  return date;
+};
+
+/**
+ * Converts YYYY-MM-DD or DateTime string to DD-MM-YYYY for display
  */
 export const convertToDisplayFormat = (storageDate: string): string => {
   if (!storageDate) return "";
 
-  const [year, month, day] = storageDate.split("-");
+  let dateToProcess = storageDate;
+
+  // If it's a DateTime string (contains 'T'), extract just the date part
+  if (storageDate.includes("T")) {
+    dateToProcess = storageDate.split("T")[0];
+  }
+
+  const [year, month, day] = dateToProcess.split("-");
   if (!year || !month || !day) return "";
 
   return `${day}-${month}-${year}`;
@@ -107,5 +138,27 @@ export const getMaxBirthdayDate = (): string => {
   const year = today.getFullYear();
   const month = String(today.getMonth() + 1).padStart(2, "0");
   const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+/**
+ * Extracts date part from DateTime string or Date object
+ * Returns YYYY-MM-DD format
+ */
+export const extractDatePart = (dateInput: string | Date): string => {
+  if (!dateInput) return "";
+
+  if (typeof dateInput === "string") {
+    // If it's a DateTime string (contains 'T'), extract just the date part
+    if (dateInput.includes("T")) {
+      return dateInput.split("T")[0];
+    }
+    return dateInput;
+  }
+
+  // If it's a Date object, format it as YYYY-MM-DD
+  const year = dateInput.getFullYear();
+  const month = String(dateInput.getMonth() + 1).padStart(2, "0");
+  const day = String(dateInput.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 };

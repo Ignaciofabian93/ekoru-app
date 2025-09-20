@@ -7,26 +7,25 @@ import { useProductStore } from "@/store/product";
 import MainButton from "../buttons/mainButton";
 import { Save } from "lucide-react";
 
-type ProductFormData = {
-  name: string;
-  description: string;
-  price: number;
-  category: string;
-  condition: string;
-  images: File[];
-  tags: string[];
-};
+// type ProductFormData = {
+//   name: string;
+//   description: string;
+//   price: number;
+//   category: string;
+//   condition: string;
+//   images: File[];
+//   tags: string[];
+// };
 
 export default function ProductModal() {
   const { isOpen, onClose, mode, selectedProductId } = useProductStore();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (formData: ProductFormData) => {
+  const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
       // Handle form submission logic here
-      console.log("Submitting product data:", formData);
 
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));

@@ -43,7 +43,6 @@ export default function useCoverImage() {
 
       // Upload file and get URL
       const imageUrl = await uploadCoverImage(file);
-      console.log("imageUrl", imageUrl);
 
       // Update state with permanent URL
       setCoverImage(imageUrl);
@@ -65,7 +64,6 @@ export default function useCoverImage() {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("userId", data.id);
-    console.log("formData", formData);
 
     const response = await fetch("/api/upload/cover-image", {
       method: "POST",

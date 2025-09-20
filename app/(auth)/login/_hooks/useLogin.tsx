@@ -42,7 +42,6 @@ export default function useLogin() {
     const response = await Login({ email, password });
     if (response && response.token) {
       const { data: userData } = await GetMe();
-      console.log("userData:: ", userData);
       if (!userLoading && userData.me?.id) {
         handleSession(userData.me);
         notify("Inicio de sesión exitoso.");

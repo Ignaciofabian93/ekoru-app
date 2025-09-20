@@ -30,7 +30,11 @@ export default function ProfileNavigation() {
     updatePreferredContactMethod,
     handleUpdateProfile,
     handleBirthdayChange,
+    handlePhoneChange,
     validateBirthdayField,
+    validatePhoneField,
+    handleSocialMediaLinkChange,
+    handleSubmit,
   } = useProfileForm();
 
   return (
@@ -97,15 +101,10 @@ export default function ProfileNavigation() {
           <div className="text-sm text-gray-600">
             <UserForm
               formData={form}
-              onChange={() => {}}
               countries={countriesData}
               regions={regionsData}
               cities={citiesData}
               counties={countiesData}
-              handleSubmit={() => {
-                console.log("Form submitted");
-                console.log("Form data: ", form);
-              }}
               countiesLoading={countiesLoading}
               citiesLoading={citiesLoading}
               regionsLoading={regionsLoading}
@@ -118,7 +117,10 @@ export default function ProfileNavigation() {
               updatePreferredContactMethod={updatePreferredContactMethod}
               handleUpdateProfile={handleUpdateProfile}
               handleBirthdayChange={handleBirthdayChange}
+              handlePhoneChange={handlePhoneChange}
               validateBirthdayField={validateBirthdayField}
+              validatePhoneField={validatePhoneField}
+              handleSocialMediaLinkChange={handleSocialMediaLinkChange}
             />
           </div>
 
@@ -139,11 +141,10 @@ export default function ProfileNavigation() {
             <MainButton
               text={"Actualizar Perfil"}
               variant="primary"
-              onClick={() => {
-                console.log("Main button clicked");
-              }}
+              type="submit"
               hasIcon
               icon={Save}
+              onClick={handleSubmit}
             />
           </motion.div>
         </motion.div>

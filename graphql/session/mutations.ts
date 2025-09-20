@@ -98,3 +98,24 @@ export const UPDATE_STORE_PROFILE = gql`
     }
   }
 `;
+
+export const UPDATE_SERVICE_PROFILE = gql`
+  mutation UpdateServiceProfile($input: UpdateServiceProfileInput!) {
+    updateServiceProfile(input: $input) {
+      id
+      email
+      sellerType
+      isActive
+      isVerified
+      createdAt
+      updatedAt
+      address
+      phone
+      website
+      preferredContactMethod
+      socialMediaLinks
+      accountType
+      points
+    }
+  }
+`;
