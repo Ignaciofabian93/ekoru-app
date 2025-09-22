@@ -4,7 +4,6 @@ export const REGISTER_PERSON = gql`
   mutation RegisterPerson($input: RegisterPersonInput!) {
     registerPerson(input: $input) {
       email
-      firstName
       sellerType
       createdAt
       updatedAt
