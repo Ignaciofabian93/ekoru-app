@@ -1,21 +1,16 @@
 import { LogOut, Package, UserRound } from "lucide-react";
+import { useProductStore } from "@/store/product";
 import Link from "next/link";
 import MainButton from "@/ui/buttons/mainButton";
-import { useProductStore } from "@/store/product";
-import { useRouter } from "next/navigation";
+import useLogout from "@/hooks/useLogout";
 
 type Props = {
   isLoggedIn?: boolean;
 };
 
 const LoggedInMenu = () => {
-  const router = useRouter();
+  const { handleLogout } = useLogout();
   const { openModal } = useProductStore();
-
-  const handleLogout = async () => {
-    await fetch("/api/logout", { method: "POST", credentials: "include" });
-    router.replace("/feed");
-  };
 
   return (
     <div className="flex flex-col items-center space-y-3 px-2 py-2">
@@ -54,13 +49,7 @@ const LoggedInMenu = () => {
           openModal("create");
         }}
       />
-      <MainButton
-        text="Cerrar Sesión"
-        variant="destructive"
-        hasIcon
-        icon={LogOut}
-        onClick={handleLogout}
-      />
+      <MainButton text="Cerrar Sesión" variant="destructive" hasIcon icon={LogOut} onClick={handleLogout} />
     </div>
   );
 };
@@ -90,9 +79,7 @@ export default function AccountMenu({ isLoggedIn }: Props) {
 
       {/* Dropdown Menu */}
       <div className="absolute right-0 z-50 mt-2 w-48 bg-white rounded-lg shadow-lg border border-neutral/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-        <div className="py-2">
-          {isLoggedIn ? <LoggedInMenu /> : <NotLoggedInMenu />}
-        </div>
+        <div className="py-2">{isLoggedIn ? <LoggedInMenu /> : <NotLoggedInMenu />}</div>
       </div>
     </div>
   );
