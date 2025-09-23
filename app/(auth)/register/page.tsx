@@ -81,7 +81,7 @@ export default function RegisterPage() {
           className="overflow-hidden"
         >
           <div className="px-4 py-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form id="register-form" onSubmit={handleSubmit} className="space-y-4">
               {/* Account Type Selector */}
               <Select
                 label="Tipo de cuenta"
@@ -172,10 +172,13 @@ export default function RegisterPage() {
                 isInvalid={formData.password !== formData.confirmPassword && formData.confirmPassword.length > 0}
                 errorMessage="Las contraseñas no coinciden."
               />
+            </form>
 
-              {/* Submit Button */}
+            {/* Submit Button */}
+            <div className="mt-8">
               <MainButton
                 type="submit"
+                form="register-form"
                 isLoading={registerPersonLoading || registerStoreLoading || registerServiceLoading}
                 loadingText="Creando cuenta..."
                 text="Registrarse"
@@ -183,7 +186,7 @@ export default function RegisterPage() {
                 icon={ArrowRight}
                 variant="primary"
               />
-            </form>
+            </div>
             <span className="block text-center text-sm text-gray-600 mt-4">
               ¿Ya tienes una cuenta?{" "}
               <Link href="/login" className="text-primary hover:underline">

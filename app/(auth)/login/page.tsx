@@ -8,14 +8,7 @@ import Link from "next/link";
 import useLogin from "./_hooks/useLogin";
 
 export default function LoginPage() {
-  const {
-    formData,
-    showPassword,
-    isLoading,
-    togglePasswordVisibility,
-    handleFormData,
-    handleSubmit,
-  } = useLogin();
+  const { formData, showPassword, isLoading, togglePasswordVisibility, handleFormData, handleSubmit } = useLogin();
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 py-8">
@@ -33,18 +26,9 @@ export default function LoginPage() {
           className="text-center mb-8"
         >
           <div className="w-auto h-[80px] rounded-2xl mx-auto mb-4 flex items-center justify-center">
-            <Image
-              src={"/brand/logo.webp"}
-              alt="EKORU"
-              width={800}
-              height={400}
-              className="w-auto h-full"
-              priority
-            />
+            <Image src={"/brand/logo.webp"} alt="EKORU" width={800} height={400} className="w-auto h-full" priority />
           </div>
-          <h1 className="text-3xl font-bold text-text-primary mb-2">
-            Bienvenido
-          </h1>
+          <h1 className="text-3xl font-bold text-text-primary mb-2">Bienvenido</h1>
           <p className="text-gray-600">Ingresa a tu cuenta</p>
         </motion.div>
 
@@ -56,7 +40,7 @@ export default function LoginPage() {
           className="overflow-hidden"
         >
           <div className="px-4 py-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form id="login-form" onSubmit={handleSubmit} className="space-y-4">
               {/* Email Field */}
               <Input
                 name="email"
@@ -82,10 +66,13 @@ export default function LoginPage() {
                 showPassword={showPassword}
                 icon={Lock}
               />
+            </form>
 
-              {/* Submit Button */}
+            {/* Submit Button */}
+            <div className="mt-8">
               <MainButton
                 type="submit"
+                form="login-form"
                 isLoading={isLoading}
                 loadingText="Iniciando sesión..."
                 text="Entrar"
@@ -93,7 +80,7 @@ export default function LoginPage() {
                 icon={ArrowRight}
                 variant="primary"
               />
-            </form>
+            </div>
             <span className="block text-center text-sm text-gray-600 mt-4">
               ¿No tienes una cuenta?{" "}
               <Link href="/register" className="text-primary hover:underline">

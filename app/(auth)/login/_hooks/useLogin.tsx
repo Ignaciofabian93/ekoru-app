@@ -5,6 +5,7 @@ import { useLazyQuery } from "@apollo/client";
 import { GET_ME } from "@/graphql/session/queries";
 import useSessionStore from "@/store/session";
 import useAlert from "@/hooks/useAlert";
+import { sanitizeEmailInput } from "@/security/sanitizeInputs";
 
 export default function useLogin() {
   const router = useRouter();
@@ -21,9 +22,17 @@ export default function useLogin() {
 
   const handleFormData = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    let sanitizedValue = value;
+
+    // Apply appropriate sanitization based on input type
+    if (name === "email") {
+      sanitizedValue = sanitizeEmailInput(value);
+    }
+    // Don't sanitize password as it might need special characters
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: sanitizedValue,
     }));
   };
 
@@ -38,8 +47,12 @@ export default function useLogin() {
       notifyError("Todos los campos son obligatorios.");
       return;
     }
+
+    // Final sanitization before submission
+    const sanitizedEmail = sanitizeEmailInput(email);
+
     setIsLoading(true);
-    const response = await Login({ email, password });
+    const response = await Login({ email: sanitizedEmail, password }); // Don't sanitize password
     if (response && response.token) {
       const { data: userData } = await GetMe();
       if (!userLoading && userData.me?.id) {

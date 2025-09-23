@@ -4,6 +4,7 @@ import { REGISTER_PERSON, REGISTER_SERVICE, REGISTER_STORE } from "@/graphql/ses
 import { type SellerType } from "@/types/enums";
 import useAlert from "@/hooks/useAlert";
 import { useRouter } from "next/navigation";
+import { sanitizeNameInput, sanitizeEmailInput, sanitizeTextInput } from "@/security/sanitizeInputs";
 
 export type RegisterPerson = {
   firstName: string;
@@ -88,9 +89,33 @@ export default function useRegister() {
 
   const handleFormData = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    let sanitizedValue = value;
+
+    // Apply appropriate sanitization based on input type
+    switch (name) {
+      case "firstName":
+      case "lastName":
+        sanitizedValue = sanitizeNameInput(value);
+        break;
+      case "displayName":
+      case "businessName":
+        sanitizedValue = sanitizeTextInput(value);
+        break;
+      case "email":
+        sanitizedValue = sanitizeEmailInput(value);
+        break;
+      case "password":
+      case "confirmPassword":
+        // Don't sanitize passwords as they might need special characters
+        sanitizedValue = value;
+        break;
+      default:
+        sanitizedValue = sanitizeTextInput(value);
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: sanitizedValue,
     }));
   };
 
@@ -107,9 +132,18 @@ export default function useRegister() {
       notifyError("Las contraseñas no coinciden.");
       return;
     }
+
+    // Final sanitization before submission
+    const sanitizedData = {
+      firstName: sanitizeNameInput(firstName),
+      lastName: lastName ? sanitizeNameInput(lastName) : undefined,
+      email: sanitizeEmailInput(email),
+      password: password, // Don't sanitize password
+    };
+
     RegisterPerson({
       variables: {
-        input: { firstName, lastName, email, password },
+        input: sanitizedData,
       },
     });
   };
@@ -123,9 +157,18 @@ export default function useRegister() {
       notifyError("Las contraseñas no coinciden.");
       return;
     }
+
+    // Final sanitization before submission
+    const sanitizedData = {
+      displayName: sanitizeTextInput(displayName),
+      businessName: businessName ? sanitizeTextInput(businessName) : undefined,
+      email: sanitizeEmailInput(email),
+      password: password, // Don't sanitize password
+    };
+
     RegisterStore({
       variables: {
-        input: { displayName, businessName, email, password },
+        input: sanitizedData,
       },
     });
   };
@@ -139,9 +182,18 @@ export default function useRegister() {
       notifyError("Las contraseñas no coinciden.");
       return;
     }
+
+    // Final sanitization before submission
+    const sanitizedData = {
+      displayName: sanitizeTextInput(displayName),
+      businessName: businessName ? sanitizeTextInput(businessName) : undefined,
+      email: sanitizeEmailInput(email),
+      password: password, // Don't sanitize password
+    };
+
     RegisterService({
       variables: {
-        input: { displayName, businessName, email, password },
+        input: sanitizedData,
       },
     });
   };
