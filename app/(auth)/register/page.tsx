@@ -8,6 +8,7 @@ import Select from "@/ui/inputs/select";
 import MainButton from "@/ui/buttons/mainButton";
 import Link from "next/link";
 import useRegister, { RegisterPerson, RegisterService, RegisterStore } from "./_hooks/useRegister";
+import { validateEmail } from "@/utils/regexValidations";
 
 export default function RegisterPage() {
   const {
@@ -143,6 +144,8 @@ export default function RegisterPage() {
                 placeholder="Ingresa tu correo electrónico"
                 minLength={5}
                 maxLength={50}
+                isInvalid={formData.email.length > 0 && !validateEmail(formData.email)}
+                errorMessage="Por favor, ingresa un correo electrónico válido."
               />
 
               {/* Password Field */}

@@ -6,6 +6,7 @@ import Input from "@/ui/inputs/input";
 import MainButton from "@/ui/buttons/mainButton";
 import Link from "next/link";
 import useLogin from "./_hooks/useLogin";
+import { validateEmail } from "@/utils/regexValidations";
 
 export default function LoginPage() {
   const { formData, showPassword, isLoading, togglePasswordVisibility, handleFormData, handleSubmit } = useLogin();
@@ -52,6 +53,8 @@ export default function LoginPage() {
                 placeholder="Ingresa tu correo electrónico"
                 minLength={10}
                 maxLength={100}
+                isInvalid={formData.email.length > 0 && !validateEmail(formData.email)}
+                errorMessage="Por favor, ingresa un correo electrónico válido."
               />
 
               {/* Password Field */}
