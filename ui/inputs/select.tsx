@@ -25,6 +25,7 @@ type SelectProps = {
   isRenderingColorIcon?: boolean;
   renderOption?: (option: Option, selected: boolean) => React.ReactNode;
   icon?: LucideIcon;
+  searchEnabled?: boolean;
 };
 
 export default function Select({
@@ -40,6 +41,7 @@ export default function Select({
   renderOption,
   className,
   icon: Icon = Lock,
+  searchEnabled = true,
 }: SelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -48,16 +50,11 @@ export default function Select({
   const listboxId = `${name}-listbox`;
 
   const selectedOption = options.find((o) => o.value === value);
-  const filteredOptions = options.filter((o) =>
-    o.label.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredOptions = options.filter((o) => o.label.toLowerCase().includes(search.toLowerCase()));
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -85,8 +82,7 @@ export default function Select({
           style={{
             color: option.iconColor,
             fill: option.iconColor,
-            borderColor:
-              option.iconColor === "#FFFFFF" ? "#888" : option.iconColor,
+            borderColor: option.iconColor === "#FFFFFF" ? "#888" : option.iconColor,
           }}
           className={clsx("rounded-full", {
             border: option.iconColor === "#FFFFFF" ? "#888" : null,
@@ -133,11 +129,7 @@ export default function Select({
         </label>
       )}
       <div className="relative">
-        <motion.div
-          initial={false}
-          transition={{ duration: 0.2 }}
-          className="relative"
-        >
+        <motion.div initial={false} transition={{ duration: 0.2 }} className="relative">
           <Icon
             className={
               "absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 text-gray-400"
@@ -186,14 +178,16 @@ export default function Select({
                 tabIndex={-1}
                 className="absolute top-full left-0 z-50 mt-1 w-full bg-white border-2 border-primary rounded-xl shadow-2xl overflow-hidden"
               >
-                <input
-                  type="text"
-                  placeholder="Buscar..."
-                  className="w-full px-4 py-2 border-b border-primary outline-none text-base"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  aria-label="Buscar opciones"
-                />
+                {searchEnabled && (
+                  <input
+                    type="text"
+                    placeholder="Buscar..."
+                    className="w-full px-4 py-2 border-b border-primary outline-none text-base"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    aria-label="Buscar opciones"
+                  />
+                )}
                 <ul className="max-h-60 overflow-y-auto">
                   {filteredOptions.length > 0 ? (
                     filteredOptions.map((option, idx) => (
@@ -211,20 +205,15 @@ export default function Select({
                         onMouseEnter={() => setHighlightedIndex(idx)}
                         className={clsx(
                           "px-4 py-2 cursor-pointer hover:bg-primary/10 flex items-center gap-2",
-                          option.value === value &&
-                            "bg-primary/10 font-semibold",
+                          option.value === value && "bg-primary/10 font-semibold",
                           highlightedIndex === idx && "bg-primary/20"
                         )}
                       >
-                        {renderOption
-                          ? renderOption(option, option.value === value)
-                          : renderLabel(option)}
+                        {renderOption ? renderOption(option, option.value === value) : renderLabel(option)}
                       </li>
                     ))
                   ) : (
-                    <li className="px-4 py-2 text-sm text-gray-500 italic">
-                      No se encuentran resultados
-                    </li>
+                    <li className="px-4 py-2 text-sm text-gray-500 italic">No se encuentran resultados</li>
                   )}
                 </ul>
               </motion.div>

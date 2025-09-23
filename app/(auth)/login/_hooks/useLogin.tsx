@@ -48,6 +48,10 @@ export default function useLogin() {
         router.replace("/feed");
         setIsLoading(false);
         return;
+      } else {
+        notifyError("Error al obtener los datos del usuario.");
+        setIsLoading(false);
+        return;
       }
     } else {
       notifyError("Error al iniciar sesión. Verifica tus credenciales.");

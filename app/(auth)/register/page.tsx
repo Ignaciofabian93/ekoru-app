@@ -7,7 +7,7 @@ import Input from "@/ui/inputs/input";
 import Select from "@/ui/inputs/select";
 import MainButton from "@/ui/buttons/mainButton";
 import Link from "next/link";
-import useRegister from "./_hooks/useRegister";
+import useRegister, { RegisterPerson, RegisterService, RegisterStore } from "./_hooks/useRegister";
 
 export default function RegisterPage() {
   const {
@@ -16,12 +16,40 @@ export default function RegisterPage() {
     showConfirmPassword,
     registerPersonLoading,
     registerStoreLoading,
+    registerServiceLoading,
     handleFormData,
     handleAccountTypeChange,
     togglePasswordVisibility,
     toggleConfirmPasswordVisibility,
     handleSubmit,
   } = useRegister();
+
+  const userDictionary = {
+    PERSON: {
+      label1: "Nombre",
+      label2: "Apellido",
+      placeholder1: "Ingresa tu nombre",
+      placeholder2: "Ingresa tu apellido",
+      input1: "firstName",
+      input2: "lastName",
+    },
+    STORE: {
+      label1: "Nombre de la tienda",
+      label2: "Razón social (opcional)",
+      placeholder1: "Ingresa el nombre de la tienda",
+      placeholder2: "Ingresa la razón social",
+      input1: "displayName",
+      input2: "businessName",
+    },
+    SERVICE: {
+      label1: "Nombre del servicio",
+      label2: "Razón social (opcional)",
+      placeholder1: "Ingresa el nombre del servicio",
+      placeholder2: "Ingresa la razón social",
+      input1: "displayName",
+      input2: "businessName",
+    },
+  };
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 py-8">
@@ -36,21 +64,12 @@ export default function RegisterPage() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-center mb-8"
+          className="text-center mb-8 mt-10"
         >
           <div className="w-auto h-[80px] rounded-2xl mx-auto mb-4 flex items-center justify-center">
-            <Image
-              src={"/brand/logo.webp"}
-              alt="EKORU"
-              width={800}
-              height={400}
-              className="w-auto h-full"
-              priority
-            />
+            <Image src={"/brand/logo.webp"} alt="EKORU" width={800} height={400} className="w-auto h-full" priority />
           </div>
-          <h1 className="text-3xl font-bold text-text-primary mb-2">
-            Crear cuenta
-          </h1>
+          <h1 className="text-3xl font-bold text-text-primary mb-2">Crear cuenta</h1>
           <p className="text-gray-600">Regístrate para comenzar</p>
         </motion.div>
 
@@ -59,10 +78,10 @@ export default function RegisterPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
+          className="overflow-hidden"
         >
-          <div className="p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="px-4 py-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Account Type Selector */}
               <Select
                 label="Tipo de cuenta"
@@ -73,37 +92,44 @@ export default function RegisterPage() {
                 options={[
                   { value: "PERSON", label: "Persona" },
                   { value: "STORE", label: "Tienda" },
+                  { value: "SERVICE", label: "Servicio" },
                 ]}
+                searchEnabled={false}
               />
 
               {/* Name Field */}
               <Input
-                label={
+                label={userDictionary[formData.sellerType].label1}
+                name={userDictionary[formData.sellerType].input1}
+                value={
                   formData.sellerType === "PERSON"
-                    ? "Nombre"
-                    : "Nombre de la tienda"
+                    ? (formData as RegisterPerson).firstName ?? ""
+                    : (formData as RegisterStore | RegisterService).displayName ?? ""
                 }
-                name="firstName"
-                value={formData.firstName}
                 onChange={handleFormData}
                 type="text"
                 icon={UserRound}
-                placeholder={
-                  formData.sellerType === "PERSON"
-                    ? "Ingresa tu nombre"
-                    : "Ingresa el nombre de la tienda"
-                }
+                placeholder={userDictionary[formData.sellerType].placeholder1}
+                minLength={2}
+                maxLength={80}
               />
 
               {/* LastName Field */}
               <Input
-                label={"Apellido"}
-                name="lastName"
-                value={formData.lastName ?? ""}
+                label={userDictionary[formData.sellerType].label2}
+                name={userDictionary[formData.sellerType].input2}
+                value={
+                  formData.sellerType === "PERSON"
+                    ? (formData as RegisterPerson).lastName ?? ""
+                    : (formData as RegisterStore | RegisterService).businessName ?? ""
+                }
                 onChange={handleFormData}
                 type="text"
                 icon={UserRound}
-                placeholder={"Ingresa tu apellido"}
+                placeholder={userDictionary[formData.sellerType].placeholder2}
+                required={false}
+                minLength={2}
+                maxLength={100}
               />
 
               {/* Email Field */}
@@ -115,6 +141,8 @@ export default function RegisterPage() {
                 type="email"
                 icon={Mail}
                 placeholder="Ingresa tu correo electrónico"
+                minLength={5}
+                maxLength={50}
               />
 
               {/* Password Field */}
@@ -141,12 +169,14 @@ export default function RegisterPage() {
                 showPassword={showConfirmPassword}
                 icon={Lock}
                 placeholder="Repite tu contraseña"
+                isInvalid={formData.password !== formData.confirmPassword && formData.confirmPassword.length > 0}
+                errorMessage="Las contraseñas no coinciden."
               />
 
               {/* Submit Button */}
               <MainButton
                 type="submit"
-                isLoading={registerPersonLoading || registerStoreLoading}
+                isLoading={registerPersonLoading || registerStoreLoading || registerServiceLoading}
                 loadingText="Creando cuenta..."
                 text="Registrarse"
                 hasIcon
@@ -158,6 +188,11 @@ export default function RegisterPage() {
               ¿Ya tienes una cuenta?{" "}
               <Link href="/login" className="text-primary hover:underline">
                 Inicia sesión
+              </Link>
+            </span>
+            <span className="block text-center text-sm text-gray-600 mt-4">
+              <Link href="/feed" className="text-primary hover:underline">
+                Regresar a la página principal
               </Link>
             </span>
           </div>

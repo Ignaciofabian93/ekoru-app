@@ -53,10 +53,10 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
+          className="overflow-hidden"
         >
-          <div className="p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="px-4 py-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email Field */}
               <Input
                 name="email"
@@ -98,6 +98,11 @@ export default function LoginPage() {
               ¿No tienes una cuenta?{" "}
               <Link href="/register" className="text-primary hover:underline">
                 Regístrate
+              </Link>
+            </span>
+            <span className="block text-center text-sm text-gray-600 mt-4">
+              <Link href="/feed" className="text-primary hover:underline">
+                Regresar a la página principal
               </Link>
             </span>
           </div>

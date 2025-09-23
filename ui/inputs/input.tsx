@@ -21,6 +21,7 @@ type Props = React.HTMLAttributes<HTMLInputElement> & {
   size?: "sm" | "md" | "lg" | "full";
   isInvalid?: boolean;
   errorMessage?: string;
+  required?: boolean;
 };
 
 export default function Input({
@@ -39,6 +40,7 @@ export default function Input({
   size = "full",
   isInvalid = false,
   errorMessage,
+  required = false,
 }: Props) {
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
@@ -48,6 +50,8 @@ export default function Input({
     lg: "w-2/3",
     full: "w-full",
   }[size];
+
+  const inputType = type === "password" && showPassword ? "text" : type;
 
   return (
     <div className={clsx("space-y-2", sizeClass)}>
@@ -70,12 +74,12 @@ export default function Input({
           <input
             id={name}
             name={name}
-            type={type}
+            type={inputType}
             value={value}
             onChange={onChange}
             onFocus={() => setFocusedField("password")}
             onBlur={() => setFocusedField(null)}
-            required
+            required={required}
             minLength={minLength}
             maxLength={maxLength}
             className={clsx(

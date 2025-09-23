@@ -17,17 +17,20 @@ export const REGISTER_STORE = gql`
       id
       email
       sellerType
-      isActive
-      isVerified
       createdAt
       updatedAt
-      address
-      phone
-      website
-      preferredContactMethod
-      socialMediaLinks
-      accountType
-      points
+    }
+  }
+`;
+
+export const REGISTER_SERVICE = gql`
+  mutation RegisterService($input: RegisterServiceInput!) {
+    registerService(input: $input) {
+      id
+      email
+      sellerType
+      createdAt
+      updatedAt
     }
   }
 `;

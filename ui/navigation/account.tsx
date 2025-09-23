@@ -14,7 +14,7 @@ const LoggedInMenu = () => {
 
   const handleLogout = async () => {
     await fetch("/api/logout", { method: "POST", credentials: "include" });
-    router.refresh();
+    router.replace("/feed");
   };
 
   return (
