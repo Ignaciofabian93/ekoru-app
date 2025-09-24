@@ -3,19 +3,8 @@ import Image from "next/image";
 import InstagramIcon from "../icons/instagram";
 import LinkedinIcon from "../icons/linkedin";
 
-const IconLink = ({
-  children,
-  url,
-}: {
-  children: React.ReactNode;
-  url: string;
-}) => (
-  <Link
-    href={url}
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Social Link"
-  >
+const IconLink = ({ children, url }: { children: React.ReactNode; url: string }) => (
+  <Link href={url} target="_blank" rel="noopener noreferrer" aria-label="Social Link">
     {children}
   </Link>
 );
@@ -44,79 +33,45 @@ export default function Footer() {
               </span>
             </q>
             <nav className="flex flex-wrap gap-4 text-white text-sm font-medium">
-              <Link
-                href="/community"
-                className="hover:text-primary transition-colors"
-              >
+              <Link href="/community" className="hover:text-primary transition-colors">
                 Comunidad
               </Link>
-              <Link
-                href="/blog"
-                className="hover:text-primary transition-colors"
-              >
+              <Link href="/blog" className="hover:text-primary transition-colors">
                 Blog
               </Link>
-              <Link
-                href="/departments"
-                className="hover:text-primary transition-colors"
-              >
+              <Link href="/departments" className="hover:text-primary transition-colors">
                 Mercado
               </Link>
-              <Link
-                href="/stores"
-                className="hover:text-primary transition-colors"
-              >
+              <Link href="/stores" className="hover:text-primary transition-colors">
                 Tiendas
               </Link>
-              <Link
-                href="/help"
-                className="hover:text-primary transition-colors"
-              >
+              <Link href="/help" className="hover:text-primary transition-colors">
                 Ayuda
               </Link>
             </nav>
           </div>
           <div className="flex gap-3">
             <IconLink url="https://www.instagram.com/ekoru_chile?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">
-              <InstagramIcon
-                width={37}
-                height={37}
-                className="hover:scale-125 transition-transform duration-300"
-              />
+              <InstagramIcon width={37} height={37} className="hover:scale-125 transition-transform duration-300" />
             </IconLink>
             <IconLink url="https://www.linkedin.com/company/ekoru-chile/">
-              <LinkedinIcon
-                width={36}
-                height={36}
-                className="hover:scale-125 transition-transform duration-300"
-              />
+              <LinkedinIcon width={36} height={36} className="hover:scale-125 transition-transform duration-300" />
             </IconLink>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white">
           <div className="flex gap-3 flex-wrap">
-            <Link
-              href="/legal/privacy-policy"
-              className="hover:text-primary transition-colors"
-            >
+            <Link href="/legal/privacy-policy" className="hover:text-primary transition-colors">
               Privacidad
             </Link>
-            <Link
-              href="/legal/terms-of-service"
-              className="hover:text-primary transition-colors"
-            >
+            <Link href="/legal/terms-of-service" className="hover:text-primary transition-colors">
               Términos
             </Link>
-            <Link
-              href="/legal/community-guidelines"
-              className="hover:text-primary transition-colors"
-            >
+            <Link href="/legal/community-guidelines" className="hover:text-primary transition-colors">
               Normas de la comunidad
             </Link>
           </div>
-          <span className="block">
-            © {new Date().getFullYear()} Ekoru. Todos los derechos reservados.
-          </span>
+          <span className="block">© {new Date().getFullYear()} Ekoru. Todos los derechos reservados.</span>
         </div>
       </div>
     </footer>

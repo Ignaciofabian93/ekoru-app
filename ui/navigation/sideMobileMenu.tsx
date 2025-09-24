@@ -129,7 +129,7 @@ export default function SideMobileMenu({
             {profileNavigation.map((item) => (
               <Link
                 key={item.name}
-                href="/profile"
+                href={item.href}
                 onClick={closeMobileMenu}
                 className="flex items-center px-3 py-2 text-sm text-text-secondary hover:bg-white hover:text-primary transition-colors rounded-lg"
               >
