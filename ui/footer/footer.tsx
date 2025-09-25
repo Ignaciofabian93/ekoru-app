@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import InstagramIcon from "../icons/instagram";
 import LinkedinIcon from "../icons/linkedin";
+import clsx from "clsx";
 
 const IconLink = ({ children, url }: { children: React.ReactNode; url: string }) => (
   <Link href={url} target="_blank" rel="noopener noreferrer" aria-label="Social Link">
@@ -11,7 +12,14 @@ const IconLink = ({ children, url }: { children: React.ReactNode; url: string })
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-r from-primary-light via-primary to-primary-dark text-white border-t border-white">
+    <footer
+      className={clsx(
+        "bg-gradient-to-r from-primary-light via-primary to-primary-dark",
+        "dark:from-slate-950 dark:via-slate-800 dark:to-slate-700",
+        "text-white border-t border-white",
+        "dark:border-neutral/20"
+      )}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col gap-8">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex-shrink-0">

@@ -1,9 +1,16 @@
 import { Mails } from "lucide-react";
 import Input from "../inputs/input";
+import clsx from "clsx";
 
 export default function NewsLetter() {
   return (
-    <section className="py-16 bg-gradient-to-r from-primary-light via-primary to-primary-dark text-white">
+    <section
+      className={clsx(
+        "py-16 bg-gradient-to-r from-primary-light via-primary to-primary-dark",
+        "dark:from-slate-950 dark:via-slate-800 dark:to-slate-700",
+        "text-white"
+      )}
+    >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">¿Quieres ser parte del cambio?</h2>
         <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">

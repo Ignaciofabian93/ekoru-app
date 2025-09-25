@@ -2,13 +2,14 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, ShoppingCart, Heart, Menu } from "lucide-react";
+import { useCatalogStore } from "@/store/catalog";
 import Image from "next/image";
 import Link from "next/link";
 import Subheader from "./subheader";
-import { useCatalogStore } from "@/store/catalog";
 import useSessionStore from "@/store/session";
 import AccountMenu from "./account";
 import SideMobileMenu from "./sideMobileMenu";
+import clsx from "clsx";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -43,7 +44,15 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="bg-gradient-to-r from-primary-light via-primary to-primary-dark shadow-md border-b border-neutral/20 sticky top-0 z-50">
+      <header
+        className={clsx(
+          "bg-gradient-to-r from-primary-light via-primary to-primary-dark",
+          // "dark:from-slate-950 dark:via-slate-800 dark:to-slate-700",
+          "dark:bg-background",
+          "shadow-md border-b border-neutral/20",
+          "sticky top-0 z-50"
+        )}
+      >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Main Navigation */}
           <div className="flex justify-between items-center h-16">
