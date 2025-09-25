@@ -4,6 +4,7 @@ import "@/lib/apolloSetup";
 import { GRAPHQL_URL } from "@/config/endpoints";
 import SessionWrapper from "./sessionWrapper";
 import InitialDataProvider from "@/providers/initialData";
+import { ThemeProvider } from "@/providers/theme";
 
 export default function Providers({
   children,
@@ -22,10 +23,12 @@ export default function Providers({
   });
 
   return (
-    <ApolloProvider client={client}>
-      <SessionWrapper token={token} refreshToken={refreshToken}>
-        <InitialDataProvider>{children}</InitialDataProvider>
-      </SessionWrapper>
-    </ApolloProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+      <ApolloProvider client={client}>
+        <SessionWrapper token={token} refreshToken={refreshToken}>
+          <InitialDataProvider>{children}</InitialDataProvider>
+        </SessionWrapper>
+      </ApolloProvider>
+    </ThemeProvider>
   );
 }

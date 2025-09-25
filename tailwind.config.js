@@ -6,6 +6,7 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./ui/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
@@ -32,6 +33,12 @@ module.exports = {
           secondary: "#6b7280",
           muted: "#9ca3af",
           inverse: "#ffffff",
+        },
+        background: {
+          DEFAULT: "#ffffff",
+          secondary: "#f9fafb",
+          dark: "#1a1a1a",
+          "dark-secondary": "#2d3748",
         },
       },
     },

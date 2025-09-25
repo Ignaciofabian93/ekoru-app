@@ -8,6 +8,7 @@ import MainButton from "@/ui/buttons/mainButton";
 import { Bell, Lock, Globe, Shield, Palette, Store, Save, MapPin, CreditCard, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { AccountType } from "@/types/enums";
+import ThemeAndPreferencesSettings from "./_ui/themeAndPreferences";
 
 type UserSettings = {
   // Theme Preferences
@@ -50,20 +51,6 @@ type UserSettings = {
   nextBillingDate: string;
   autoRenew: boolean;
 };
-
-const languages = [
-  { label: "Español", value: "es" },
-  { label: "English", value: "en" },
-  { label: "Português", value: "pt" },
-  { label: "Français", value: "fr" },
-];
-
-const currencies = [
-  { label: "USD - Dólar Estadounidense", value: "USD" },
-  { label: "EUR - Euro", value: "EUR" },
-  { label: "COP - Peso Colombiano", value: "COP" },
-  { label: "MXN - Peso Mexicano", value: "MXN" },
-];
 
 const sessionTimeouts = [
   { label: "15 minutos", value: 15 },
@@ -148,12 +135,14 @@ export default function SettingsPage() {
 
   return (
     <MainLayout>
-      <div className="min-h-screen bg-neutral-light/10">
+      <div className="min-h-screen bg-neutral-light/10 dark:bg-background-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-2">Configuración</h1>
-            <p className="text-text-muted text-lg">
+            <h1 className="text-3xl md:text-4xl font-bold text-text-primary dark:text-text-inverse mb-2">
+              Configuración
+            </h1>
+            <p className="text-text-muted dark:text-text-muted text-lg">
               Personaliza tu experiencia, gestiona tu seguridad y configura tus preferencias
             </p>
           </div>
@@ -171,7 +160,7 @@ export default function SettingsPage() {
                       className={`w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3 transition-colors ${
                         activeSection === section.id
                           ? "bg-primary text-white"
-                          : "text-text-primary hover:bg-neutral-light/20"
+                          : "text-text-primary dark:text-text-inverse hover:bg-neutral-light/20 dark:hover:bg-neutral-dark/20"
                       }`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -186,85 +175,18 @@ export default function SettingsPage() {
 
             {/* Content */}
             <div className="lg:col-span-3">
-              <div className="bg-white rounded-xl shadow-sm border border-neutral/20 p-6">
+              <div className="bg-white dark:bg-background-dark-secondary rounded-xl shadow-sm border border-neutral/20 dark:border-neutral-dark/30 p-6">
                 {/* Theme & Preferences Section */}
-                {activeSection === "theme" && (
-                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-                    <div className="flex items-center space-x-4 mb-6">
-                      <Palette className="text-primary" size={24} />
-                      <h2 className="text-2xl font-semibold text-text-primary">Tema y Preferencias</h2>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-text-primary mb-4">Tema de la Aplicación</label>
-                      <div className="grid grid-cols-3 gap-4">
-                        {["light", "dark", "system"].map((theme) => (
-                          <motion.button
-                            key={theme}
-                            onClick={() => updateSettings("theme", theme as "light" | "dark" | "system")}
-                            className={`p-4 rounded-lg border-2 text-center transition-all ${
-                              settings.theme === theme
-                                ? "border-primary bg-primary/10"
-                                : "border-neutral/30 hover:border-primary/50"
-                            }`}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                          >
-                            <div className="text-sm font-medium text-text-primary capitalize">
-                              {theme === "light" ? "Claro" : theme === "dark" ? "Oscuro" : "Sistema"}
-                            </div>
-                          </motion.button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <Select
-                        label="Idioma"
-                        value={settings.language}
-                        onChange={(value) => updateSettings("language", value as string)}
-                        options={languages}
-                        icon={Globe}
-                      />
-                      <Select
-                        label="Moneda"
-                        value={settings.currency}
-                        onChange={(value) => updateSettings("currency", value as string)}
-                        options={currencies}
-                        icon={CreditCard}
-                      />
-                    </div>
-
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-medium text-text-primary">Opciones de Accesibilidad</h3>
-                      <div className="space-y-4">
-                        <Checkbox
-                          id="reducedMotion"
-                          name="reducedMotion"
-                          label="Reducir movimiento"
-                          description="Minimiza animaciones y transiciones para una experiencia más estática"
-                          checked={settings.reducedMotion}
-                          onChange={(checked) => updateSettings("reducedMotion", checked)}
-                        />
-                        <Checkbox
-                          id="compactView"
-                          name="compactView"
-                          label="Vista compacta"
-                          description="Muestra más información en menos espacio"
-                          checked={settings.compactView}
-                          onChange={(checked) => updateSettings("compactView", checked)}
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+                {activeSection === "theme" && <ThemeAndPreferencesSettings />}
 
                 {/* Notifications Section */}
                 {activeSection === "notifications" && (
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                     <div className="flex items-center space-x-4 mb-6">
                       <Bell className="text-primary" size={24} />
-                      <h2 className="text-2xl font-semibold text-text-primary">Notificaciones</h2>
+                      <h2 className="text-2xl font-semibold text-text-primary dark:text-text-inverse">
+                        Notificaciones
+                      </h2>
                     </div>
 
                     <div className="space-y-6">
