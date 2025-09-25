@@ -175,7 +175,7 @@ export default function SettingsPage() {
 
             {/* Content */}
             <div className="lg:col-span-3">
-              <div className="bg-white dark:bg-background-dark-secondary rounded-xl shadow-sm border border-neutral/20 dark:border-neutral-dark/30 p-6">
+              <div className="bg-white dark:bg-background-dark-container rounded-xl shadow-sm border border-neutral/20 dark:border-neutral-dark/30 p-6">
                 {/* Theme & Preferences Section */}
                 {activeSection === "theme" && <ThemeAndPreferencesSettings />}
 

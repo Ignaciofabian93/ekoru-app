@@ -1,3 +1,5 @@
+import { lime, slate } from "tailwindcss/colors";
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -39,6 +41,11 @@ module.exports = {
           secondary: "#f9fafb",
           dark: "#1a1a1a",
           "dark-secondary": "#2d3748",
+          "dark-container": "#2a2a2a",
+        },
+        navbar: {
+          light: lime,
+          dark: slate,
         },
       },
     },

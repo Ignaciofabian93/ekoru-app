@@ -46,9 +46,8 @@ export default function Navbar() {
     <>
       <header
         className={clsx(
-          "bg-gradient-to-r from-primary-light via-primary to-primary-dark",
-          // "dark:from-slate-950 dark:via-slate-800 dark:to-slate-700",
-          "dark:bg-background",
+          "bg-gradient-to-r from-navbar-light-200 via-navbar-light-600 to-navbar-light-950",
+          "dark:from-navbar-dark-950 dark:via-navbar-dark-800 dark:to-navbar-dark-700",
           "shadow-md border-b border-neutral/20",
           "sticky top-0 z-50"
         )}

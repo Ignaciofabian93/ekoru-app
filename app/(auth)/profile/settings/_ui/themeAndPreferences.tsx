@@ -43,23 +43,6 @@ export default function ThemeAndPreferencesSettings() {
       </div>
 
       <ThemeDebug />
-
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Select
-          label="Idioma"
-          value={settings.language}
-          onChange={(value) => updateSettings("language", value as string)}
-          options={languages}
-          icon={Globe}
-        />
-        <Select
-          label="Moneda"
-          value={settings.currency}
-          onChange={(value) => updateSettings("currency", value as string)}
-          options={currencies}
-          icon={CreditCard}
-        />
-      </div> */}
     </motion.div>
   );
 }
