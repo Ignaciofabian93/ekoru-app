@@ -18,7 +18,7 @@ export default function ThemeAndPreferencesSettings() {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
       <div className="flex items-center space-x-4 mb-6">
         <Palette className="text-primary" size={24} />
-        <Title text="Tema y Preferencias" variant="h3" />
+        <Title text="Tema e Idioma" variant="h3" />
       </div>
 
       <div className="space-y-2">
@@ -50,7 +50,7 @@ export default function ThemeAndPreferencesSettings() {
       </div>
 
       <div className="space-y-2">
-        <Text text="Lenguaje" variant="label" />
+        <Text text="Idioma de la aplicación" variant="label" />
         <Select
           icon={Flag}
           options={languageOptions}

@@ -18,7 +18,7 @@ export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState("theme");
 
   const sections = [
-    { id: "theme", label: "Tema y Preferencias", icon: Palette },
+    { id: "theme", label: "Tema e Idioma", icon: Palette },
     { id: "notifications", label: "Notificaciones", icon: Bell },
     { id: "security", label: "Seguridad", icon: Shield },
     { id: "payments", label: "Pagos", icon: CreditCard },
