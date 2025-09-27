@@ -56,7 +56,7 @@ export default function Navbar() {
         className={clsx(
           "bg-gradient-to-r from-navbar-light-950 via-navbar-light-600 to-navbar-light-950",
           "dark:from-navbar-dark-950 dark:via-navbar-dark-700 dark:to-navbar-dark-950",
-          "shadow-md border-b border-neutral/20",
+          "shadow-md border-b border-neutral/20 dark:border-navbar-dark-800",
           "sticky top-0 z-50"
         )}
         onKeyDown={handleKeyDown}

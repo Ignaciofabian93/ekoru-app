@@ -26,6 +26,7 @@ type SelectProps = {
   renderOption?: (option: Option, selected: boolean) => React.ReactNode;
   icon?: LucideIcon;
   searchEnabled?: boolean;
+  readOnly?: boolean;
 };
 
 export default function Select({
@@ -42,7 +43,9 @@ export default function Select({
   className,
   icon: Icon = Lock,
   searchEnabled = true,
+  readOnly = false,
 }: SelectProps) {
+  const [isFocused, setIsFocused] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
@@ -131,9 +134,13 @@ export default function Select({
       <div className="relative">
         <motion.div initial={false} transition={{ duration: 0.2 }} className="relative">
           <Icon
-            className={
-              "absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 text-gray-400"
-            }
+            className={clsx(
+              "absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200",
+              {
+                "text-primary": isFocused,
+                "text-gray-400": !isFocused,
+              }
+            )}
           />
           <button
             type="button"
@@ -143,12 +150,17 @@ export default function Select({
             aria-haspopup="listbox"
             aria-expanded={isOpen}
             aria-controls={listboxId}
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => !readOnly && setIsOpen(!isOpen)}
+            onFocus={() => !readOnly && setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
             onKeyDown={handleKeyDown}
             className={clsx(
+              "bg-select-light-50 dark:bg-select-dark-800",
               "w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200 bg-gray-50 focus:bg-white text-left",
               "placeholder:text-gray-400",
-              disabled && "opacity-50 cursor-not-allowed"
+              {
+                "opacity-50 cursor-not-allowed": disabled || readOnly,
+              }
             )}
           >
             {renderLabel(selectedOption)}
@@ -156,7 +168,11 @@ export default function Select({
               size={18}
               className={clsx(
                 "absolute right-3 top-1/2 transform -translate-y-1/2 transition-transform duration-200",
-                isOpen && "rotate-180"
+                isOpen && "rotate-180",
+                {
+                  "text-primary": isFocused,
+                  "text-gray-400": !isFocused,
+                }
               )}
             />
           </button>
@@ -176,13 +192,19 @@ export default function Select({
                     : undefined
                 }
                 tabIndex={-1}
-                className="absolute top-full left-0 z-50 mt-1 w-full bg-white border-2 border-primary rounded-xl shadow-2xl overflow-hidden"
+                className="absolute top-full left-0 z-50 mt-1 w-full bg-select-light-50 dark:bg-select-dark-800 border-2 border-primary rounded-xl shadow-2xl overflow-hidden"
               >
                 {searchEnabled && (
                   <input
                     type="text"
                     placeholder="Buscar..."
-                    className="w-full px-4 py-2 border-b border-primary outline-none text-base"
+                    className={clsx(
+                      "bg-select-light-50 dark:bg-select-dark-800",
+                      "w-full px-4 py-2 border-b border-primary outline-none text-base",
+                      {
+                        "text-gray-400": !isFocused,
+                      }
+                    )}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     aria-label="Buscar opciones"

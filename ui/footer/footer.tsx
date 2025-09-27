@@ -23,7 +23,7 @@ export default function Footer() {
         "bg-gradient-to-r from-footer-light-950 via-footer-light-600 to-footer-light-950",
         "dark:from-footer-dark-950 dark:via-footer-dark-700 dark:to-footer-dark-950",
         "text-white border-t border-white",
-        "dark:border-neutral/20"
+        "dark:border-footer-dark-800"
       )}
       role="contentinfo"
       aria-label="Información del sitio web"

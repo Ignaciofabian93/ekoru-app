@@ -47,7 +47,7 @@ export default function Subheader() {
           "sticky top-[64px] z-40",
           "h-10 flex items-center justify-center",
           "text-sm font-medium",
-          "dark:bg-stone-950 dark:text-text-inverse dark:border-neutral/20"
+          "dark:bg-subheader-dark-950 dark:text-text-100 dark:border-subheader-dark-800"
         )}
       >
         {subnavigationLinks.map(({ title, enabled }) => (
