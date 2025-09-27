@@ -5,6 +5,7 @@ import { LucideIcon, Eye, EyeOff, Lock } from "lucide-react";
 import clsx from "clsx";
 
 type Props = React.HTMLAttributes<HTMLInputElement> & {
+  id?: string;
   label?: string;
   placeholder?: string;
   value: string;
@@ -25,6 +26,7 @@ type Props = React.HTMLAttributes<HTMLInputElement> & {
 };
 
 export default function Input({
+  id,
   name,
   label,
   placeholder,
@@ -75,7 +77,7 @@ export default function Input({
             />
           )}
           <input
-            id={name}
+            id={id || name}
             name={name}
             type={inputType}
             value={value}

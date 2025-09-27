@@ -1,11 +1,6 @@
 import { Icon } from "./type";
 
-export default function InstagramIcon({
-  width,
-  height,
-  className,
-  onClick,
-}: Icon) {
+export default function InstagramIcon({ width, height, className, onClick }: Icon) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
