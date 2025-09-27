@@ -14,8 +14,8 @@ export default function Footer() {
   return (
     <footer
       className={clsx(
-        "bg-gradient-to-r from-primary-light via-primary to-primary-dark",
-        "dark:from-slate-950 dark:via-slate-800 dark:to-slate-700",
+        "bg-gradient-to-r from-footer-light-950 via-footer-light-600 to-footer-light-950",
+        "dark:from-footer-dark-950 dark:via-footer-dark-700 dark:to-footer-dark-950",
         "text-white border-t border-white",
         "dark:border-neutral/20"
       )}

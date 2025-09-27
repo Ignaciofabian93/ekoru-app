@@ -39,7 +39,7 @@ export default function Subheader() {
   };
 
   return (
-    <div className="relative">
+    <section className="relative">
       <div
         className={clsx(
           "hidden lg:flex w-full bg-white",
@@ -47,7 +47,7 @@ export default function Subheader() {
           "sticky top-[64px] z-40",
           "h-10 flex items-center justify-center",
           "text-sm font-medium",
-          "dark:bg-stone-900 dark:text-text-inverse dark:border-neutral/20"
+          "dark:bg-stone-950 dark:text-text-inverse dark:border-neutral/20"
         )}
       >
         {subnavigationLinks.map(({ title, enabled }) => (
@@ -82,6 +82,6 @@ export default function Subheader() {
           </div>
         )}
       </AnimatePresence>
-    </div>
+    </section>
   );
 }

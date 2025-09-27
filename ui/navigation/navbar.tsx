@@ -10,10 +10,11 @@ import useSessionStore from "@/store/session";
 import AccountMenu from "./account";
 import SideMobileMenu from "./sideMobileMenu";
 import clsx from "clsx";
+import Input from "../inputs/input";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const { marketData } = useCatalogStore();
   const { data } = useSessionStore();
 
@@ -46,8 +47,8 @@ export default function Navbar() {
     <>
       <header
         className={clsx(
-          "bg-gradient-to-r from-navbar-light-200 via-navbar-light-600 to-navbar-light-950",
-          "dark:from-navbar-dark-950 dark:via-navbar-dark-800 dark:to-navbar-dark-700",
+          "bg-gradient-to-r from-navbar-light-950 via-navbar-light-600 to-navbar-light-950",
+          "dark:from-navbar-dark-950 dark:via-navbar-dark-700 dark:to-navbar-dark-950",
           "shadow-md border-b border-neutral/20",
           "sticky top-0 z-50"
         )}
@@ -70,20 +71,15 @@ export default function Navbar() {
 
             {/* Search Bar - Desktop */}
             <div className="hidden md:flex flex-1 max-w-2xl mx-8">
-              <div className="relative w-full">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-neutral" />
-                </div>
-                <input
-                  type="search"
-                  placeholder="Buscar en EKORU..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2 border border-neutral/30 rounded-lg 
-                         focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent
-                         text-text-primary placeholder-text-muted bg-white"
-                />
-              </div>
+              <Input
+                name="search"
+                type="search"
+                placeholder="Buscar en EKORU..."
+                value={searchQuery}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                icon={Search}
+                className="m-0"
+              />
             </div>
 
             {/* User Actions */}
@@ -127,20 +123,15 @@ export default function Navbar() {
 
           {/* Mobile Search Bar */}
           <div className="md:hidden pb-4">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-neutral" />
-              </div>
-              <input
-                type="search"
-                placeholder="Buscar en EKORU..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-10 pr-3 py-2 border border-neutral/30 rounded-lg 
-                       focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent
-                       text-text-primary placeholder-text-muted bg-white"
-              />
-            </div>
+            <Input
+              name="search"
+              type="search"
+              placeholder="Buscar en EKORU..."
+              value={searchQuery}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+              icon={Search}
+              className="m-0"
+            />
           </div>
         </nav>
       </header>

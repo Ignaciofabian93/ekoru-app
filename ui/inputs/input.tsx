@@ -9,7 +9,7 @@ type Props = React.HTMLAttributes<HTMLInputElement> & {
   placeholder?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  type?: "text" | "email" | "password" | "number";
+  type?: "text" | "email" | "password" | "number" | "search";
   icon?: LucideIcon;
   hasIcon?: boolean;
   showPassword?: boolean;
@@ -54,20 +54,23 @@ export default function Input({
   const inputType = type === "password" && showPassword ? "text" : type;
 
   return (
-    <div className={clsx("space-y-2", sizeClass)}>
+    <div
+      className={clsx(
+        {
+          "space-y-2": !!label,
+        },
+        sizeClass
+      )}
+    >
       <label htmlFor={name} className="text-sm font-medium text-gray-700">
         {label}
       </label>
       <div className="relative">
-        <motion.div
-          initial={false}
-          transition={{ duration: 0.2 }}
-          className="relative"
-        >
+        <motion.div initial={false} transition={{ duration: 0.2 }} className="relative">
           {hasIcon && Icon && (
             <Icon
               className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
-                focusedField === "password" ? "text-primary" : "text-gray-400"
+                focusedField === name ? "text-primary" : "text-gray-400"
               }`}
             />
           )}
@@ -77,26 +80,29 @@ export default function Input({
             type={inputType}
             value={value}
             onChange={onChange}
-            onFocus={() => setFocusedField("password")}
+            onFocus={() => setFocusedField(name || "input")}
             onBlur={() => setFocusedField(null)}
             required={required}
             minLength={minLength}
             maxLength={maxLength}
             className={clsx(
-              "w-full pr-12 py-3 border border-gray-300 rounded-lg outline-0 focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200 bg-gray-50 focus:bg-white",
+              "w-full pr-12 py-3",
+              "border border-gray-300",
+              "rounded-lg outline-0",
+              "transition-all duration-200",
+              "bg-input-light-100 focus:bg-white",
+              "focus:ring-1 focus:ring-primary focus:border-primary",
+              "dark:bg-input-dark-800 dark:focus:bg-input-dark-900",
               "placeholder:text-gray-400",
               {
                 "pl-3": !hasIcon,
                 "pl-10": hasIcon,
-                "border-red-600 focus:ring-red-600 focus:border-red-600":
-                  isInvalid,
+                "border-red-600 focus:ring-red-600 focus:border-red-600": isInvalid,
               }
             )}
             placeholder={placeholder}
           />
-          {isInvalid && (
-            <p className="absolute text-xs text-red-600">{errorMessage}</p>
-          )}
+          {isInvalid && <p className="absolute text-xs text-red-600">{errorMessage}</p>}
           {type === "password" && (
             <button
               type="button"

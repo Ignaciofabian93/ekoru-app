@@ -1,4 +1,4 @@
-import { lime, slate } from "tailwindcss/colors";
+import { lime, stone, gray, white, neutral } from "tailwindcss/colors";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -45,7 +45,27 @@ module.exports = {
         },
         navbar: {
           light: lime,
-          dark: slate,
+          dark: stone,
+        },
+        footer: {
+          light: lime,
+          dark: stone,
+        },
+        subheader: {
+          light: white,
+          dark: stone,
+        },
+        container: {
+          light: neutral,
+          dark: stone,
+        },
+        layout: {
+          light: neutral,
+          dark: stone,
+        },
+        input: {
+          light: gray,
+          dark: stone,
         },
       },
     },
