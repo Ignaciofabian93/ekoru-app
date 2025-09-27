@@ -1,4 +1,4 @@
-import { lime, stone, gray, white, neutral } from "tailwindcss/colors";
+import { lime, stone, gray, white, neutral, red } from "tailwindcss/colors";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -12,11 +12,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: "#71b64a",
-          dark: "#2d5016",
-          light: "#d8f999",
-        },
+        primary: lime[600],
+        danger: red[600],
         secondary: "#9bc53d",
         accent: "#8b4513",
         neutral: {
@@ -62,6 +59,10 @@ module.exports = {
         layout: {
           light: neutral,
           dark: stone,
+        },
+        button: {
+          primary: lime,
+          danger: red,
         },
         input: {
           light: gray,

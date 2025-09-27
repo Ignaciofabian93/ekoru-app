@@ -26,9 +26,9 @@ export default function MainButton({
   const getVariantStyles = (variant: string) => {
     switch (variant) {
       case "primary":
-        return "border-2 border-primary bg-gradient-to-r from-primary to-primary-dark text-white hover:brightness-110";
+        return "border-2 border-primary bg-gradient-to-r from-button-primary-500 to-button-primary-800 text-white hover:brightness-110";
       case "destructive":
-        return "border-2 border-error bg-error text-white hover:brightness-110";
+        return "border-2 border-danger bg-button-danger-600 text-white hover:brightness-110";
       case "outline":
         return "border-2 border-primary text-primary bg-white hover:brightness-110";
       case "ghost":
