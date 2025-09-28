@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useTheme } from "@/providers/theme";
 import { Flag, Palette } from "lucide-react";
 import { motion } from "motion/react";
@@ -12,10 +13,16 @@ const languageOptions = [
   { value: "fr", label: "Francés" },
 ];
 
-export default function ThemeAndPreferencesSettings() {
+export default function ThemeAndLanguageSettings() {
   const { theme, setTheme } = useTheme();
+  const [language, setLanguage] = useState("es");
+
+  const handleLanguageChange = (value: string) => {
+    setLanguage(value);
+  };
+
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 mb-24">
       <div className="flex items-center space-x-4 mb-6">
         <Palette className="text-primary" size={24} />
         <Title text="Tema e Idioma" variant="h3" />
@@ -50,12 +57,12 @@ export default function ThemeAndPreferencesSettings() {
       </div>
 
       <div className="space-y-2">
-        <Text text="Idioma de la aplicación" variant="label" />
+        <Text text="Idioma de la aplicación (próximamente)" variant="label" />
         <Select
           icon={Flag}
           options={languageOptions}
-          value={languageOptions[0].value}
-          onChange={(value) => console.log(value)}
+          value={language}
+          onChange={(e) => handleLanguageChange(e as string)}
           readOnly
         />
       </div>

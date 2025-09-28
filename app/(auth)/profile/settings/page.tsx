@@ -5,7 +5,7 @@ import { Bell, Shield, Palette, Store, CreditCard } from "lucide-react";
 import { Title } from "@/ui/text/title";
 import { Text } from "@/ui/text/text";
 import MainLayout from "@/ui/layout/mainLayout";
-import ThemeAndPreferencesSettings from "./_ui/themeAndPreferences";
+import ThemeAndLanguageSettings from "./_ui/themeAndPreferences";
 import NotificationsSettings from "./_ui/notifications";
 import SecuritySettings from "./_ui/security";
 import PaymentsSettings from "./_ui/payments";
@@ -65,22 +65,20 @@ export default function SettingsPage() {
 
             {/* Content */}
             <div className="lg:col-span-3">
-              <div className="p-6">
-                {/* Theme & Preferences Section */}
-                {activeSection === "theme" && <ThemeAndPreferencesSettings />}
+              {/* Theme & Language Section */}
+              {activeSection === "theme" && <ThemeAndLanguageSettings />}
 
-                {/* Notifications Section */}
-                {activeSection === "notifications" && <NotificationsSettings />}
+              {/* Notifications Section */}
+              {activeSection === "notifications" && <NotificationsSettings />}
 
-                {/* Security Section */}
-                {activeSection === "security" && <SecuritySettings />}
+              {/* Security Section */}
+              {activeSection === "security" && <SecuritySettings />}
 
-                {/* Payments Section */}
-                {activeSection === "payments" && <PaymentsSettings />}
+              {/* Payments Section */}
+              {activeSection === "payments" && <PaymentsSettings />}
 
-                {/* Subscription Section */}
-                {activeSection === "subscription" && <SubscriptionSettings />}
-              </div>
+              {/* Subscription Section */}
+              {activeSection === "subscription" && <SubscriptionSettings />}
             </div>
           </Grid>
         </div>
