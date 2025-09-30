@@ -13,19 +13,9 @@ export type ProductCondition =
   | "USED"
   | "REFURBISHED";
 
-export type TransactionKind =
-  | "PURCHASE"
-  | "EXCHANGE"
-  | "GIFT"
-  | "REFERRAL"
-  | "BONUS";
+export type TransactionKind = "PURCHASE" | "EXCHANGE" | "GIFT" | "REFERRAL" | "BONUS";
 
-export type ShippingStage =
-  | "PREPARING"
-  | "SHIPPED"
-  | "DELIVERED"
-  | "RETURNED"
-  | "CANCELED";
+export type ShippingStage = "PREPARING" | "SHIPPED" | "DELIVERED" | "RETURNED" | "CANCELED";
 
 export type Badge =
   | "POPULAR"
@@ -62,23 +52,26 @@ export type Badge =
   | "IN_HOUSE_PICKUP"
   | "IN_MID_POINT_PICKUP";
 
-export type ContactMethod =
-  | "EMAIL"
-  | "PHONE"
-  | "INSTAGRAM"
-  | "FACEBOOK"
-  | "TIKTOK"
-  | "WEBSITE"
-  | "WHATSAPP"
-  | "ALL";
+export type ContactMethod = "EMAIL" | "PHONE" | "INSTAGRAM" | "FACEBOOK" | "TIKTOK" | "WEBSITE" | "WHATSAPP" | "ALL";
 
 export type WeightUnit = "KG" | "LB" | "OZ" | "G";
 
 export type ProductSize = "XS" | "S" | "M" | "L" | "XL";
 
-export type ExchangeStatus =
-  | "PENDING"
-  | "ACCEPTED"
-  | "DECLINED"
-  | "COMPLETED"
-  | "CANCELLED";
+export type ExchangeStatus = "PENDING" | "ACCEPTED" | "DECLINED" | "COMPLETED" | "CANCELLED";
+
+export enum BlogCategory {
+  RECYCLING = "RECYCLING",
+  POLLUTION = "POLLUTION",
+  SUSTAINABILITY = "SUSTAINABILITY",
+  CIRCULAR_ECONOMY = "CIRCULAR_ECONOMY",
+  USED_PRODUCTS = "USED_PRODUCTS",
+  REUSE = "REUSE",
+  ENVIRONMENT = "ENVIRONMENT",
+  UPCYCLING = "UPCYCLING",
+  RESPONSIBLE_CONSUMPTION = "RESPONSIBLE_CONSUMPTION",
+  ECO_TIPS = "ECO_TIPS",
+  ENVIRONMENTAL_IMPACT = "ENVIRONMENTAL_IMPACT",
+  SUSTAINABLE_LIVING = "SUSTAINABLE_LIVING",
+  OTHER = "OTHER",
+}

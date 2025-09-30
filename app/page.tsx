@@ -6,14 +6,14 @@ import { useCatalogStore } from "@/store/catalog";
 
 export default function InitApp() {
   const router = useRouter();
-  const { storeData, marketData, initialized } = useCatalogStore();
+  const { storeData, marketData, blogData, initialized } = useCatalogStore();
 
   // Redirect when both are loaded
   useEffect(() => {
-    if (initialized && (marketData || storeData)) {
+    if (initialized && (marketData || storeData || blogData)) {
       router.replace("/feed");
     }
-  }, [initialized, storeData, marketData]);
+  }, [initialized, storeData, marketData, blogData]);
 
   return null;
 }

@@ -29,7 +29,7 @@ export const subnavigationLinks = [
   },
   {
     title: "Blog",
-    href: "/blog",
+    href: "/posts",
     enabled: process.env.NEXT_PUBLIC_ENABLE_BLOG === "true",
   },
 ];

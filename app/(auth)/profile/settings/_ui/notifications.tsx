@@ -1,7 +1,7 @@
-import { motion } from "motion/react";
-import Checkbox from "@/ui/inputs/checkbox";
-import { Bell } from "lucide-react";
 import { useState } from "react";
+import { motion } from "motion/react";
+import { Bell } from "lucide-react";
+import Checkbox from "@/ui/inputs/checkbox";
 
 type NotificationSettings = {
   emailNotifications: boolean;
@@ -32,8 +32,8 @@ export default function NotificationsSettings() {
         <h2 className="text-2xl font-semibold text-text-primary dark:text-text-inverse">Notificaciones</h2>
       </div>
 
-      <div className="space-y-6">
-        <div>
+      <div className="space-y-2">
+        <div className="mb-8">
           <h3 className="text-lg font-medium text-text-primary mb-4">Canales de Notificación</h3>
           <div className="space-y-4">
             <Checkbox

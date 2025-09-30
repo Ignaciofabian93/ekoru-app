@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
 import {
   ChevronRight,
   Package,
@@ -9,10 +8,28 @@ import {
   Wrench,
   Users,
   BookOpen,
+  LucideIcon,
+  // Add more icons as needed for blog categories
+  Recycle,
+  TreeDeciduous,
+  HousePlug,
+  Leaf,
+  UtilityPole,
+  LeafyGreen,
+  Trees,
+  Dam,
+  Tent,
+  Flower2,
+  Tractor,
+  Sun,
+  Vegan,
 } from "lucide-react";
 import { serviceCategories } from "@/constants/navigation/data";
 import { Department } from "@/types/product";
 import { StoreProfile } from "@/types/user";
+import { BlogCategories } from "@/types/blog";
+import Link from "next/link";
+import clsx from "clsx";
 
 interface MegaMenuProps {
   activeTab: string | null;
@@ -23,17 +40,13 @@ interface MegaMenuProps {
   storeData?: {
     storeCatalog: Array<StoreProfile>;
   } | null;
+  blogData?: {
+    blogCategories: Array<BlogCategories>;
+  } | null;
 }
 
-export default function MegaMenu({
-  activeTab,
-  onClose,
-  marketData,
-  storeData,
-}: MegaMenuProps) {
-  const [selectedDepartment, setSelectedDepartment] = useState<number | null>(
-    null
-  );
+export default function MegaMenu({ activeTab, onClose, marketData, storeData, blogData }: MegaMenuProps) {
+  const [selectedDepartment, setSelectedDepartment] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
   // Use marketData from props for Mercado
@@ -97,9 +110,7 @@ export default function MegaMenu({
               className="w-80 border-r border-neutral/20"
             >
               <div className="p-4">
-                <h4 className="text-md font-semibold text-text-primary mb-4">
-                  Categorías
-                </h4>
+                <h4 className="text-md font-semibold text-text-primary mb-4">Categorías</h4>
                 <div className="space-y-1">
                   {departments
                     .find((d) => d.id === selectedDepartment)
@@ -135,9 +146,7 @@ export default function MegaMenu({
               className="w-80"
             >
               <div className="p-4">
-                <h4 className="text-md font-semibold text-text-primary mb-4">
-                  Subcategorías
-                </h4>
+                <h4 className="text-md font-semibold text-text-primary mb-4">Subcategorías</h4>
                 <div className="space-y-1">
                   {departments
                     .find((d) => d.id === selectedDepartment)
@@ -188,9 +197,7 @@ export default function MegaMenu({
               onClick={onClose}
               className="p-4 rounded-lg border border-neutral/20 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200 group"
             >
-              <h4 className="font-semibold text-text-primary group-hover:text-primary mb-2">
-                {category.title}
-              </h4>
+              <h4 className="font-semibold text-text-primary group-hover:text-primary mb-2">{category.title}</h4>
               <p className="text-sm text-text-muted">{category.description}</p>
             </Link>
           ))}
@@ -213,9 +220,7 @@ export default function MegaMenu({
             onClick={onClose}
             className="p-4 rounded-lg border border-neutral/20 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200 group"
           >
-            <h4 className="font-semibold text-text-primary group-hover:text-primary mb-2">
-              {service.title}
-            </h4>
+            <h4 className="font-semibold text-text-primary group-hover:text-primary mb-2">{service.title}</h4>
             <p className="text-sm text-text-muted">{service.description}</p>
           </Link>
         ))}
@@ -258,42 +263,63 @@ export default function MegaMenu({
     </div>
   );
 
-  const renderBlogMenu = () => (
-    <div className="p-6">
-      <h3 className="text-lg font-semibold text-text-primary mb-6 flex items-center">
-        <BookOpen className="h-5 w-5 mr-2 text-primary" />
-        Contenido Educativo
-      </h3>
-      <div className="grid grid-cols-3 gap-4 max-w-3xl">
-        <Link
-          href="/blog/sustainability"
-          onClick={onClose}
-          className="p-4 rounded-lg border border-neutral/20 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200"
-        >
-          <h4 className="font-semibold text-text-primary mb-2">
-            Sostenibilidad
-          </h4>
-          <p className="text-sm text-text-muted">Guías y consejos</p>
-        </Link>
-        <Link
-          href="/blog/reviews"
-          onClick={onClose}
-          className="p-4 rounded-lg border border-neutral/20 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200"
-        >
-          <h4 className="font-semibold text-text-primary mb-2">Reviews</h4>
-          <p className="text-sm text-text-muted">Análisis de productos</p>
-        </Link>
-        <Link
-          href="/blog/news"
-          onClick={onClose}
-          className="p-4 rounded-lg border border-neutral/20 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200"
-        >
-          <h4 className="font-semibold text-text-primary mb-2">Noticias</h4>
-          <p className="text-sm text-text-muted">Actualidad ambiental</p>
-        </Link>
+  const renderBlogMenu = () => {
+    // Icon mapping function
+    const getIconComponent = (iconName: string): LucideIcon => {
+      const iconMap: Record<string, LucideIcon> = {
+        Recycle: Recycle,
+        TreeDeciduous: TreeDeciduous,
+        HousePlug: HousePlug,
+        Leaf: Leaf,
+        UtilityPole: UtilityPole,
+        LeafyGreen: LeafyGreen,
+        Trees: Trees,
+        Dam: Dam,
+        Tent: Tent,
+        Flower2: Flower2,
+        Tractor: Tractor,
+        Sun: Sun,
+        Vegan: Vegan,
+      };
+
+      return iconMap[iconName] || BookOpen; // Default fallback icon
+    };
+
+    return (
+      <div className="p-6">
+        <h3 className="text-lg font-semibold text-text-primary mb-6 flex items-center">
+          <BookOpen className="h-5 w-5 mr-2 text-primary" />
+          Blog Ecológico
+        </h3>
+        {!blogData || !blogData.blogCategories ? (
+          <div className="p-6">No hay datos de blog disponibles.</div>
+        ) : (
+          <div className="flex flex-wrap gap-4 items-center justify-center text-text-800">
+            {blogData.blogCategories.map((category) => {
+              const Icon = getIconComponent(category.icon);
+              return (
+                <Link
+                  key={category.id}
+                  href={`/blog/${category.id}`}
+                  onClick={onClose}
+                  className={clsx(
+                    "min-w-[220px] w-full max-w-[240px] h-[80px]",
+                    "flex items-center justify-start gap-4",
+                    "p-4 rounded-lg",
+                    "border border-neutral/20 hover:border-primary/30 hover:bg-primary/5",
+                    "transition-all duration-200"
+                  )}
+                >
+                  <Icon className="h-5 w-5 mb-2 text-primary" />
+                  <h4 className="font-semibold text-text-primary mb-2">{category.name}</h4>
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
-    </div>
-  );
+    );
+  };
 
   if (!activeTab) return null;
 

@@ -40,3 +40,13 @@ export const GET_MARKET_CATALOG = gql`
     }
   }
 `;
+
+export const GET_BLOG_CATALOG = gql`
+  query BlogCategories {
+    blogCategories {
+      id
+      name
+      icon
+    }
+  }
+`;
