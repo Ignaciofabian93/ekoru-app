@@ -3,41 +3,39 @@ import { useProductStore } from "@/store/product";
 import Link from "next/link";
 import MainButton from "@/ui/buttons/mainButton";
 import useLogout from "@/hooks/useLogout";
+import clsx from "clsx";
 
 type Props = {
   isLoggedIn?: boolean;
 };
+
+const links = [
+  { href: "/profile", label: "Mi Perfil" },
+  { href: "/profile/orders", label: "Mis Órdenes" },
+  { href: "/profile/impact-dashboard", label: "Mi Impacto" },
+  { href: "/profile/settings", label: "Ajustes" },
+];
 
 const LoggedInMenu = () => {
   const { handleLogout } = useLogout();
   const { openModal } = useProductStore();
 
   return (
-    <div className="flex flex-col items-center space-y-3 px-2 py-2">
-      <Link
-        href="/profile"
-        className="w-full rounded-sm block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
-      >
-        Mi Perfil
-      </Link>
-      <Link
-        href="/profile/orders"
-        className="w-full rounded-sm block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
-      >
-        Mis Órdenes
-      </Link>
-      <Link
-        href="/profile/impact-dashboard"
-        className="w-full rounded-sm block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
-      >
-        Mi Impacto
-      </Link>
-      <Link
-        href="/profile/settings"
-        className="w-full rounded-sm block px-4 py-2 text-text-primary hover:bg-neutral-light transition-colors"
-      >
-        Ajustes
-      </Link>
+    <div className="flex flex-col items-center space-y-3 px-2 py-2 text-text-800 dark:text-text-100">
+      {links.map(({ href, label }) => (
+        <Link
+          key={href}
+          href={href}
+          className={clsx(
+            "w-full rounded-md block px-4 py-2",
+            "text-text-800 dark:text-text-100",
+            "hover:bg-navbar-light-200 dark:hover:bg-navbar-light-700/30",
+            "transition-colors"
+          )}
+        >
+          {label}
+        </Link>
+      ))}
       <hr className="my-2 border-neutral/20" />
       <MainButton
         type="button"
@@ -78,7 +76,17 @@ export default function AccountMenu({ isLoggedIn }: Props) {
       </button>
 
       {/* Dropdown Menu */}
-      <div className="absolute right-0 z-50 mt-2 w-48 bg-white rounded-lg shadow-lg border border-neutral/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+      <div
+        className={clsx(
+          "absolute right-0 z-50 mt-2 w-48",
+          "bg-white dark:bg-navbar-dark-800",
+          "rounded-lg shadow-lg",
+          "border border-neutral/20 dark:border-navbar-dark-700",
+          "opacity-0 invisible",
+          "group-hover:opacity-100 group-hover:visible",
+          "transition-all duration-200"
+        )}
+      >
         <div className="py-2">{isLoggedIn ? <LoggedInMenu /> : <NotLoggedInMenu />}</div>
       </div>
     </div>

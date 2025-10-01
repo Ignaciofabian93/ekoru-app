@@ -25,11 +25,11 @@ export default function ThemeAndLanguageSettings() {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 mb-24">
       <div className="flex items-center space-x-4 mb-6">
         <Palette className="text-primary" size={24} />
-        <Title text="Tema e Idioma" variant="h3" />
+        <Title variant="h3">Tema e Idioma</Title>
       </div>
 
       <div className="space-y-2">
-        <Text text="Tema de la Aplicación" variant="label" />
+        <Text variant="label">Tema de la Aplicación</Text>
         <div className="grid grid-cols-3 gap-4">
           {["light", "dark", "system"].map((t) => (
             <motion.button
@@ -57,7 +57,7 @@ export default function ThemeAndLanguageSettings() {
       </div>
 
       <div className="space-y-2">
-        <Text text="Idioma de la aplicación (próximamente)" variant="label" />
+        <Text variant="label">Idioma de la aplicación (próximamente)</Text>
         <Select
           icon={Flag}
           options={languageOptions}

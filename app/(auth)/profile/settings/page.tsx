@@ -31,8 +31,8 @@ export default function SettingsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="mb-8">
-            <Title text="Configuración de la Cuenta" variant="h1" />
-            <Text text="Personaliza tu experiencia, gestiona tu seguridad y configura tus preferencias" variant="p" />
+            <Title variant="h1">Configuración de la Cuenta</Title>
+            <Text variant="p">Personaliza tu experiencia, gestiona tu seguridad y configura tus preferencias</Text>
           </div>
 
           <Grid className="grid-cols-1 lg:grid-cols-4 gap-8">
