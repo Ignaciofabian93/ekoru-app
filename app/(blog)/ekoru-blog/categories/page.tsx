@@ -5,11 +5,10 @@ import Container from "@/ui/layout/container";
 import { Title } from "@/ui/text/title";
 import { Text } from "@/ui/text/text";
 import useBlogCategories from "../../_hooks/useBlogCategories";
-import CategoryCard from "../../_ui/categoryCard";
+import CategoryCard, { BlogCategoryCardSkeleton } from "../../_ui/categoryCard";
 
 export default function CategoriesPage() {
   const { loadingCategories, categories } = useBlogCategories();
-  console.log(loadingCategories, categories);
 
   return (
     <MainLayout>
@@ -28,11 +27,11 @@ export default function CategoriesPage() {
         </Text>
 
         {/* Categories Grid */}
-        <Container>
+        <Container className="mb-20">
           <div className="flex flex-wrap gap-6 justify-evenly">
-            {categories?.map((category) => (
-              <CategoryCard key={category.id} category={category} />
-            ))}
+            {loadingCategories && Array.from({ length: 14 }, (_, index) => <BlogCategoryCardSkeleton key={index} />)}
+            {!loadingCategories &&
+              categories?.map((category) => <CategoryCard key={category.id} category={category} />)}
           </div>
         </Container>
       </Container>

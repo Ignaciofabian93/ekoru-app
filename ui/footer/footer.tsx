@@ -60,8 +60,7 @@ export default function Footer() {
 
             {/* Main Navigation */}
             <nav aria-label="Navegación principal del pie de página">
-              <h2 className="sr-only">Enlaces principales</h2>
-              <ul className="flex flex-wrap gap-4 text-white text-sm font-medium" role="list">
+              <ul className="flex flex-wrap justify-center gap-4 text-white text-sm font-medium" role="list">
                 <li>
                   <Link
                     href="/community"

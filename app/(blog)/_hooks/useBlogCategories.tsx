@@ -12,7 +12,5 @@ export default function useBlogCategories() {
     blogCategories();
   }, [blogCategories]);
 
-  console.log("DATA CATEGORIES:", categories);
-
   return { categories: categories?.blogCategories as BlogCategories[], loadingCategories };
 }

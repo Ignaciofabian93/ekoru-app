@@ -1,6 +1,5 @@
 import { usePathname } from "next/navigation";
 import { Book, File, Home, Tags, Users2 } from "lucide-react";
-import Container from "@/ui/layout/container";
 import clsx from "clsx";
 import Link from "next/link";
 
@@ -23,14 +22,14 @@ export default function BlogNavigation() {
 
   return (
     <nav className={clsx("bg-subheader-light dark:bg-subheader-dark-900", "mb-12")}>
-      <Container>
-        <div className="flex space-x-8 overflow-x-auto items-center justify-center">
+      <div className="w-full overflow-x-auto">
+        <div className="flex space-x-8 px-4 min-w-max md:justify-center">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={clsx(
-                "flex items-center justify-start gap-3 py-2 px-3 mt-4 border-b-2",
+                "flex items-center justify-start gap-3 py-2 px-3 mt-4 border-b-2 whitespace-nowrap flex-shrink-0",
                 "hover:border-b-stone-800 dark:hover:border-b-white",
                 "transition-colors duration-300 ease-in-out",
                 {
@@ -44,7 +43,7 @@ export default function BlogNavigation() {
             </Link>
           ))}
         </div>
-      </Container>
+      </div>
     </nav>
   );
 }

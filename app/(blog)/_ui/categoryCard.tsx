@@ -27,6 +27,54 @@ type Props = {
   category: BlogCategories;
 };
 
+export const BlogCategoryCardSkeleton = () => {
+  return (
+    <div className={clsx("w-full max-w-lg md:max-w-xs lg:max-w-[280px]")}>
+      <div
+        className={clsx(
+          "relative bg-card-light-100 dark:bg-card-dark-800 rounded-xl shadow-md",
+          "p-6",
+          "border border-neutral/10"
+        )}
+      >
+        {/* Header with Icon and Blog Count Skeleton */}
+        <div className="flex items-start justify-between mb-4">
+          {/* Icon Container Skeleton */}
+          <div className="p-3 rounded-full bg-primary/10 animate-pulse">
+            <div className="h-8 w-8 bg-neutral/30 dark:bg-neutral/40 rounded"></div>
+          </div>
+          {/* Blog Count Skeleton */}
+          <div className="text-right space-y-1 bg-neutral-800/10 dark:bg-neutral-50/10 animate-pulse">
+            <div className="h-3 w-16 bg-neutral/30 dark:bg-neutral/40 rounded animate-pulse" />
+            <div className="h-4 w-8 bg-neutral/30 dark:bg-neutral/40 rounded animate-pulse" />
+          </div>
+        </div>
+
+        {/* Category Name Skeleton */}
+        <div className="mb-3 space-y-2 bg-neutral-800/10 dark:bg-neutral-50/10 animate-pulse">
+          <div className="h-6 w-3/4 bg-neutral/30 dark:bg-neutral/40 rounded animate-pulse" />
+          <div className="h-6 w-1/2 bg-neutral/30 dark:bg-neutral/40 rounded animate-pulse" />
+        </div>
+
+        {/* Description Skeleton */}
+        <div className="mb-4 space-y-2 bg-neutral-800/10 dark:bg-neutral-50/10 animate-pulse">
+          <div className="h-4 w-full bg-neutral/20 dark:bg-neutral/30 rounded animate-pulse" />
+          <div className="h-4 w-5/6 bg-neutral/20 dark:bg-neutral/30 rounded animate-pulse" />
+          <div className="h-4 w-3/4 bg-neutral/20 dark:bg-neutral/30 rounded animate-pulse" />
+        </div>
+
+        {/* CTA Button Skeleton */}
+        <div className="flex items-center justify-between pt-4 border-t border-neutral/10">
+          <div className="flex items-center bg-neutral-800/10 dark:bg-neutral-50/10 animate-pulse">
+            <div className="h-4 w-32 bg-neutral/30 dark:bg-neutral/40 rounded animate-pulse" />
+            <div className="ml-2 h-4 w-4 bg-neutral/30 dark:bg-neutral/40 rounded animate-pulse" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function CategoryCard({ category }: Props) {
   // Icon mapping function (same as mega menu)
   const getIconComponent = (iconName: string): LucideIcon => {
@@ -50,8 +98,8 @@ export default function CategoryCard({ category }: Props) {
     return iconMap[iconName] || BookOpen; // Default fallback icon
   };
 
-  const Icon = getIconComponent(category.icon);
-  const blogCount = category.blogs?.length || 0;
+  const Icon = getIconComponent(category?.icon || "");
+  const blogCount = category?.blogs?.length || 0;
 
   return (
     <Link
