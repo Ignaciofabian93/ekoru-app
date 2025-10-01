@@ -15,7 +15,7 @@ import Input from "../inputs/input";
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { marketData } = useCatalogStore();
+  const { marketData, storeData, blogData } = useCatalogStore();
   const { data } = useSessionStore();
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
@@ -199,6 +199,8 @@ export default function Navbar() {
               openAccordion={openAccordion}
               toggleAccordion={toggleAccordion}
               marketData={Array.isArray(marketData) ? { marketCatalog: marketData } : marketData}
+              storeData={Array.isArray(storeData) ? { storeCatalog: storeData } : storeData}
+              blogData={Array.isArray(blogData) ? { blogCategories: blogData } : blogData}
               openDepartment={openDepartment}
               toggleDepartment={toggleDepartment}
               openCategory={openCategory}

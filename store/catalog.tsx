@@ -1,17 +1,17 @@
 import { BlogCategories } from "@/types/blog";
 import { Department } from "@/types/product";
-import { StoreProfile } from "@/types/user";
+import { Seller } from "@/types/user";
 import { create } from "zustand";
 
 interface CatalogState {
-  storeData: StoreProfile[] | null;
+  storeData: Seller[] | null;
   marketData: Department[] | null;
   blogData: BlogCategories[] | null;
   loading: boolean;
   error: unknown;
   initialized: boolean;
   fetchCatalogs: (
-    StoreCatalog: () => Promise<{ storeCatalog: StoreProfile[] }>,
+    StoreCatalog: () => Promise<{ storeCatalog: Seller[] }>,
     MarketCatalog: () => Promise<{ marketCatalog: Department[] }>,
     BlogCatalog: () => Promise<{ blogCategories: BlogCategories[] }>
   ) => Promise<void>;
@@ -25,7 +25,7 @@ export const useCatalogStore = create<CatalogState>((set) => ({
   error: null,
   initialized: false,
   fetchCatalogs: async (
-    StoreCatalog: () => Promise<{ storeCatalog: StoreProfile[] }>,
+    StoreCatalog: () => Promise<{ storeCatalog: Seller[] }>,
     MarketCatalog: () => Promise<{ marketCatalog: Department[] }>,
     BlogCatalog: () => Promise<{ blogCategories: BlogCategories[] }>
   ) => {

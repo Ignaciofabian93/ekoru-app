@@ -7,6 +7,7 @@ import {
   Heart,
   House,
   LogOut,
+  LucideIcon,
   Package,
   ShoppingCart,
   Store,
@@ -23,6 +24,7 @@ import Image from "next/image";
 import { Title } from "../text/title";
 import clsx from "clsx";
 import { Text } from "../text/text";
+import { BlogCategories } from "@/types/blog";
 
 type Props = {
   closeMobileMenu: () => void;
@@ -30,6 +32,12 @@ type Props = {
   toggleAccordion: (section: string) => void;
   marketData?: {
     marketCatalog: Array<Department>;
+  } | null;
+  storeData?: {
+    storeCatalog: Array<Seller>;
+  } | null;
+  blogData?: {
+    blogCategories: Array<BlogCategories>;
   } | null;
   openDepartment: number | null;
   toggleDepartment: (departmentId: number) => void;
@@ -39,11 +47,41 @@ type Props = {
   data?: Seller | null;
 };
 
+type NavigationButtonProps = {
+  openAccordion: string | null;
+  toggleAccordion: (section: string) => void;
+  label: string;
+  icon: LucideIcon;
+};
+
+const NavigationButton = ({ openAccordion, toggleAccordion, label, icon }: NavigationButtonProps) => {
+  const Icon: LucideIcon = icon;
+  return (
+    <button
+      onClick={() => toggleAccordion("blog")}
+      className="w-full flex items-center justify-between p-3 text-left hover:bg-card-light-200 dark:hover:bg-card-dark-700 transition-colors rounded-lg"
+    >
+      <div className="flex items-center">
+        <Icon className="h-5 w-5 mr-3 text-primary" />
+        <Text variant="label" className="font-medium">
+          {label}
+        </Text>
+      </div>
+      <ChevronDown
+        className={`h-4 w-4 text-text-500 dark:text-text-400 transition-transform duration-200 ${
+          openAccordion === "blog" ? "rotate-180" : ""
+        }`}
+      />
+    </button>
+  );
+};
+
 export default function SideMobileMenu({
   closeMobileMenu,
   openAccordion,
   toggleAccordion,
   marketData,
+  blogData,
   openDepartment,
   toggleDepartment,
   openCategory,
@@ -77,6 +115,18 @@ export default function SideMobileMenu({
 
   const AccordionWrapper = ({ children }: { children: React.ReactNode }) => (
     <article className="border-b border-neutral/10 last:border-b-0">{children}</article>
+  );
+
+  const AccordionListWrapper = ({ children }: { children: React.ReactNode }) => (
+    <motion.div
+      initial={{ height: 0 }}
+      animate={{ height: "auto" }}
+      exit={{ height: 0 }}
+      transition={{ duration: 0.2 }}
+      className="overflow-hidden bg-card-light-100/40 dark:bg-card-dark-800 rounded-lg mt-1"
+    >
+      {children}
+    </motion.div>
   );
 
   return (
@@ -417,55 +467,34 @@ export default function SideMobileMenu({
 
           {/* Blog Accordion */}
           <AccordionWrapper>
-            <button
-              onClick={() => toggleAccordion("blog")}
-              className="w-full flex items-center justify-between p-3 text-left hover:bg-card-light-200 dark:hover:bg-card-dark-700 transition-colors rounded-lg"
-            >
-              <div className="flex items-center">
-                <BookOpen className="h-5 w-5 mr-3 text-primary" />
-                <span className="font-medium text-title-700 dark:text-title-300">Blog</span>
-              </div>
-              <ChevronDown
-                className={`h-4 w-4 text-text-500 dark:text-text-400 transition-transform duration-200 ${
-                  openAccordion === "blog" ? "rotate-180" : ""
-                }`}
-              />
-            </button>
-
+            <NavigationButton
+              openAccordion={openAccordion ?? null}
+              toggleAccordion={toggleAccordion}
+              label="Blog"
+              icon={BookOpen}
+            />
             <AnimatePresence>
               {openAccordion === "blog" && (
-                <motion.div
-                  initial={{ height: 0 }}
-                  animate={{ height: "auto" }}
-                  exit={{ height: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="overflow-hidden bg-card-light-200 dark:bg-card-dark-700 rounded-lg mt-1"
-                >
-                  <Link
-                    href="/blog/sustainability"
-                    onClick={closeMobileMenu}
-                    className="block p-3 pl-6 border-b border-neutral-300 dark:border-neutral-600 hover:bg-container-light-300 dark:hover:bg-container-dark-600 transition-colors"
-                  >
-                    <h4 className="text-sm font-medium text-text-700 dark:text-text-300 mb-1">Sostenibilidad</h4>
-                    <p className="text-xs text-text-500 dark:text-text-400">Guías y consejos</p>
-                  </Link>
-                  <Link
-                    href="/blog/reviews"
-                    onClick={closeMobileMenu}
-                    className="block p-3 pl-6 border-b border-neutral-300 dark:border-neutral-600 hover:bg-container-light-300 dark:hover:bg-container-dark-600 transition-colors"
-                  >
-                    <h4 className="text-sm font-medium text-text-700 dark:text-text-300 mb-1">Reviews</h4>
-                    <p className="text-xs text-text-500 dark:text-text-400">Análisis de productos</p>
-                  </Link>
-                  <Link
-                    href="/blog/news"
-                    onClick={closeMobileMenu}
-                    className="block p-3 pl-6 hover:bg-container-light-300 dark:hover:bg-container-dark-600 transition-colors"
-                  >
-                    <h4 className="text-sm font-medium text-text-700 dark:text-text-300 mb-1">Noticias</h4>
-                    <p className="text-xs text-text-500 dark:text-text-400">Actualidad ambiental</p>
-                  </Link>
-                </motion.div>
+                <AccordionListWrapper>
+                  {Array.isArray(blogData?.blogCategories) &&
+                    blogData?.blogCategories.map(({ id, name }) => (
+                      <Link
+                        key={id}
+                        href={`/ekoru-blog/categories/${id}`}
+                        onClick={closeMobileMenu}
+                        className={clsx(
+                          "block p-3 pl-6",
+                          "border-b border-neutral-300 dark:border-neutral-600",
+                          "hover:bg-container-light-200 dark:hover:bg-container-dark-600",
+                          "transition-colors"
+                        )}
+                      >
+                        <Text variant="span" className="font-medium mb-1">
+                          {name}
+                        </Text>
+                      </Link>
+                    ))}
+                </AccordionListWrapper>
               )}
             </AnimatePresence>
           </AccordionWrapper>
