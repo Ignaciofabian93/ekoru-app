@@ -23,13 +23,13 @@ import {
   Tractor,
   Sun,
   Vegan,
+  ShieldCheck,
 } from "lucide-react";
 import { serviceCategories } from "@/constants/navigation/data";
 import { Department } from "@/types/product";
 import { StoreProfile } from "@/types/user";
 import { BlogCategories } from "@/types/blog";
 import Link from "next/link";
-import clsx from "clsx";
 
 interface MegaMenuProps {
   activeTab: string | null;
@@ -280,6 +280,7 @@ export default function MegaMenu({ activeTab, onClose, marketData, storeData, bl
         Tractor: Tractor,
         Sun: Sun,
         Vegan: Vegan,
+        ShieldCheck: ShieldCheck,
       };
 
       return iconMap[iconName] || BookOpen; // Default fallback icon
@@ -292,29 +293,41 @@ export default function MegaMenu({ activeTab, onClose, marketData, storeData, bl
           Blog Ecológico
         </h3>
         {!blogData || !blogData.blogCategories ? (
-          <div className="p-6">No hay datos de blog disponibles.</div>
+          <div className="p-6 text-center text-text-muted">
+            <BookOpen className="h-12 w-12 mx-auto mb-3 text-neutral/40" />
+            <p>No hay datos de blog disponibles.</p>
+          </div>
         ) : (
-          <div className="flex flex-wrap gap-4 items-center justify-center text-text-800">
-            {blogData.blogCategories.map((category) => {
-              const Icon = getIconComponent(category.icon);
-              return (
-                <Link
-                  key={category.id}
-                  href={`/blog/${category.id}`}
-                  onClick={onClose}
-                  className={clsx(
-                    "min-w-[220px] w-full max-w-[240px] h-[80px]",
-                    "flex items-center justify-start gap-4",
-                    "p-4 rounded-lg",
-                    "border border-neutral/20 hover:border-primary/30 hover:bg-primary/5",
-                    "transition-all duration-200"
-                  )}
-                >
-                  <Icon className="h-5 w-5 mb-2 text-primary" />
-                  <h4 className="font-semibold text-text-primary mb-2">{category.name}</h4>
-                </Link>
-              );
-            })}
+          <div className="flex justify-center">
+            <div className="grid grid-cols-4 gap-4 max-w-4xl">
+              {blogData.blogCategories.map((category) => {
+                const Icon = getIconComponent(category.icon);
+                return (
+                  <Link
+                    key={category.id}
+                    href={`/ekoru-blog/categories/${category.id}`}
+                    onClick={onClose}
+                    className="group relative p-4 rounded-lg border border-neutral/20 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
+                  >
+                    <div className="flex flex-col items-center text-center space-y-3">
+                      <div className="p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors duration-200">
+                        <Icon className="h-6 w-6 text-primary group-hover:scale-110 transition-transform duration-200" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-text-primary group-hover:text-primary transition-colors duration-200 text-sm leading-tight">
+                          {category.name}
+                        </h4>
+                      </div>
+                    </div>
+
+                    {/* Hover indicator */}
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <ChevronRight className="h-4 w-4 text-primary" />
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>

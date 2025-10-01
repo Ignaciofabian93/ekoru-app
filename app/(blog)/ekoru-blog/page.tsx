@@ -1,24 +1,22 @@
 "use client";
 
 import MainLayout from "@/ui/layout/mainLayout";
-import BlogHero from "@/ui/components/blog/blogHero";
-import BlogNavigation from "@/ui/components/blog/blogNavigation";
-import BlogCard from "@/ui/cards/blog/blogCard";
-import { mockPosts, blogCategoriesInfo, mockAuthors, mockTags } from "@/lib/blogMockData";
+import BlogHero from "@/app/(blog)/_ui/blogHero";
+import BlogNavigation from "@/app/(blog)/_ui/blogNavigation";
 import Link from "next/link";
 
 export default function BlogPage() {
   // Get recent posts
-  const recentPosts = mockPosts
-    .filter((post) => post.status === "PUBLISHED")
-    .sort((a, b) => new Date(b.publishedAt || b.createdAt).getTime() - new Date(a.publishedAt || a.createdAt).getTime())
-    .slice(0, 6);
+  // const recentPosts = mockPosts
+  //   .filter((post) => post.status === "PUBLISHED")
+  //   .sort((a, b) => new Date(b.publishedAt || b.createdAt).getTime() - new Date(a.publishedAt || a.createdAt).getTime())
+  //   .slice(0, 6);
 
   // Get popular categories (top 6 by post count)
-  const popularCategories = [...blogCategoriesInfo].sort((a, b) => b.postsCount - a.postsCount).slice(0, 6);
+  // const popularCategories = [...blogCategoriesInfo].sort((a, b) => b.postsCount - a.postsCount).slice(0, 6);
 
-  // Get popular tags (top 8 by post count)
-  const popularTags = [...mockTags].sort((a, b) => b.postsCount - a.postsCount).slice(0, 8);
+  // // Get popular tags (top 8 by post count)
+  // const popularTags = [...mockTags].sort((a, b) => b.postsCount - a.postsCount).slice(0, 8);
 
   return (
     <MainLayout>
@@ -42,9 +40,9 @@ export default function BlogPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {recentPosts.map((post, index) => (
+            {/* {recentPosts.map((post, index) => (
               <BlogCard key={post.id} post={post} variant={index === 0 ? "featured" : "default"} />
-            ))}
+            ))} */}
           </div>
         </section>
 
@@ -61,7 +59,7 @@ export default function BlogPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {popularCategories.map((categoryInfo) => (
+            {/* {popularCategories.map((categoryInfo) => (
               <Link key={categoryInfo.category} href={`/blog/categories/${categoryInfo.category.toLowerCase()}`}>
                 <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 p-6 cursor-pointer hover:scale-105">
                   <div className="flex items-center mb-4">
@@ -81,7 +79,7 @@ export default function BlogPage() {
                   <p className="text-gray-600 text-sm">{categoryInfo.description}</p>
                 </div>
               </Link>
-            ))}
+            ))} */}
           </div>
         </section>
 
@@ -98,7 +96,7 @@ export default function BlogPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockAuthors.slice(0, 3).map((author) => (
+            {/* {mockAuthors.slice(0, 3).map((author) => (
               <Link key={author.id} href={`/blog/authors/${author.id}`}>
                 <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6 cursor-pointer text-center">
                   <div className="relative w-20 h-20 rounded-full overflow-hidden bg-gray-200 mx-auto mb-4">
@@ -111,7 +109,7 @@ export default function BlogPage() {
                   <div className="text-sm text-gray-500">{author.postsCount} posts</div>
                 </div>
               </Link>
-            ))}
+            ))} */}
           </div>
         </section>
 
@@ -129,7 +127,7 @@ export default function BlogPage() {
 
           <div className="bg-gray-50 rounded-lg p-8">
             <div className="flex flex-wrap justify-center gap-3">
-              {popularTags.map((tag) => (
+              {/* {popularTags.map((tag) => (
                 <Link key={tag.id} href={`/blog/tags/${tag.slug}`}>
                   <div
                     className="px-4 py-2 rounded-full text-white font-medium hover:opacity-80 transition-opacity cursor-pointer"
@@ -138,7 +136,7 @@ export default function BlogPage() {
                     #{tag.name} ({tag.postsCount})
                   </div>
                 </Link>
-              ))}
+              ))} */}
             </div>
           </div>
         </section>

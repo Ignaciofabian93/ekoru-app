@@ -1,7 +1,7 @@
 "use client";
 
 import MainLayout from "@/ui/layout/mainLayout";
-import BlogNavigation from "@/ui/components/blog/blogNavigation";
+import BlogNavigation from "@/app/(blog)/_ui/blogNavigation";
 import { mockAuthors, blogCategoriesInfo } from "@/lib/blogMockData";
 import { BlogAuthor } from "@/types/blog";
 import Link from "next/link";

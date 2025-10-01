@@ -55,6 +55,10 @@ module.exports = {
         },
         title: gray,
         text: gray,
+        card: {
+          light: neutral,
+          dark: stone,
+        },
       },
     },
   },

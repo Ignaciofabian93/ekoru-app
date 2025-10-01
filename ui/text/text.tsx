@@ -2,11 +2,11 @@ import clsx from "clsx";
 
 type Text = {
   className?: string;
-  text: string;
   variant?: "p" | "span" | "label" | "blockquote";
+  children: React.ReactNode;
 };
 
-export const Text = ({ className, text, variant = "p" }: Text) => {
+export const Text = ({ className, variant = "p", children }: Text) => {
   const getTextVariantStyle = (variant: string) => {
     switch (variant) {
       case "p":
@@ -21,6 +21,6 @@ export const Text = ({ className, text, variant = "p" }: Text) => {
   };
   const Tag = variant;
   return (
-    <Tag className={clsx("text-text-800 dark:text-text-100", className, getTextVariantStyle(variant))}>{text}</Tag>
+    <Tag className={clsx("text-text-800 dark:text-text-100", className, getTextVariantStyle(variant))}>{children}</Tag>
   );
 };
