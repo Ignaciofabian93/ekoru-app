@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, ShoppingCart, Heart, Menu } from "lucide-react";
-import { useCatalogStore } from "@/store/catalog";
 import Image from "next/image";
 import Link from "next/link";
 import Subheader from "./subheader";
@@ -15,7 +14,6 @@ import Input from "../inputs/input";
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { marketData, storeData, blogData } = useCatalogStore();
   const { data } = useSessionStore();
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
@@ -25,29 +23,6 @@ export default function Navbar() {
     if (event.key === "Escape" && isMobileMenuOpen) {
       setIsMobileMenuOpen(false);
     }
-  };
-
-  // Mobile accordion states
-  const [openAccordion, setOpenAccordion] = useState<string | null>(null);
-  const [openDepartment, setOpenDepartment] = useState<number | null>(null);
-  const [openCategory, setOpenCategory] = useState<number | null>(null);
-
-  const toggleAccordion = (section: string) => {
-    setOpenAccordion(openAccordion === section ? null : section);
-    // Reset nested accordions when switching main sections
-    if (openAccordion !== section) {
-      setOpenDepartment(null);
-      setOpenCategory(null);
-    }
-  };
-
-  const toggleDepartment = (departmentId: number) => {
-    setOpenDepartment(openDepartment === departmentId ? null : departmentId);
-    setOpenCategory(null); // Reset category when switching departments
-  };
-
-  const toggleCategory = (categoryId: number) => {
-    setOpenCategory(openCategory === categoryId ? null : categoryId);
   };
 
   return (
@@ -174,14 +149,6 @@ export default function Navbar() {
             aria-labelledby="mobile-menu-title"
             aria-describedby="mobile-menu-description"
           >
-            {/* Screen reader only content */}
-            <h2 id="mobile-menu-title" className="sr-only">
-              Menú de navegación móvil
-            </h2>
-            <p id="mobile-menu-description" className="sr-only">
-              Navega por las diferentes secciones y categorías de EKORU
-            </p>
-
             {/* Overlay Background */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -194,20 +161,7 @@ export default function Navbar() {
             />
 
             {/* Slide-in Menu */}
-            <SideMobileMenu
-              closeMobileMenu={closeMobileMenu}
-              openAccordion={openAccordion}
-              toggleAccordion={toggleAccordion}
-              marketData={Array.isArray(marketData) ? { marketCatalog: marketData } : marketData}
-              storeData={Array.isArray(storeData) ? { storeCatalog: storeData } : storeData}
-              blogData={Array.isArray(blogData) ? { blogCategories: blogData } : blogData}
-              openDepartment={openDepartment}
-              toggleDepartment={toggleDepartment}
-              openCategory={openCategory}
-              toggleCategory={toggleCategory}
-              isLoggedIn={!!data?.id}
-              data={data ?? null}
-            />
+            <SideMobileMenu closeMobileMenu={closeMobileMenu} isLoggedIn={!!data?.id} data={data ?? null} />
           </div>
         )}
       </AnimatePresence>

@@ -51,6 +51,10 @@ module.exports = {
             lightHover: neutral[100],
             darkHover: stone[800],
           },
+          navigationItem: {
+            lightHover: neutral[200],
+            darkHover: stone[800],
+          },
         },
         footer: {
           light: lime,

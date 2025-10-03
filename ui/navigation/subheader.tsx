@@ -76,7 +76,7 @@ export default function Subheader() {
             <MegaMenu
               activeTab={activeDropdown}
               onClose={handleMegaMenuClose}
-              marketData={Array.isArray(marketData) ? { marketCatalog: marketData } : marketData}
+              marketData={Array.isArray(marketData) ? marketData : marketData}
               storeData={Array.isArray(storeData) ? { storeCatalog: storeData } : storeData}
               blogData={Array.isArray(blogData) ? { blogCategories: blogData } : blogData}
             />

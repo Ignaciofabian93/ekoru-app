@@ -2,7 +2,7 @@ import clsx from "clsx";
 
 type Text = {
   className?: string;
-  variant?: "p" | "span" | "label" | "blockquote";
+  variant?: "p" | "span" | "label" | "blockquote" | "small";
   children: React.ReactNode;
   colorClass?: string; // Optional: for predefined color schemes
 };
@@ -16,6 +16,8 @@ export const Text = ({ className, variant = "p", children, colorClass }: Text) =
         return "text-sm";
       case "label":
         return "text-sm";
+      case "small":
+        return "text-xs";
       case "blockquote":
         return "text-base italic";
     }

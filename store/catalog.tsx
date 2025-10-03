@@ -4,17 +4,15 @@ import { Seller } from "@/types/user";
 import { create } from "zustand";
 
 interface CatalogState {
-  storeData: Seller[] | null;
-  marketData: Department[] | null;
-  blogData: BlogCategories[] | null;
+  storeData: { storeCatalog: Seller[] | null } | null;
+  marketData: { marketCatalog: Department[] | null } | null;
+  blogData: { blogCategories: BlogCategories[] | null } | null;
   loading: boolean;
   error: unknown;
   initialized: boolean;
-  fetchCatalogs: (
-    StoreCatalog: () => Promise<{ storeCatalog: Seller[] }>,
-    MarketCatalog: () => Promise<{ marketCatalog: Department[] }>,
-    BlogCatalog: () => Promise<{ blogCategories: BlogCategories[] }>
-  ) => Promise<void>;
+  setStoreData?: (data: { storeCatalog: Seller[] | null }) => void;
+  setMarketData?: (data: { marketCatalog: Department[] | null }) => void;
+  setBlogData?: (data: { blogCategories: BlogCategories[] | null }) => void;
 }
 
 export const useCatalogStore = create<CatalogState>((set) => ({
@@ -24,23 +22,7 @@ export const useCatalogStore = create<CatalogState>((set) => ({
   loading: false,
   error: null,
   initialized: false,
-  fetchCatalogs: async (
-    StoreCatalog: () => Promise<{ storeCatalog: Seller[] }>,
-    MarketCatalog: () => Promise<{ marketCatalog: Department[] }>,
-    BlogCatalog: () => Promise<{ blogCategories: BlogCategories[] }>
-  ) => {
-    set({ loading: true, error: null });
-    try {
-      const [storeData, marketData, blogData] = await Promise.all([StoreCatalog(), MarketCatalog(), BlogCatalog()]);
-      set({
-        storeData: storeData.storeCatalog,
-        marketData: marketData.marketCatalog,
-        blogData: blogData.blogCategories,
-        loading: false,
-        initialized: true,
-      });
-    } catch (error) {
-      set({ loading: false, error });
-    }
-  },
+  setStoreData: (data) => set(() => ({ storeData: data })),
+  setMarketData: (data) => set(() => ({ marketData: data })),
+  setBlogData: (data) => set(() => ({ blogData: data })),
 }));

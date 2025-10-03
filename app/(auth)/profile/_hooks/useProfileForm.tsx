@@ -1,20 +1,10 @@
-import {
-  GET_CITIES,
-  GET_COUNTIES,
-  GET_COUNTRIES,
-  GET_REGIONS,
-} from "@/graphql/location/queries";
+import { GET_CITIES, GET_COUNTIES, GET_COUNTRIES, GET_REGIONS } from "@/graphql/location/queries";
 import useSessionStore, { defaultSeller } from "@/store/session";
 import { City, Country, County, Region } from "@/types/location";
 import { Seller, PersonProfile } from "@/types/user";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
-import {
-  formatBirthdayInput,
-  convertToDisplayFormat,
-  validateBirthday,
-  convertToDateObject,
-} from "@/utils/dateUtils";
+import { formatBirthdayInput, convertToDisplayFormat, validateBirthday, convertToDateObject } from "@/utils/dateUtils";
 import {
   formatPhoneInput,
   validatePhoneNumber,
@@ -31,14 +21,10 @@ export default function useProfileForm() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [form, setForm] = useState<Seller>(defaultSeller);
 
-  const [Countries, { data: countriesData, loading: countriesLoading }] =
-    useLazyQuery(GET_COUNTRIES);
-  const [Regions, { data: regionsData, loading: regionsLoading }] =
-    useLazyQuery(GET_REGIONS);
-  const [Cities, { data: citiesData, loading: citiesLoading }] =
-    useLazyQuery(GET_CITIES);
-  const [Counties, { data: countiesData, loading: countiesLoading }] =
-    useLazyQuery(GET_COUNTIES);
+  const [Countries, { data: countriesData, loading: countriesLoading }] = useLazyQuery(GET_COUNTRIES);
+  const [Regions, { data: regionsData, loading: regionsLoading }] = useLazyQuery(GET_REGIONS);
+  const [Cities, { data: citiesData, loading: citiesLoading }] = useLazyQuery(GET_CITIES);
+  const [Counties, { data: countiesData, loading: countiesLoading }] = useLazyQuery(GET_COUNTIES);
 
   const [UpdateUser] = useMutation(UPDATE_USER, {
     onCompleted: (data) => {
@@ -46,9 +32,7 @@ export default function useProfileForm() {
     },
     onError: (error) => {
       console.error("Error updating user:", error);
-      notifyError(
-        "Error al intentar actualizar el usuario. Por favor, inténtalo de nuevo más tarde."
-      );
+      notifyError("Error al intentar actualizar el usuario. Por favor, inténtalo de nuevo más tarde.");
     },
   });
   const [UpdatePersonProfile] = useMutation(UPDATE_PERSON_PROFILE, {
@@ -59,9 +43,7 @@ export default function useProfileForm() {
     },
     onError: (error) => {
       console.error("Error updating profile:", error);
-      notifyError(
-        "Error al intentar actualizar el perfil. Por favor, inténtalo de nuevo más tarde."
-      );
+      notifyError("Error al intentar actualizar el perfil. Por favor, inténtalo de nuevo más tarde.");
     },
   });
 
@@ -92,11 +74,7 @@ export default function useProfileForm() {
       const profileData = { ...data };
 
       // Convert birthday from storage format (YYYY-MM-DD) to display format (DD-MM-YYYY)
-      if (
-        profileData.profile &&
-        "birthday" in profileData.profile &&
-        profileData.profile.birthday
-      ) {
+      if (profileData.profile && "birthday" in profileData.profile && profileData.profile.birthday) {
         profileData.profile = {
           ...profileData.profile,
           birthday: convertToDisplayFormat(profileData.profile.birthday),
@@ -113,9 +91,7 @@ export default function useProfileForm() {
   const closeModal = () => setIsOpen(false);
 
   const updateCountry = (countryId: number) => {
-    const country = countriesData.countries.find(
-      (c: Country) => Number(c.id) === countryId
-    );
+    const country = countriesData.countries.find((c: Country) => Number(c.id) === countryId);
     if (country) {
       setForm({
         ...form,
@@ -128,9 +104,7 @@ export default function useProfileForm() {
   };
 
   const updateRegion = (regionId: number) => {
-    const region = regionsData.regions.find(
-      (r: Region) => Number(r.id) === regionId
-    );
+    const region = regionsData.regions.find((r: Region) => Number(r.id) === regionId);
     if (region) {
       setForm({
         ...form,
@@ -153,9 +127,7 @@ export default function useProfileForm() {
   };
 
   const updateCounty = (countyId: number) => {
-    const county = countiesData.counties.find(
-      (c: County) => Number(c.id) === countyId
-    );
+    const county = countiesData.counties.find((c: County) => Number(c.id) === countyId);
     if (county) {
       setForm({
         ...form,
@@ -171,20 +143,12 @@ export default function useProfileForm() {
     });
   };
 
-  const handleUpdateUser = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleUpdateUser = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
 
-  const handleUpdateProfile = (
-    e:
-      | React.ChangeEvent<HTMLTextAreaElement>
-      | React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleUpdateProfile = (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm({ ...form, profile: { ...form.profile, [name]: value } });
   };
@@ -246,10 +210,7 @@ export default function useProfileForm() {
     return { isValid: true };
   };
 
-  const handleSocialMediaLinkChange = (
-    platform: "instagram" | "facebook" | "tiktok",
-    url: string
-  ) => {
+  const handleSocialMediaLinkChange = (platform: "instagram" | "facebook" | "tiktok", url: string) => {
     setForm((prevForm) => ({
       ...prevForm,
       socialMediaLinks: {
@@ -333,9 +294,7 @@ export default function useProfileForm() {
     if (form.sellerType === "PERSON") {
       submitPersonProfile();
     } else if (form.sellerType === "STORE") {
-      console.log("Store profile submission not implemented yet.");
     } else if (form.sellerType === "SERVICE") {
-      console.log("Service profile submission not implemented yet.");
     }
   };
 

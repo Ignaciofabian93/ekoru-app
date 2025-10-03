@@ -27,22 +27,16 @@ import {
 } from "lucide-react";
 import { serviceCategories } from "@/constants/navigation/data";
 import { Department } from "@/types/product";
-import { StoreProfile } from "@/types/user";
+import { Seller, StoreProfile } from "@/types/user";
 import { BlogCategories } from "@/types/blog";
 import Link from "next/link";
 
 interface MegaMenuProps {
   activeTab: string | null;
   onClose: () => void;
-  marketData?: {
-    marketCatalog: Array<Department>;
-  } | null;
-  storeData?: {
-    storeCatalog: Array<StoreProfile>;
-  } | null;
-  blogData?: {
-    blogCategories: Array<BlogCategories>;
-  } | null;
+  marketData: { marketCatalog: Department[] | null } | null;
+  storeData: { storeCatalog: Seller[] | null } | null;
+  blogData: { blogCategories: BlogCategories[] | null } | null;
 }
 
 export default function MegaMenu({ activeTab, onClose, marketData, storeData, blogData }: MegaMenuProps) {
@@ -179,8 +173,8 @@ export default function MegaMenu({ activeTab, onClose, marketData, storeData, bl
     // Transform API data to expected structure
     const categories = storeData.storeCatalog.map((store) => ({
       id: store.id,
-      title: store.displayName || store.businessName,
-      description: store.description || "",
+      title: (store.profile as StoreProfile).displayName || (store.profile as StoreProfile).businessName,
+      description: (store.profile as StoreProfile).description || "",
     }));
 
     return (

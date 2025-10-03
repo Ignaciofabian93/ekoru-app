@@ -7,7 +7,7 @@ type NavigationButtonProps = {
   toggleAccordion?: (section: string) => void;
   redirect?: () => void;
   label: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
   section?: string;
 };
 
@@ -19,7 +19,7 @@ export const NavigationButton = ({
   section,
   redirect,
 }: NavigationButtonProps) => {
-  const Icon: LucideIcon = icon;
+  const Icon: LucideIcon | undefined = icon;
   return (
     <button
       onClick={() => {
@@ -27,16 +27,18 @@ export const NavigationButton = ({
         if (redirect) redirect();
       }}
       className={clsx(
+        "group",
         "w-full flex items-center justify-between",
         "p-3 text-left",
         "rounded-lg",
-        "hover:bg-card-light-200 dark:hover:bg-card-dark-700",
-        "transition-colors"
+        "hover:bg-sidebar-navigationItem-lightHover/50",
+        "dark:hover:bg-sidebar-navigationItem-darkHover/50",
+        "transition-colors duration-300"
       )}
     >
       <div className="flex items-center">
-        <Icon className="h-5 w-5 mr-3 text-primary" />
-        <Text variant="label" className="font-medium">
+        {Icon && <Icon className="h-5 w-5 mr-3 text-primary" />}
+        <Text variant="label" className="font-medium group-hover:text-primary">
           {label}
         </Text>
       </div>

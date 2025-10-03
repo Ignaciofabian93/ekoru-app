@@ -58,12 +58,7 @@ export default function ProductModal() {
             : "Update the product information below."}
         </div>
 
-        <ProductForm
-          onSubmit={handleSubmit}
-          isSubmitting={isSubmitting}
-          productId={selectedProductId}
-          mode={mode}
-        />
+        <ProductForm onSubmit={handleSubmit} isSubmitting={isSubmitting} productId={selectedProductId} mode={mode} />
 
         {/* Action Buttons */}
         <motion.div
@@ -72,21 +67,11 @@ export default function ProductModal() {
           transition={{ delay: 0.2, duration: 0.3 }}
           className="flex justify-end space-x-3 pt-4 border-t border-gray-200"
         >
+          <MainButton text="Cancelar" onClick={onClose} disabled={isSubmitting} variant="outline" hasIcon={false} />
           <MainButton
-            text="Cancelar"
-            onClick={onClose}
-            disabled={isSubmitting}
-            variant="outline"
-            hasIcon={false}
-          />
-          <MainButton
-            text={
-              mode === "create" ? "Agregar Producto" : "Actualizar Producto"
-            }
+            text={mode === "create" ? "Agregar Producto" : "Actualizar Producto"}
             variant="primary"
-            onClick={() => {
-              console.log("Main button clicked");
-            }}
+            onClick={() => {}}
             hasIcon
             icon={Save}
           />

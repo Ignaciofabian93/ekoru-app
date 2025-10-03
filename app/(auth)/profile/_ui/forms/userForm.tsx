@@ -1,20 +1,7 @@
 import { City, Country, County, Region } from "@/types/location";
-import {
-  PersonProfile,
-  Seller,
-  ServiceProfile,
-  StoreProfile,
-} from "@/types/user";
+import { PersonProfile, Seller, ServiceProfile, StoreProfile } from "@/types/user";
 import { ContactMethod } from "@/types/enums";
-import {
-  Cake,
-  Flag,
-  Globe,
-  MapPin,
-  MessageCircle,
-  Phone,
-  UserRound,
-} from "lucide-react";
+import { Cake, Flag, Globe, MapPin, MessageCircle, Phone, UserRound } from "lucide-react";
 import Input from "@/ui/inputs/input";
 import Select from "@/ui/inputs/select";
 import TextArea from "@/ui/inputs/textarea";
@@ -33,17 +20,9 @@ type Props = {
   updateRegion: (regionId: number) => void;
   updateCity: (cityId: number) => void;
   updateCounty: (countyId: number) => void;
-  handleUpdateUser: (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLSelectElement>
-  ) => void;
+  handleUpdateUser: (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => void;
   updatePreferredContactMethod: (method: string) => void;
-  handleUpdateProfile: (
-    e:
-      | React.ChangeEvent<HTMLTextAreaElement>
-      | React.ChangeEvent<HTMLInputElement>
-  ) => void;
+  handleUpdateProfile: (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => void;
   handleBirthdayChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handlePhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   validateBirthdayField: () => { isValid: boolean; error?: string };
@@ -53,10 +32,7 @@ type Props = {
     type?: "mobile" | "landline" | "international";
     isWhatsAppCompatible?: boolean;
   };
-  handleSocialMediaLinkChange: (
-    platform: "instagram" | "facebook" | "tiktok",
-    url: string
-  ) => void;
+  handleSocialMediaLinkChange: (platform: "instagram" | "facebook" | "tiktok", url: string) => void;
 };
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -98,8 +74,6 @@ export default function UserForm({
   validatePhoneField,
   handleSocialMediaLinkChange,
 }: Props) {
-  console.log("formData:: ", formData);
-
   const sellerType = formData?.sellerType;
 
   return (
@@ -147,9 +121,7 @@ export default function UserForm({
           label="Dirección"
           type="text"
           value={formData.address}
-          onChange={
-            handleUpdateUser as React.ChangeEventHandler<HTMLInputElement>
-          }
+          onChange={handleUpdateUser as React.ChangeEventHandler<HTMLInputElement>}
           placeholder="Calle, número"
         />
         <Input
@@ -169,17 +141,11 @@ export default function UserForm({
         <Input
           name="displayName"
           icon={UserRound}
-          label={
-            sellerType === "PERSON" ? "Nickname/Apodo" : "Nombre de la empresa"
-          }
+          label={sellerType === "PERSON" ? "Nickname/Apodo" : "Nombre de la empresa"}
           type="text"
           value={formData.profile?.displayName || ""}
-          onChange={
-            handleUpdateProfile as React.ChangeEventHandler<HTMLInputElement>
-          }
-          placeholder={
-            sellerType === "PERSON" ? "Ej: Juanito123" : "Ej: Mi Empresa"
-          }
+          onChange={handleUpdateProfile as React.ChangeEventHandler<HTMLInputElement>}
+          placeholder={sellerType === "PERSON" ? "Ej: Juanito123" : "Ej: Mi Empresa"}
         />
         <Input
           icon={Globe}
@@ -187,9 +153,7 @@ export default function UserForm({
           label="Sitio Web"
           type="text"
           value={formData.website || ""}
-          onChange={
-            handleUpdateUser as React.ChangeEventHandler<HTMLInputElement>
-          }
+          onChange={handleUpdateUser as React.ChangeEventHandler<HTMLInputElement>}
           placeholder="Ej: www.misitioweb.com"
         />
       </Wrapper>
@@ -227,12 +191,7 @@ export default function UserForm({
           label="Instagram"
           type="text"
           value={formData.socialMediaLinks?.instagram || ""}
-          onChange={(e) =>
-            handleSocialMediaLinkChange(
-              "instagram",
-              (e.target as HTMLInputElement).value
-            )
-          }
+          onChange={(e) => handleSocialMediaLinkChange("instagram", (e.target as HTMLInputElement).value)}
           placeholder="Ej: @miusuario"
         />
         <Input
@@ -241,12 +200,7 @@ export default function UserForm({
           label="Facebook"
           type="text"
           value={formData.socialMediaLinks?.facebook || ""}
-          onChange={(e) =>
-            handleSocialMediaLinkChange(
-              "facebook",
-              (e.target as HTMLInputElement).value
-            )
-          }
+          onChange={(e) => handleSocialMediaLinkChange("facebook", (e.target as HTMLInputElement).value)}
           placeholder="Ej: @miusuario"
         />
         <Input
@@ -255,35 +209,21 @@ export default function UserForm({
           label="TikTok"
           type="text"
           value={formData.socialMediaLinks?.tiktok || ""}
-          onChange={(e) =>
-            handleSocialMediaLinkChange(
-              "tiktok",
-              (e.target as HTMLInputElement).value
-            )
-          }
+          onChange={(e) => handleSocialMediaLinkChange("tiktok", (e.target as HTMLInputElement).value)}
           placeholder="Ej: @miusuario"
         />
       </Wrapper>
       <Wrapper>
         <TextArea
-          label={
-            sellerType === "PERSON" ? "Biografía" : "Descripción de la empresa"
-          }
+          label={sellerType === "PERSON" ? "Biografía" : "Descripción de la empresa"}
           value={
             sellerType === "PERSON"
               ? (formData.profile as PersonProfile)?.bio || ""
-              : (formData.profile as StoreProfile | ServiceProfile)
-                  ?.description || ""
+              : (formData.profile as StoreProfile | ServiceProfile)?.description || ""
           }
           name={sellerType === "PERSON" ? "bio" : "description"}
-          onChange={
-            handleUpdateProfile as React.ChangeEventHandler<HTMLTextAreaElement>
-          }
-          placeholder={
-            sellerType === "PERSON"
-              ? "Escribe algo sobre ti..."
-              : "Escribe algo sobre tu empresa..."
-          }
+          onChange={handleUpdateProfile as React.ChangeEventHandler<HTMLTextAreaElement>}
+          placeholder={sellerType === "PERSON" ? "Escribe algo sobre ti..." : "Escribe algo sobre tu empresa..."}
         />
       </Wrapper>
     </form>

@@ -22,9 +22,5 @@ const getEndpoints = () => {
 
 const endpoints = getEndpoints();
 
-console.log(`[ENDPOINTS] Environment: ${ENVIRONMENT}`);
-console.log(`[ENDPOINTS] GraphQL URL: ${endpoints.graphql}`);
-console.log(`[ENDPOINTS] REST URL: ${endpoints.rest}`);
-
 export const GRAPHQL_URL = endpoints.graphql;
 export const REST_URL = endpoints.rest;
