@@ -21,11 +21,32 @@ module.exports = {
         warning: "#f59e0b",
         white: "#ffffff",
         black: "#1a1a1a",
+        icon: {
+          light: gray[700],
+          dark: gray[300],
+          hover: lime[600],
+        },
         navbar: {
           light: lime,
           dark: stone,
         },
         sidebar: {
+          container: {
+            light: neutral[50],
+            dark: stone[900],
+          },
+          header: {
+            light: neutral[50],
+            dark: stone[900],
+          },
+          profile: {
+            light: amber[50],
+            dark: stone[800],
+          },
+          profileLink: {
+            lightHover: lime[100],
+            darkHover: stone[700],
+          },
           light: amber,
           dark: stone,
         },

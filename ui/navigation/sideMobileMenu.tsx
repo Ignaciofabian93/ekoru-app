@@ -4,16 +4,17 @@ import { Seller } from "@/types/user";
 import { Title } from "../text/title";
 import { BlogCategories } from "@/types/blog";
 import { BookOpen, ChevronRight, House, LogOut, Package, Store, Users, Wrench } from "lucide-react";
+import { AccordionListItem, AccordionListWrapper, AccordionWrapper } from "./components/accordion";
+import { SideBarHeader } from "./components/sidebarHeader";
+import { NavigationButton } from "./components/navigationButton";
+import { SideBarProfile } from "./components/sidebarProfile";
 import Link from "next/link";
 import MainButton from "../buttons/mainButton";
 import useLogout from "@/hooks/useLogout";
 import useRedirect from "@/hooks/useRedirect";
-import { SideBarHeader } from "./components/sidebarHeader";
-import { NavigationButton } from "./components/navigationButton";
-import { AccordionListItem, AccordionListWrapper, AccordionWrapper } from "./components/accordion";
-import { SideBarProfile } from "./components/sidebarProfile";
 import QuickActions from "./components/quickActions";
 import Support from "./components/support";
+import clsx from "clsx";
 
 type Props = {
   closeMobileMenu: () => void;
@@ -58,7 +59,12 @@ export default function SideMobileMenu({
       animate={{ x: 0 }}
       exit={{ x: "100%" }}
       transition={{ type: "spring", damping: 25, stiffness: 200 }}
-      className="relative w-[70%] max-w-sm h-full bg-container-light-50 dark:bg-container-dark-900 shadow-2xl"
+      className={clsx(
+        "relative w-[70%] max-w-sm h-full",
+        "shadow-2xl",
+        "bg-sidebar-container-light",
+        "dark:bg-sidebar-container-dark"
+      )}
     >
       {/* Menu Header */}
       <SideBarHeader closeMobileMenu={closeMobileMenu} />

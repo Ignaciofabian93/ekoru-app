@@ -48,8 +48,11 @@ export const SideBarProfile = ({ data, closeMobileMenu }: { data: Seller | null;
     <section
       className={clsx(
         "p-4",
-        "border-b border-neutral-300 dark:border-neutral-700",
-        "bg-sidebar-light-100/40 dark:bg-card-dark-800"
+        "border-b",
+        "border-sidebar-profile-dark/20",
+        "bg-sidebar-profile-light/90",
+        "dark:border-sidebar-profile-light/20",
+        "dark:bg-sidebar-profile-dark"
       )}
     >
       <div className="flex flex-col items-center mb-3">
@@ -90,7 +93,7 @@ export const SideBarProfile = ({ data, closeMobileMenu }: { data: Seller | null;
             />
           )}
         </div>
-        <div className="text-center w-full mt-2">
+        <div className="text-center w-full mt-3">
           <Text variant="p" className="font-medium">
             {isPerson ? personName : businessDisplayName}
           </Text>
@@ -104,14 +107,15 @@ export const SideBarProfile = ({ data, closeMobileMenu }: { data: Seller | null;
             href={item.href}
             onClick={closeMobileMenu}
             className={clsx(
+              "group", // Add group class for group hover
               "flex items-center px-4 py-3",
               "rounded-lg",
-              "hover:bg-white/80",
-              "dark:hover:bg-container-dark-700",
+              "hover:bg-sidebar-profileLink-lightHover",
+              "dark:hover:bg-sidebar-profileLink-darkHover",
               "transition-colors duration-300"
             )}
           >
-            <Text variant="label" className="font-medium">
+            <Text variant="label" className={clsx("font-medium", "group-hover:text-primary")}>
               {item.name}
             </Text>
           </Link>
