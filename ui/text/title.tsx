@@ -23,7 +23,7 @@ export const Title = ({ children, variant = "h1", className }: Title) => {
   };
   const Heading = variant;
   return (
-    <Heading className={`${getVariantStyle(variant)} font-bold text-title-900 dark:text-title-100 mb-2 ${className}`}>
+    <Heading className={`${getVariantStyle(variant)} font-bold text-title-900 dark:text-title-100 ${className}`}>
       {children}
     </Heading>
   );

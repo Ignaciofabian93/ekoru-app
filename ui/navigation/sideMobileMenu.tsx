@@ -1,30 +1,19 @@
 import { Department } from "@/types/product";
 import { motion, AnimatePresence } from "motion/react";
-import {
-  BookOpen,
-  ChevronDown,
-  ChevronRight,
-  Heart,
-  House,
-  LogOut,
-  LucideIcon,
-  Package,
-  ShoppingCart,
-  Store,
-  Users,
-  Wrench,
-  X,
-} from "lucide-react";
+import { Seller } from "@/types/user";
+import { Title } from "../text/title";
+import { BlogCategories } from "@/types/blog";
+import { BookOpen, ChevronRight, House, LogOut, Package, Store, Users, Wrench } from "lucide-react";
 import Link from "next/link";
 import MainButton from "../buttons/mainButton";
 import useLogout from "@/hooks/useLogout";
 import useRedirect from "@/hooks/useRedirect";
-import { PersonProfile, Seller, StoreProfile, ServiceProfile } from "@/types/user";
-import Image from "next/image";
-import { Title } from "../text/title";
-import clsx from "clsx";
-import { Text } from "../text/text";
-import { BlogCategories } from "@/types/blog";
+import { SideBarHeader } from "./components/sidebarHeader";
+import { NavigationButton } from "./components/navigationButton";
+import { AccordionListItem, AccordionListWrapper, AccordionWrapper } from "./components/accordion";
+import { SideBarProfile } from "./components/sidebarProfile";
+import QuickActions from "./components/quickActions";
+import Support from "./components/support";
 
 type Props = {
   closeMobileMenu: () => void;
@@ -47,35 +36,6 @@ type Props = {
   data?: Seller | null;
 };
 
-type NavigationButtonProps = {
-  openAccordion: string | null;
-  toggleAccordion: (section: string) => void;
-  label: string;
-  icon: LucideIcon;
-};
-
-const NavigationButton = ({ openAccordion, toggleAccordion, label, icon }: NavigationButtonProps) => {
-  const Icon: LucideIcon = icon;
-  return (
-    <button
-      onClick={() => toggleAccordion("blog")}
-      className="w-full flex items-center justify-between p-3 text-left hover:bg-card-light-200 dark:hover:bg-card-dark-700 transition-colors rounded-lg"
-    >
-      <div className="flex items-center">
-        <Icon className="h-5 w-5 mr-3 text-primary" />
-        <Text variant="label" className="font-medium">
-          {label}
-        </Text>
-      </div>
-      <ChevronDown
-        className={`h-4 w-4 text-text-500 dark:text-text-400 transition-transform duration-200 ${
-          openAccordion === "blog" ? "rotate-180" : ""
-        }`}
-      />
-    </button>
-  );
-};
-
 export default function SideMobileMenu({
   closeMobileMenu,
   openAccordion,
@@ -92,43 +52,6 @@ export default function SideMobileMenu({
   const { handleLogout } = useLogout();
   const { redirectTo } = useRedirect();
 
-  const isPerson = data?.sellerType === "PERSON";
-
-  const personName =
-    data && (data?.profile as PersonProfile)?.displayName
-      ? (data?.profile as PersonProfile)?.displayName
-      : `${(data?.profile as PersonProfile)?.firstName} ${(data?.profile as PersonProfile)?.lastName}`;
-  const businessDisplayName =
-    data && ((data?.profile as StoreProfile) || (data?.profile as ServiceProfile))?.displayName;
-
-  const profileImage = isPerson ? (data?.profile as PersonProfile)?.profileImage : "/brand/icon.webp";
-  const logo = !isPerson
-    ? ((data?.profile as StoreProfile) || (data?.profile as ServiceProfile))?.logo
-    : "/brand/icon.webp";
-
-  const profileNavigation = [
-    { name: "Perfil", href: "/profile" },
-    { name: "Pedidos", href: "/profile/orders" },
-    { name: "Impacto", href: "/profile/impact-dashboard" },
-    { name: "Ajustes", href: "/profile/settings" },
-  ];
-
-  const AccordionWrapper = ({ children }: { children: React.ReactNode }) => (
-    <article className="border-b border-neutral/10 last:border-b-0">{children}</article>
-  );
-
-  const AccordionListWrapper = ({ children }: { children: React.ReactNode }) => (
-    <motion.div
-      initial={{ height: 0 }}
-      animate={{ height: "auto" }}
-      exit={{ height: 0 }}
-      transition={{ duration: 0.2 }}
-      className="overflow-hidden bg-card-light-100/40 dark:bg-card-dark-800 rounded-lg mt-1"
-    >
-      {children}
-    </motion.div>
-  );
-
   return (
     <motion.div
       initial={{ x: "100%" }}
@@ -138,74 +61,12 @@ export default function SideMobileMenu({
       className="relative w-[70%] max-w-sm h-full bg-container-light-50 dark:bg-container-dark-900 shadow-2xl"
     >
       {/* Menu Header */}
-      <div
-        className={clsx(
-          "flex items-center justify-between p-4",
-          "border-b border-neutral-300 dark:border-neutral-700",
-          "bg-navbar-light-100/20 dark:bg-navbar-dark-800"
-        )}
-      >
-        <Title variant="h5" className="font-semibold">
-          Menú
-        </Title>
-        <button
-          onClick={closeMobileMenu}
-          className="p-2 text-title-700 dark:text-title-200 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-primary/10"
-          aria-label="Close menu"
-        >
-          <X className="w-5 h-5" />
-        </button>
-      </div>
+      <SideBarHeader closeMobileMenu={closeMobileMenu} />
 
       {/* Scrollable Menu Content */}
       <aside className="h-full overflow-y-auto pb-20 scrollbar-hide">
         {/* User Section */}
-        <section
-          className={clsx(
-            "p-4",
-            "border-b border-neutral-300 dark:border-neutral-700 bg-card-light-100 dark:bg-card-dark-800"
-          )}
-        >
-          <div className="flex flex-col items-center space-x-3 mb-3">
-            <div className="w-14 h-14 bg-primary/20 rounded-full flex items-center justify-center">
-              {isPerson ? (
-                <Image
-                  src={profileImage as string}
-                  alt="imagen de perfil"
-                  width={40}
-                  height={40}
-                  className="rounded-full w-full h-full object-cover"
-                />
-              ) : (
-                <Image
-                  src={logo as string}
-                  alt="imagen de perfil"
-                  width={40}
-                  height={40}
-                  className="rounded-full w-full h-full object-cover"
-                />
-              )}
-            </div>
-            <div className="text-center w-full mt-2">
-              <p className="font-medium text-title-800 dark:text-title-200">
-                {isPerson ? personName : businessDisplayName}
-              </p>
-              <p className="text-sm text-text-600 dark:text-text-400">{data?.email}</p>
-            </div>
-          </div>
-          <div className="space-y-1">
-            {profileNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={closeMobileMenu}
-                className="flex items-center px-3 py-2 text-sm text-text-700 dark:text-text-300 hover:bg-container-light-200 dark:hover:bg-container-dark-700 hover:text-primary transition-colors rounded-lg"
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
-        </section>
+        <SideBarProfile data={data} closeMobileMenu={closeMobileMenu} />
 
         {/* Navigation Links with Accordion */}
         <section className="p-4 space-y-1">
@@ -213,34 +74,18 @@ export default function SideMobileMenu({
             Navegación
           </Title>
 
-          <div className="border-b border-neutral/10 last:border-b-0">
-            <button
-              onClick={() => redirectTo("/feed")}
-              className="w-full flex items-center justify-start p-3 text-left hover:bg-card-light-200 dark:hover:bg-card-dark-700 transition-colors rounded-lg"
-            >
-              <House className="h-5 w-5 mr-3 text-primary" />
-              <Text variant="span" className="font-medium text-title-700 dark:text-title-300">
-                Inicio
-              </Text>
-            </button>
-          </div>
+          {/* Home Link */}
+          <NavigationButton icon={House} label="Inicio" redirect={() => redirectTo("/")} />
 
           {/* Mercado Accordion */}
           <AccordionWrapper>
-            <button
-              onClick={() => toggleAccordion("mercado")}
-              className="w-full flex items-center justify-between p-3 text-left hover:bg-card-light-200 dark:hover:bg-card-dark-700 transition-colors rounded-lg"
-            >
-              <div className="flex items-center">
-                <Package className="h-5 w-5 mr-3 text-primary" />
-                <span className="font-medium text-title-700 dark:text-title-300">Mercado</span>
-              </div>
-              <ChevronDown
-                className={`h-4 w-4 text-text-500 dark:text-text-400 transition-transform duration-200 ${
-                  openAccordion === "mercado" ? "rotate-180" : ""
-                }`}
-              />
-            </button>
+            <NavigationButton
+              openAccordion={openAccordion ?? null}
+              toggleAccordion={toggleAccordion}
+              icon={Package}
+              label="Mercado"
+              section="mercado"
+            />
 
             <AnimatePresence>
               {openAccordion === "mercado" && (
@@ -328,20 +173,13 @@ export default function SideMobileMenu({
 
           {/* Tiendas Accordion */}
           <AccordionWrapper>
-            <button
-              onClick={() => toggleAccordion("tiendas")}
-              className="w-full flex items-center justify-between p-3 text-left hover:bg-card-light-200 dark:hover:bg-card-dark-700 transition-colors rounded-lg"
-            >
-              <div className="flex items-center">
-                <Store className="h-5 w-5 mr-3 text-primary" />
-                <span className="font-medium text-title-700 dark:text-title-300">Tiendas</span>
-              </div>
-              <ChevronDown
-                className={`h-4 w-4 text-text-500 dark:text-text-400 transition-transform duration-200 ${
-                  openAccordion === "tiendas" ? "rotate-180" : ""
-                }`}
-              />
-            </button>
+            <NavigationButton
+              openAccordion={openAccordion ?? null}
+              toggleAccordion={toggleAccordion}
+              icon={Store}
+              label="Tiendas"
+              section="tiendas"
+            />
 
             <AnimatePresence>
               {openAccordion === "tiendas" && (
@@ -370,20 +208,13 @@ export default function SideMobileMenu({
 
           {/* Servicios Accordion */}
           <AccordionWrapper>
-            <button
-              onClick={() => toggleAccordion("servicios")}
-              className="w-full flex items-center justify-between p-3 text-left hover:bg-card-light-200 dark:hover:bg-card-dark-700 transition-colors rounded-lg"
-            >
-              <div className="flex items-center">
-                <Wrench className="h-5 w-5 mr-3 text-primary" />
-                <span className="font-medium text-title-700 dark:text-title-300">Servicios</span>
-              </div>
-              <ChevronDown
-                className={`h-4 w-4 text-text-500 dark:text-text-400 transition-transform duration-200 ${
-                  openAccordion === "servicios" ? "rotate-180" : ""
-                }`}
-              />
-            </button>
+            <NavigationButton
+              openAccordion={openAccordion ?? null}
+              toggleAccordion={toggleAccordion}
+              icon={Wrench}
+              label="Servicios"
+              section="servicios"
+            />
 
             <AnimatePresence>
               {openAccordion === "servicios" && (
@@ -412,20 +243,13 @@ export default function SideMobileMenu({
 
           {/* Comunidad Accordion */}
           <AccordionWrapper>
-            <button
-              onClick={() => toggleAccordion("comunidad")}
-              className="w-full flex items-center justify-between p-3 text-left hover:bg-card-light-200 dark:hover:bg-card-dark-700 transition-colors rounded-lg"
-            >
-              <div className="flex items-center">
-                <Users className="h-5 w-5 mr-3 text-primary" />
-                <span className="font-medium text-title-700 dark:text-title-300">Comunidad</span>
-              </div>
-              <ChevronDown
-                className={`h-4 w-4 text-text-500 dark:text-text-400 transition-transform duration-200 ${
-                  openAccordion === "comunidad" ? "rotate-180" : ""
-                }`}
-              />
-            </button>
+            <NavigationButton
+              openAccordion={openAccordion ?? null}
+              toggleAccordion={toggleAccordion}
+              icon={Users}
+              label="Comunidad"
+              section="comunidad"
+            />
 
             <AnimatePresence>
               {openAccordion === "comunidad" && (
@@ -472,27 +296,19 @@ export default function SideMobileMenu({
               toggleAccordion={toggleAccordion}
               label="Blog"
               icon={BookOpen}
+              section="blog"
             />
             <AnimatePresence>
               {openAccordion === "blog" && (
                 <AccordionListWrapper>
                   {Array.isArray(blogData?.blogCategories) &&
                     blogData?.blogCategories.map(({ id, name }) => (
-                      <Link
+                      <AccordionListItem
                         key={id}
-                        href={`/ekoru-blog/categories/${id}`}
-                        onClick={closeMobileMenu}
-                        className={clsx(
-                          "block p-3 pl-6",
-                          "border-b border-neutral-300 dark:border-neutral-600",
-                          "hover:bg-container-light-200 dark:hover:bg-container-dark-600",
-                          "transition-colors"
-                        )}
-                      >
-                        <Text variant="span" className="font-medium mb-1">
-                          {name}
-                        </Text>
-                      </Link>
+                        href={`/blog/category/${id}`}
+                        name={name}
+                        closeMobileMenu={closeMobileMenu}
+                      />
                     ))}
                 </AccordionListWrapper>
               )}
@@ -501,57 +317,10 @@ export default function SideMobileMenu({
         </section>
 
         {/* Quick Actions */}
-        <section className="p-4 border-t border-neutral-300 dark:border-neutral-700">
-          <h3 className="text-sm font-semibold text-text-600 dark:text-text-400 uppercase tracking-wide mb-3">
-            Acciones Rápidas
-          </h3>
-          <div className="space-y-2">
-            <Link
-              href="/cart"
-              onClick={closeMobileMenu}
-              className="flex items-center justify-between px-3 py-3 text-title-700 dark:text-title-300 hover:bg-card-light-200 dark:hover:bg-card-dark-700 hover:text-primary transition-colors rounded-lg border border-neutral-300 dark:border-neutral-600"
-            >
-              <div className="flex items-center">
-                <ShoppingCart className="h-5 w-5 mr-3 text-primary" />
-                <span>Carrito de Compras</span>
-              </div>
-              <span className="bg-primary text-white text-xs rounded-full h-6 w-6 flex items-center justify-center">
-                3
-              </span>
-            </Link>
-            <Link
-              href="/profile/favorites"
-              onClick={closeMobileMenu}
-              className="flex items-center px-3 py-3 text-title-700 dark:text-title-300 hover:bg-card-light-200 dark:hover:bg-card-dark-700 hover:text-primary transition-colors rounded-lg border border-neutral-300 dark:border-neutral-600"
-            >
-              <Heart className="h-5 w-5 mr-3 text-primary" />
-              <span>Lista de favoritos</span>
-            </Link>
-          </div>
-        </section>
+        <QuickActions closeMobileMenu={closeMobileMenu} />
 
-        {/* Settings & Support */}
-        <section className="p-4 border-t border-neutral-300 dark:border-neutral-700">
-          <h3 className="text-sm font-semibold text-text-600 dark:text-text-400 uppercase tracking-wide mb-3">
-            Soporte
-          </h3>
-          <div className="space-y-1">
-            <Link
-              href="/help"
-              onClick={closeMobileMenu}
-              className="flex items-center px-3 py-2 text-sm text-text-700 dark:text-text-300 hover:bg-card-light-200 dark:hover:bg-card-dark-700 hover:text-primary transition-colors rounded-lg"
-            >
-              Centro de Ayuda
-            </Link>
-            <Link
-              href="/contact"
-              onClick={closeMobileMenu}
-              className="flex items-center px-3 py-2 text-sm text-text-700 dark:text-text-300 hover:bg-card-light-200 dark:hover:bg-card-dark-700 hover:text-primary transition-colors rounded-lg"
-            >
-              Contacto
-            </Link>
-          </div>
-        </section>
+        {/* Support */}
+        <Support closeMobileMenu={closeMobileMenu} />
 
         {/* Sign In/Out */}
         <div className="p-4 border-t border-neutral-300 dark:border-neutral-700">

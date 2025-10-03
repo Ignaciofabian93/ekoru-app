@@ -1,0 +1,122 @@
+import { useEffect, useState } from "react";
+import { PersonProfile, Seller, ServiceProfile, StoreProfile } from "@/types/user";
+import clsx from "clsx";
+import Image from "next/image";
+import Link from "next/link";
+import { Text } from "@/ui/text/text";
+
+export const SideBarProfile = ({ data, closeMobileMenu }: { data: Seller | null; closeMobileMenu: () => void }) => {
+  const [isPerson, setIsPerson] = useState<boolean>(false);
+  const [personName, setPersonName] = useState<string>("");
+  const [businessDisplayName, setBusinessDisplayName] = useState<string>("");
+  const [profileImage, setProfileImage] = useState<string>("/brand/icon.webp");
+  const [logo, setLogo] = useState<string>("/brand/icon.webp");
+
+  useEffect(() => {
+    const isPerson = data && data?.sellerType === "PERSON";
+
+    if (isPerson) {
+      setIsPerson(true);
+      const profile = data?.profile as PersonProfile;
+      const displayName = profile?.displayName;
+      const firstName = profile?.firstName;
+      const lastName = profile?.lastName;
+      const profileImg = profile?.profileImage || "/brand/icon.webp";
+      setPersonName(displayName ? displayName : `${firstName} ${lastName}`);
+      setProfileImage(profileImg);
+    }
+
+    if (!isPerson) {
+      setIsPerson(false);
+      const profile = data?.profile as StoreProfile | ServiceProfile;
+      const businessName = profile?.businessName;
+      const displayName = profile?.displayName;
+      const logoImg = profile?.logo || "/brand/icon.webp";
+      setBusinessDisplayName(businessName || displayName || "");
+      setLogo(logoImg);
+    }
+  }, [data]);
+
+  const profileNavigation = [
+    { name: "Perfil", href: "/profile" },
+    { name: "Pedidos", href: "/profile/orders" },
+    { name: "Impacto", href: "/profile/impact-dashboard" },
+    { name: "Ajustes", href: "/profile/settings" },
+  ];
+
+  return (
+    <section
+      className={clsx(
+        "p-4",
+        "border-b border-neutral-300 dark:border-neutral-700",
+        "bg-sidebar-light-100/40 dark:bg-card-dark-800"
+      )}
+    >
+      <div className="flex flex-col items-center mb-3">
+        <div className="w-18 h-18 bg-primary/20 rounded-full flex items-center justify-center">
+          {isPerson ? (
+            profileImage ? (
+              <Image
+                src={profileImage}
+                alt="imagen de perfil"
+                width={120}
+                height={120}
+                className="rounded-full w-full h-full object-cover"
+              />
+            ) : (
+              <Image
+                src="/brand/icon.webp"
+                alt="imagen de perfil"
+                width={120}
+                height={120}
+                className="rounded-full w-full h-full object-cover"
+              />
+            )
+          ) : logo ? (
+            <Image
+              src={logo}
+              alt="logo de negocio"
+              width={120}
+              height={120}
+              className="rounded-full w-full h-full object-cover"
+            />
+          ) : (
+            <Image
+              src="/brand/icon.webp"
+              alt="logo de negocio"
+              width={120}
+              height={120}
+              className="rounded-full w-full h-full object-cover"
+            />
+          )}
+        </div>
+        <div className="text-center w-full mt-2">
+          <Text variant="p" className="font-medium">
+            {isPerson ? personName : businessDisplayName}
+          </Text>
+          <Text variant="span">{data?.email}</Text>
+        </div>
+      </div>
+      <div className="space-y-1">
+        {profileNavigation.map((item) => (
+          <Link
+            key={item.name}
+            href={item.href}
+            onClick={closeMobileMenu}
+            className={clsx(
+              "flex items-center px-4 py-3",
+              "rounded-lg",
+              "hover:bg-white/80",
+              "dark:hover:bg-container-dark-700",
+              "transition-colors duration-300"
+            )}
+          >
+            <Text variant="label" className="font-medium">
+              {item.name}
+            </Text>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+};
