@@ -6,7 +6,7 @@ interface BlogHeroProps {
   showStats?: boolean;
 }
 
-export default function BlogHero({ variant = "default", showFeaturedPost = true, showStats = true }: BlogHeroProps) {
+export default function BlogHero({ variant = "default", showFeaturedPost = true }: BlogHeroProps) {
   // Get the latest featured post
   // const featuredPost = mockPosts
   //   .filter((post) => post.status === "PUBLISHED")
