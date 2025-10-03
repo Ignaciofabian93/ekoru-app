@@ -1,32 +1,42 @@
 import { Text } from "@/ui/text/text";
 import { Title } from "@/ui/text/title";
+import clsx from "clsx";
 import Link from "next/link";
 
 export default function Support({ closeMobileMenu }: { closeMobileMenu: () => void }) {
+  const ItemLink = ({ href, onClick, children }: { href: string; onClick: () => void; children: React.ReactNode }) => (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={clsx(
+        "flex group relative items-center justify-start px-3 py-3",
+        "hover:bg-sidebar-quickActions-lightHover",
+        "dark:hover:bg-sidebar-quickActions-darkHover",
+        "transition-colors",
+        "border-neutral-300",
+        "dark:border-neutral-600"
+      )}
+    >
+      {children}
+    </Link>
+  );
+
   return (
-    <section className="p-4 border-t border-neutral-300 dark:border-neutral-700">
+    <section className="p-4 border-t">
       <Title variant="h6" className="font-semibold uppercase tracking-wide mb-3">
         Soporte
       </Title>
       <div className="space-y-1">
-        <Link
-          href="/help"
-          onClick={closeMobileMenu}
-          className="flex items-center px-3 py-2 hover:bg-card-light-100 dark:hover:bg-card-dark-700 transition-colors rounded-lg"
-        >
-          <Text variant="span" className="">
+        <ItemLink href="/help" onClick={closeMobileMenu}>
+          <Text variant="span" className="font-medium group-hover:text-primary">
             Centro de Ayuda
           </Text>
-        </Link>
-        <Link
-          href="/contact"
-          onClick={closeMobileMenu}
-          className="flex items-center px-3 py-2 hover:bg-card-light-100 dark:hover:bg-card-dark-700 transition-colors rounded-lg"
-        >
-          <Text variant="span" className="">
+        </ItemLink>
+        <ItemLink href="/contact" onClick={closeMobileMenu}>
+          <Text variant="span" className="font-medium group-hover:text-primary">
             Contacto
           </Text>
-        </Link>
+        </ItemLink>
       </div>
     </section>
   );

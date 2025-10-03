@@ -47,8 +47,10 @@ module.exports = {
             lightHover: lime[100],
             darkHover: stone[700],
           },
-          light: amber,
-          dark: stone,
+          quickActions: {
+            lightHover: neutral[100],
+            darkHover: stone[800],
+          },
         },
         footer: {
           light: lime,
