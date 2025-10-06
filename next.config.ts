@@ -11,9 +11,8 @@ const nextConfig: NextConfig = {
         pathname: "/images/**",
       },
       {
-        protocol: "http",
-        hostname: "gateway",
-        port: "9000",
+        protocol: "https",
+        hostname: "qa.gateway.cl",
         pathname: "/images/**",
       },
     ],

@@ -68,7 +68,6 @@ export default function useCoverImage() {
       method: "POST",
       body: formData,
     });
-    console.log("Response cover image:", await response.json());
 
     if (!response.ok) {
       throw new Error("Failed to upload cover image");
