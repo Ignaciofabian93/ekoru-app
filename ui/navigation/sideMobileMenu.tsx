@@ -40,12 +40,12 @@ export default function SideMobileMenu({ closeMobileMenu, isLoggedIn = false, da
       {/* Scrollable Menu Content */}
       <aside className="h-full overflow-y-auto pb-20 scrollbar-hide">
         {/* User Section */}
-        <SideBarProfile data={data} closeMobileMenu={closeMobileMenu} />
+        {isLoggedIn && <SideBarProfile data={data} closeMobileMenu={closeMobileMenu} />}
 
         {/* Navigation Links with Accordion */}
         <SidebarNavigation closeMobileMenu={closeMobileMenu} />
         {/* Quick Actions */}
-        <QuickActions closeMobileMenu={closeMobileMenu} />
+        {isLoggedIn && <QuickActions closeMobileMenu={closeMobileMenu} />}
 
         {/* Support */}
         <Support closeMobileMenu={closeMobileMenu} />
