@@ -16,9 +16,7 @@ export default function useCoverImage() {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleCoverImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleCoverImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -43,6 +41,7 @@ export default function useCoverImage() {
 
       // Upload file and get URL
       const imageUrl = await uploadCoverImage(file);
+      console.log("Uploaded cover image URL:", imageUrl);
 
       // Update state with permanent URL
       setCoverImage(imageUrl);
@@ -69,6 +68,7 @@ export default function useCoverImage() {
       method: "POST",
       body: formData,
     });
+    console.log("Response cover image:", response);
 
     if (!response.ok) {
       throw new Error("Failed to upload cover image");

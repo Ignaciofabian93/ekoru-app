@@ -13,7 +13,12 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "qa.gateway.cl",
-        pathname: "/images/**",
+        pathname: "/images/cover-images/**",
+      },
+      {
+        protocol: "https",
+        hostname: "qa.gateway.cl",
+        pathname: "/images/profile-images/**",
       },
     ],
   },
