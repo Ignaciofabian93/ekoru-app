@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
 
     const result = await response.json();
 
+    console.log("Upload successful, image URL:", result.imageUrl);
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error forwarding file to gateway:", error);

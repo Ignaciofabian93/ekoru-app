@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "qa.gateway.cl",
+        hostname: "qa.gateway.ekoru.cl",
         pathname: "/images/**",
       },
     ],
