@@ -7,12 +7,14 @@ import MainButton from "@/ui/buttons/mainButton";
 import Link from "next/link";
 import useLogin from "./_hooks/useLogin";
 import { validateEmail } from "@/utils/regexValidations";
+import { Title } from "@/ui/text/title";
+import { Text } from "@/ui/text/text";
 
 export default function LoginPage() {
   const { formData, showPassword, isLoading, togglePasswordVisibility, handleFormData, handleSubmit } = useLogin();
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 py-8">
+    <main className="min-h-screen flex items-center justify-center px-4 py-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -29,8 +31,10 @@ export default function LoginPage() {
           <div className="w-auto h-[80px] rounded-2xl mx-auto mb-4 flex items-center justify-center">
             <Image src={"/brand/logo.webp"} alt="EKORU" width={800} height={400} className="w-auto h-full" priority />
           </div>
-          <h1 className="text-3xl font-bold text-text-primary mb-2">Bienvenido</h1>
-          <p className="text-gray-600">Ingresa a tu cuenta</p>
+          <Title variant="h2" className="font-bold mb-2">
+            Bienvenido
+          </Title>
+          <Text variant="p">Ingresa a tu cuenta</Text>
         </motion.div>
 
         {/* Auth Form */}
@@ -84,17 +88,17 @@ export default function LoginPage() {
                 variant="primary"
               />
             </div>
-            <span className="block text-center text-sm text-gray-600 mt-4">
+            <Text variant="span" className="block text-center mt-4">
               ¿No tienes una cuenta?{" "}
               <Link href="/register" className="text-primary hover:underline">
                 Regístrate
               </Link>
-            </span>
-            <span className="block text-center text-sm text-gray-600 mt-4">
+            </Text>
+            <Text variant="span" className="block text-center mt-4">
               <Link href="/feed" className="text-primary hover:underline">
                 Regresar a la página principal
               </Link>
-            </span>
+            </Text>
           </div>
         </motion.div>
       </motion.div>

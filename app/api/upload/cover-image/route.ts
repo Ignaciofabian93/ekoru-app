@@ -12,26 +12,17 @@ export async function POST(request: NextRequest) {
     }
 
     if (!userId) {
-      return NextResponse.json(
-        { error: "User ID is required." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "User ID is required." }, { status: 400 });
     }
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      return NextResponse.json(
-        { error: "File must be an image." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "File must be an image." }, { status: 400 });
     }
 
     // Validate file size (5MB limit)
     if (file.size > 5 * 1024 * 1024) {
-      return NextResponse.json(
-        { error: "File size must be less than 5MB." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "File size must be less than 5MB." }, { status: 400 });
     }
 
     // Compress image before sending to gateway
@@ -44,7 +35,7 @@ export async function POST(request: NextRequest) {
     forwardData.append("type", "cover-image");
 
     // Forward to your GraphQL gateway REST endpoint
-    const gatewayUrl = process.env.GATEWAY_URL || "http://localhost:9000";
+    const gatewayUrl = process.env.NEXT_PUBLIC_GATEWAY_URL || "http://localhost:9000";
     const response = await fetch(`${gatewayUrl}/api/cover-image`, {
       method: "POST",
       body: forwardData,
@@ -61,10 +52,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error forwarding file to gateway:", error);
-    return NextResponse.json(
-      { error: "Failed to upload file." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to upload file." }, { status: 500 });
   }
 }
 
@@ -88,14 +76,10 @@ async function compressImage(file: File): Promise<File> {
       .toBuffer();
 
     // Create new File from processed buffer
-    const compressedFile = new File(
-      [new Uint8Array(processedBuffer)],
-      `compressed-${file.name.split(".")[0]}.jpg`,
-      {
-        type: "image/jpeg",
-        lastModified: Date.now(),
-      }
-    );
+    const compressedFile = new File([new Uint8Array(processedBuffer)], `compressed-${file.name.split(".")[0]}.jpg`, {
+      type: "image/jpeg",
+      lastModified: Date.now(),
+    });
 
     return compressedFile;
   } catch (error) {

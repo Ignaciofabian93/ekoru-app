@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LucideIcon, Eye, EyeOff, Lock } from "lucide-react";
 import clsx from "clsx";
+import { Text } from "../text/text";
 
 type Props = React.HTMLAttributes<HTMLInputElement> & {
   id?: string;
@@ -64,9 +65,9 @@ export default function Input({
         sizeClass
       )}
     >
-      <label htmlFor={name} className="text-sm font-medium text-gray-700">
+      <Text variant="label" htmlFor={name} className="font-medium">
         {label}
-      </label>
+      </Text>
       <div className="relative">
         <motion.div initial={false} transition={{ duration: 0.2 }} className="relative">
           {hasIcon && Icon && (

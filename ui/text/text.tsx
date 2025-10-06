@@ -5,9 +5,10 @@ type Text = {
   variant?: "p" | "span" | "label" | "blockquote" | "small";
   children: React.ReactNode;
   colorClass?: string; // Optional: for predefined color schemes
+  htmlFor?: string; // For label variant
 };
 
-export const Text = ({ className, variant = "p", children, colorClass }: Text) => {
+export const Text = ({ className, variant = "p", children, colorClass, htmlFor }: Text) => {
   const getTextVariantStyle = (variant: string) => {
     switch (variant) {
       case "p":
@@ -33,6 +34,7 @@ export const Text = ({ className, variant = "p", children, colorClass }: Text) =
   const Tag = variant;
   return (
     <Tag
+      htmlFor={variant === "label" ? htmlFor : undefined}
       className={clsx(
         // Apply default colors only if no color class is provided
         !hasColorInClassName && !colorClass && defaultColors,

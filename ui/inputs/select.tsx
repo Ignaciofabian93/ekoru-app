@@ -11,6 +11,7 @@ type Option = {
 };
 
 import { LucideIcon, Lock } from "lucide-react";
+import { Text } from "../text/text";
 
 type SelectProps = {
   options?: Option[];
@@ -127,9 +128,9 @@ export default function Select({
   return (
     <div className={clsx("space-y-2", sizeClass, className)} ref={containerRef}>
       {label && (
-        <label htmlFor={name} className="text-sm font-medium text-gray-700">
+        <Text variant="label" htmlFor={name} className="font-medium">
           {label}
-        </label>
+        </Text>
       )}
       <div className="relative">
         <motion.div initial={false} transition={{ duration: 0.2 }} className="relative">
