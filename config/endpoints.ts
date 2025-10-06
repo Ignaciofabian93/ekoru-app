@@ -9,8 +9,8 @@ const getEndpoints = () => {
       };
     case "qa":
       return {
-        graphql: "http://gateway:9000/graphql",
-        rest: "http://gateway:9000/session",
+        graphql: "https://qa.gateway.ekoru.cl/graphql",
+        rest: "https://qa.gateway.ekoru.cl/session",
       };
     default:
       return {
