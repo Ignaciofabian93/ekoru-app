@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "your-domain.com", // Replace with your actual domain
+        hostname: "qa.gateway.cl",
         pathname: "/images/**",
       },
     ],
