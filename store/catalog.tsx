@@ -1,16 +1,16 @@
 import { BlogCategories } from "@/types/blog";
+import { StoreCatalog } from "@/types/catalog";
 import { Department } from "@/types/product";
-import { Seller } from "@/types/user";
 import { create } from "zustand";
 
 interface CatalogState {
-  storeData: { storeCatalog: Seller[] | null } | null;
+  storeData: { storeCatalog: StoreCatalog[] | null } | null;
   marketData: { marketCatalog: Department[] | null } | null;
   blogData: { blogCategories: BlogCategories[] | null } | null;
   loading: boolean;
   error: unknown;
   initialized: boolean;
-  setStoreData?: (data: { storeCatalog: Seller[] | null }) => void;
+  setStoreData?: (data: { storeCatalog: StoreCatalog[] | null }) => void;
   setMarketData?: (data: { marketCatalog: Department[] | null }) => void;
   setBlogData?: (data: { blogCategories: BlogCategories[] | null }) => void;
 }

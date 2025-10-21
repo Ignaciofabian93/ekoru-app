@@ -4,21 +4,10 @@ export const GET_STORE_CATALOG = gql`
   query StoreCatalog {
     storeCatalog {
       id
-      email
-      sellerType
-      isVerified
-      createdAt
-      updatedAt
-      isActive
-      storeProfile {
+      category
+      subcategories {
         id
-        sellerId
-        businessName
-        displayName
-        description
-        businessType
-        businessRegistration
-        logo
+        subcategory
       }
     }
   }
@@ -29,12 +18,17 @@ export const GET_MARKET_CATALOG = gql`
     marketCatalog {
       id
       departmentName
-      departmentCategories {
+      departmentCategory {
         id
         departmentCategoryName
-        productCategories {
+        productCategory {
           id
+          departmentCategoryId
+          keywords
           productCategoryName
+          size
+          averageWeight
+          weightUnit
         }
       }
     }
@@ -47,6 +41,7 @@ export const GET_BLOG_CATALOG = gql`
       id
       name
       icon
+      description
     }
   }
 `;

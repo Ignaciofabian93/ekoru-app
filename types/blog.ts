@@ -98,6 +98,5 @@ export type BlogCategories = {
   id: number;
   name: string;
   icon: string;
-  description?: string;
-  blogs?: BlogPost[];
+  description: string;
 };

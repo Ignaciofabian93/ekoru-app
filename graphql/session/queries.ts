@@ -30,7 +30,7 @@ export const GET_ME = gql`
           coverImage
           allowExchanges
         }
-        ... on StoreProfile {
+        ... on BusinessProfile {
           id
           sellerId
           businessName
@@ -39,39 +39,46 @@ export const GET_ME = gql`
           logo
           coverImage
           businessType
+          legalBusinessName
           taxId
-          businessRegistration
-          allowExchanges
+          businessActivity
+          businessStartDate
+          legalRepresentative
+          legalRepresentativeTaxId
+          formalizationStatus
+          formalizationDeadline
+          formalizationNotes
           minOrderAmount
           shippingPolicy
           returnPolicy
-          businessHours
-        }
-        ... on ServiceProfile {
-          id
-          sellerId
-          businessName
-          displayName
-          description
-          logo
-          coverImage
-          businessType
-          taxId
-          businessRegistration
-          allowExchanges
-          minOrderAmount
           serviceArea
-          serviceHours
           yearsOfExperience
           licenseNumber
           insuranceInfo
           certifications
           emergencyService
           travelRadius
-          responsiveness
+          businessHours
+          taxDocuments
+          verificationDocuments
+          createdAt
+          updatedAt
         }
       }
-      userCategory {
+      preferences {
+        id
+        sellerId
+        preferredLanguage
+        currency
+        emailNotifications
+        pushNotifications
+        orderUpdates
+        communityUpdates
+        securityAlerts
+        weeklySummary
+        twoFactorAuth
+      }
+      sellerCategory {
         id
         name
         categoryDiscountAmount

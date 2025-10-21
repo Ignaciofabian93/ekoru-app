@@ -1,8 +1,8 @@
 import { useLazyQuery } from "@apollo/client";
 import { GET_BLOG_CATALOG, GET_MARKET_CATALOG, GET_STORE_CATALOG } from "@/graphql/catalog/queries";
-import { Seller } from "@/types/user";
 import { BlogCategories } from "@/types/blog";
 import { Department } from "@/types/product";
+import { StoreCatalog } from "@/types/catalog";
 
 export default function useCatalog() {
   const [StoreCatalog, { data: StoreData, loading: storeLoading, error: storeError }] = useLazyQuery(
@@ -21,7 +21,7 @@ export default function useCatalog() {
     StoreCatalog,
     MarketCatalog,
     BlogCatalog,
-    StoreData: StoreData?.storeCatalog as Seller[] | null,
+    StoreData: StoreData?.storeCatalog as StoreCatalog[] | null,
     BlogData: BlogData?.blogCategories as BlogCategories[] | null,
     MarketData: MarketData?.marketCatalog as Department[] | null,
     storeLoading,

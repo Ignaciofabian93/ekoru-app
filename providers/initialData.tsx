@@ -1,10 +1,10 @@
 "use client";
 import { useEffect } from "react";
 import { useCatalogStore } from "@/store/catalog";
-import { Seller } from "@/types/user";
 import { Department } from "@/types/product";
 import { BlogCategories } from "@/types/blog";
 import useCatalog from "@/hooks/useCatalog";
+import { StoreCatalog } from "@/types/catalog";
 
 export default function InitialDataProvider({ children }: { children: React.ReactNode }) {
   const { setBlogData, setMarketData, setStoreData } = useCatalogStore();
@@ -20,7 +20,7 @@ export default function InitialDataProvider({ children }: { children: React.Reac
         ]);
 
         if (storeResult?.data?.storeCatalog) {
-          setStoreData?.({ storeCatalog: storeResult.data.storeCatalog as Seller[] });
+          setStoreData?.({ storeCatalog: storeResult.data.storeCatalog as StoreCatalog[] });
         }
         if (marketResult?.data?.marketCatalog) {
           setMarketData?.({ marketCatalog: marketResult.data.marketCatalog as Department[] });

@@ -55,6 +55,9 @@ export default function useLogin() {
     const response = await Login({ email: sanitizedEmail, password }); // Don't sanitize password
     if (response && response.token) {
       const { data: userData } = await GetMe();
+      console.log("response", response);
+      console.log("userData", userData);
+
       if (!userLoading && userData.me?.id) {
         handleSession(userData.me);
         notify("Inicio de sesión exitoso.");

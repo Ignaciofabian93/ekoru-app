@@ -1,41 +1,22 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ChevronRight,
-  Package,
-  Store,
-  Wrench,
-  Users,
-  BookOpen,
-  LucideIcon,
-  // Add more icons as needed for blog categories
-  Recycle,
-  TreeDeciduous,
-  HousePlug,
-  Leaf,
-  UtilityPole,
-  LeafyGreen,
-  Trees,
-  Dam,
-  Tent,
-  Flower2,
-  Tractor,
-  Sun,
-  Vegan,
-  ShieldCheck,
-} from "lucide-react";
+import { Package, Store, Wrench, Users, BookOpen } from "lucide-react";
 import { serviceCategories } from "@/constants/navigation/data";
 import { Department } from "@/types/product";
-import { Seller, StoreProfile } from "@/types/user";
 import { BlogCategories } from "@/types/blog";
 import Link from "next/link";
+import { Title } from "../text/title";
+import BlogCategoryCard from "../cards/blog/blogCategory";
+import { Text } from "../text/text";
+import { StoreCatalog } from "@/types/catalog";
+import { MegaMenuColumn, SecondaryColumn, LeafColumn, MenuItem } from "./megaMenuColumn";
 
 interface MegaMenuProps {
   activeTab: string | null;
   onClose: () => void;
   marketData: { marketCatalog: Department[] | null } | null;
-  storeData: { storeCatalog: Seller[] | null } | null;
+  storeData: { storeCatalog: StoreCatalog[] | null } | null;
   blogData: { blogCategories: BlogCategories[] | null } | null;
 }
 
@@ -49,114 +30,73 @@ export default function MegaMenu({ activeTab, onClose, marketData, storeData, bl
       return <div className="p-6">No hay datos de mercado disponibles.</div>;
     }
 
-    // Transform API data to expected structure
-    const departments = marketData.marketCatalog.map((department) => ({
+    // Transform API data to MenuItem structure
+    const departments: MenuItem<Department>[] = marketData.marketCatalog.map((department) => ({
       id: department.id,
       title: department.departmentName,
-      categories: department.departmentCategories.map((cat) => ({
-        id: cat.id,
-        title: cat.departmentCategoryName,
-        subcategories: cat.productCategories.map((subcat) => ({
+      data: department,
+    }));
+
+    const selectedDepartmentData = marketData.marketCatalog.find((d) => d.id === selectedDepartment);
+    const categories: MenuItem[] = selectedDepartmentData
+      ? selectedDepartmentData.departmentCategories.map((cat) => ({
+          id: cat.id,
+          title: cat.departmentCategoryName,
+          data: cat,
+        }))
+      : [];
+
+    const selectedCategoryData = selectedDepartmentData?.departmentCategories.find((c) => c.id === selectedCategory);
+    const subcategories = selectedCategoryData
+      ? selectedCategoryData.productCategories.map((subcat) => ({
           id: subcat.id,
           title: subcat.productCategoryName,
-          href: `/marketplace/departments/${department.id}/categories/${cat.id}/products/${subcat.id}`,
-        })),
-      })),
-    }));
+          href: `/marketplace/departments/${selectedDepartment}/categories/${selectedCategory}/products/${subcat.id}`,
+        }))
+      : [];
 
     return (
       <div className="flex min-h-[400px]">
         {/* Departments Column */}
-        <div className="w-80 border-r border-neutral/20 bg-neutral-light/30">
-          <div className="p-4">
-            <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center">
-              <Package className="h-5 w-5 mr-2 text-primary" />
-              Departamentos
-            </h3>
-            <div className="space-y-1">
-              {departments.map((department) => (
-                <button
-                  key={department.id}
-                  onMouseEnter={() => setSelectedDepartment(department.id)}
-                  className={`w-full text-left px-3 py-2 rounded-lg transition-colors duration-200 flex items-center justify-between group ${
-                    selectedDepartment === department.id
-                      ? "bg-primary/10 text-primary"
-                      : "text-text-primary hover:bg-white hover:text-primary"
-                  }`}
-                >
-                  <span className="font-medium">{department.title}</span>
-                  <ChevronRight className="h-4 w-4 opacity-50 group-hover:opacity-100" />
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+        <MegaMenuColumn
+          icon={Package}
+          title="Departamentos"
+          items={departments}
+          selectedId={selectedDepartment}
+          onSelectItem={setSelectedDepartment}
+        />
 
         {/* Categories Column */}
         <AnimatePresence mode="wait">
-          {selectedDepartment && (
+          {selectedDepartment && categories.length > 0 && (
             <motion.div
               key={selectedDepartment}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.2 }}
-              className="w-80 border-r border-neutral/20"
             >
-              <div className="p-4">
-                <h4 className="text-md font-semibold text-text-primary mb-4">Categorías</h4>
-                <div className="space-y-1">
-                  {departments
-                    .find((d) => d.id === selectedDepartment)
-                    ?.categories.map((category) => (
-                      <button
-                        key={category.id}
-                        onMouseEnter={() => setSelectedCategory(category.id)}
-                        className={`w-full text-left px-3 py-2 rounded-lg transition-colors duration-200 flex items-center justify-between group ${
-                          selectedCategory === category.id
-                            ? "bg-primary/10 text-primary"
-                            : "text-text-secondary hover:bg-neutral-light hover:text-primary"
-                        }`}
-                      >
-                        <span>{category.title}</span>
-                        <ChevronRight className="h-4 w-4 opacity-50 group-hover:opacity-100" />
-                      </button>
-                    ))}
-                </div>
-              </div>
+              <SecondaryColumn
+                title="Categorías"
+                items={categories}
+                selectedId={selectedCategory}
+                onSelectItem={setSelectedCategory}
+              />
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Subcategories Column */}
         <AnimatePresence mode="wait">
-          {selectedCategory && selectedDepartment && (
+          {selectedCategory && selectedDepartment && subcategories.length > 0 && (
             <motion.div
               key={selectedCategory}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.2 }}
-              className="w-80"
             >
-              <div className="p-4">
-                <h4 className="text-md font-semibold text-text-primary mb-4">Subcategorías</h4>
-                <div className="space-y-1">
-                  {departments
-                    .find((d) => d.id === selectedDepartment)
-                    ?.categories.find((c) => c.id === selectedCategory)
-                    ?.subcategories.map((subcategory) => (
-                      <Link
-                        key={subcategory.id}
-                        href={subcategory.href}
-                        onClick={onClose}
-                        className="block px-3 py-2 rounded-lg text-text-secondary hover:bg-neutral-light hover:text-primary transition-colors duration-200"
-                      >
-                        {subcategory.title}
-                      </Link>
-                    ))}
-                </div>
-              </div>
+              <LeafColumn title="Subcategorías" items={subcategories} onClose={onClose} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -170,32 +110,47 @@ export default function MegaMenu({ activeTab, onClose, marketData, storeData, bl
       return <div className="p-6">No hay datos de tiendas disponibles.</div>;
     }
 
-    // Transform API data to expected structure
-    const categories = storeData.storeCatalog.map((store) => ({
+    // Transform API data to MenuItem structure
+    const storeCategories: MenuItem<StoreCatalog>[] = storeData.storeCatalog.map((store) => ({
       id: store.id,
-      title: (store.profile as StoreProfile).displayName || (store.profile as StoreProfile).businessName,
-      description: (store.profile as StoreProfile).description || "",
+      title: store.category,
+      data: store,
     }));
 
+    const selectedStoreData = storeData.storeCatalog.find((s) => s.id === selectedDepartment);
+    const subcategories = selectedStoreData
+      ? selectedStoreData.subcategories.map((subcat) => ({
+          id: subcat.id,
+          title: subcat.subcategory,
+          href: `/stores/category/${selectedStoreData.id}/subcategory/${subcat.id}`,
+        }))
+      : [];
+
     return (
-      <div className="p-6">
-        <h3 className="text-lg font-semibold text-text-primary mb-6 flex items-center">
-          <Store className="h-5 w-5 mr-2 text-primary" />
-          Tiendas
-        </h3>
-        <div className="grid grid-cols-2 gap-4 max-w-2xl">
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              href={`/stores/${category.id}`}
-              onClick={onClose}
-              className="p-4 rounded-lg border border-neutral/20 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200 group"
+      <div className="flex min-h-[400px]">
+        {/* Store Categories Column */}
+        <MegaMenuColumn
+          icon={Store}
+          title="Tiendas"
+          items={storeCategories}
+          selectedId={selectedDepartment}
+          onSelectItem={setSelectedDepartment}
+        />
+
+        {/* Subcategories Column */}
+        <AnimatePresence mode="wait">
+          {selectedDepartment && subcategories.length > 0 && (
+            <motion.div
+              key={selectedDepartment}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2 }}
             >
-              <h4 className="font-semibold text-text-primary group-hover:text-primary mb-2">{category.title}</h4>
-              <p className="text-sm text-text-muted">{category.description}</p>
-            </Link>
-          ))}
-        </div>
+              <LeafColumn title="Subcategorías" items={subcategories} onClose={onClose} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     );
   };
@@ -258,68 +213,22 @@ export default function MegaMenu({ activeTab, onClose, marketData, storeData, bl
   );
 
   const renderBlogMenu = () => {
-    // Icon mapping function
-    const getIconComponent = (iconName: string): LucideIcon => {
-      const iconMap: Record<string, LucideIcon> = {
-        Recycle: Recycle,
-        TreeDeciduous: TreeDeciduous,
-        HousePlug: HousePlug,
-        Leaf: Leaf,
-        UtilityPole: UtilityPole,
-        LeafyGreen: LeafyGreen,
-        Trees: Trees,
-        Dam: Dam,
-        Tent: Tent,
-        Flower2: Flower2,
-        Tractor: Tractor,
-        Sun: Sun,
-        Vegan: Vegan,
-        ShieldCheck: ShieldCheck,
-      };
-
-      return iconMap[iconName] || BookOpen; // Default fallback icon
-    };
-
     return (
       <div className="p-6">
-        <h3 className="text-lg font-semibold text-text-primary mb-6 flex items-center">
+        <Title variant="h4" className="flex items-center gap-2 font-semibold mb-6">
           <BookOpen className="h-5 w-5 mr-2 text-primary" />
           Blog Ecológico
-        </h3>
+        </Title>
         {!blogData || !blogData.blogCategories ? (
           <div className="p-6 text-center text-text-muted">
             <BookOpen className="h-12 w-12 mx-auto mb-3 text-neutral/40" />
-            <p>No hay datos de blog disponibles.</p>
+            <Text variant="p">No hay datos de blog disponibles.</Text>
           </div>
         ) : (
           <div className="flex justify-center">
-            <div className="grid grid-cols-4 gap-4 max-w-4xl">
-              {blogData.blogCategories.map((category) => {
-                const Icon = getIconComponent(category.icon);
-                return (
-                  <Link
-                    key={category.id}
-                    href={`/ekoru-blog/categories/${category.id}`}
-                    onClick={onClose}
-                    className="group relative p-4 rounded-lg border border-neutral/20 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
-                  >
-                    <div className="flex flex-col items-center text-center space-y-3">
-                      <div className="p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors duration-200">
-                        <Icon className="h-6 w-6 text-primary group-hover:scale-110 transition-transform duration-200" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-text-primary group-hover:text-primary transition-colors duration-200 text-sm leading-tight">
-                          {category.name}
-                        </h4>
-                      </div>
-                    </div>
-
-                    {/* Hover indicator */}
-                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      <ChevronRight className="h-4 w-4 text-primary" />
-                    </div>
-                  </Link>
-                );
+            <div className="flex flex-wrap gap-6 max-w-5xl">
+              {blogData.blogCategories.map(({ id, name, icon, description }) => {
+                return <BlogCategoryCard key={id} id={id} name={name} icon={icon} description={description} />;
               })}
             </div>
           </div>
@@ -336,7 +245,7 @@ export default function MegaMenu({ activeTab, onClose, marketData, storeData, bl
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.2 }}
-      className="absolute top-full left-0 w-full bg-white shadow-xl border-t border-neutral/20 z-30"
+      className="absolute top-full left-0 w-full bg-amber-50 dark:bg-stone-900 shadow-xl border-t border-neutral/20 z-30"
       onMouseLeave={() => {
         setSelectedDepartment(null);
         setSelectedCategory(null);
