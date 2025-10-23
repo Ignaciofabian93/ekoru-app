@@ -1,17 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import useSessionStore from "@/store/session";
+import useSessionData from "@/hooks/useSessionData";
 
 export default function useCoverImage() {
   const { data } = useSessionStore();
+  const { backgroundImage } = useSessionData();
   const [coverImage, setCoverImage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (data.profile?.coverImage) {
-      setCoverImage(data.profile?.coverImage);
-    } else {
-      setCoverImage(null);
-    }
-  }, [data.profile?.coverImage]);
+    setCoverImage(backgroundImage);
+  }, [backgroundImage]);
 
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);

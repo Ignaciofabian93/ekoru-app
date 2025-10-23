@@ -1,34 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import useSessionStore from "@/store/session";
+import useSessionData from "@/hooks/useSessionData";
 
 export default function useProfileImage() {
   const { data } = useSessionStore();
+  const { sellerImage } = useSessionData();
   const [profileImage, setProfileImage] = useState<string>("/brand/icon.webp");
   const [backupImage, setBackupImage] = useState<string>("/brand/icon.webp");
 
-  const defaultLogo = "/brand/icon.webp";
-
   useEffect(() => {
-    if (data.profile?.__typename === "PersonProfile") {
-      setProfileImage(data.profile?.profileImage || defaultLogo);
-      setBackupImage(data.profile?.profileImage || defaultLogo);
-    } else if (data.profile?.__typename === "StoreProfile") {
-      setProfileImage(data.profile?.logo || defaultLogo);
-      setBackupImage(data.profile?.logo || defaultLogo);
-    } else if (data.profile?.__typename === "ServiceProfile") {
-      setProfileImage(data.profile?.logo || defaultLogo);
-      setBackupImage(data.profile?.logo || defaultLogo);
-    } else {
-      setProfileImage(defaultLogo);
-    }
-  }, [data.profile]);
+    setProfileImage(sellerImage);
+    setBackupImage(sellerImage);
+  }, [sellerImage]);
 
   const [isProfileImageUploading, setIsProfileImageUploading] = useState(false);
   const profileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleProfileImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleProfileImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 

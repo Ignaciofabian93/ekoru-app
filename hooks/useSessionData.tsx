@@ -1,5 +1,5 @@
 import useSessionStore from "@/store/session";
-import { BusinessProfile } from "@/types/user";
+import { BusinessProfile, PersonProfile } from "@/types/user";
 
 export default function useSessionData() {
   const { data } = useSessionStore();
@@ -13,6 +13,12 @@ export default function useSessionData() {
   const isServicesBusiness = (data.profile as BusinessProfile)?.businessType === "SERVICES";
   const isMixedBusiness = (data.profile as BusinessProfile)?.businessType === "MIXED";
 
+  const sellerImage = isPersonProfile
+    ? (data.profile as PersonProfile)?.profileImage || "/brand/icon.webp"
+    : (data.profile as BusinessProfile)?.logo || "/brand/icon.webp";
+
+  const backgroundImage = data.profile?.coverImage || "/brand/logo.webp";
+
   return {
     sellerType,
     isPersonProfile,
@@ -20,5 +26,7 @@ export default function useSessionData() {
     isRetailBusiness,
     isServicesBusiness,
     isMixedBusiness,
+    sellerImage,
+    backgroundImage,
   };
 }
