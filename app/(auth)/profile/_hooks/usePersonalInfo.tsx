@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { PersonProfile } from "@/types/user";
 import useSessionStore from "@/store/session";
 
 export default function usePersonalInfo() {
@@ -13,16 +14,10 @@ export default function usePersonalInfo() {
 
   useEffect(() => {
     const userType = data.profile?.__typename;
-    const displayName = data.profile?.displayName || "";
-    const user =
-      userType === "PersonProfile"
-        ? `${data.profile?.firstName} ${data.profile?.lastName}`
-        : "";
-    const businessName =
-      userType !== "PersonProfile" ? data.profile?.businessName : "";
-    const address = data.county?.county
-      ? `${data.address}, ${data.county?.county}`
-      : "Sin dirección registrada";
+    const displayName = (data.profile as PersonProfile)?.displayName || "";
+    const user = userType === "PersonProfile" ? `${data.profile?.firstName} ${data.profile?.lastName}` : "";
+    const businessName = userType !== "PersonProfile" ? data.profile?.businessName : "";
+    const address = data.county?.county ? `${data.address}, ${data.county?.county}` : "Sin dirección registrada";
 
     if (userType === "PersonProfile") {
       setUsername(displayName || user);
