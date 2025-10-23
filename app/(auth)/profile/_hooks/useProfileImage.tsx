@@ -45,7 +45,7 @@ export default function useProfileImage() {
       setProfileImage(imageUrl);
     } catch (error) {
       console.error("Error uploading profile image:", error);
-      alert("Error al subir la imagen. Inténtalo de nuevo.");
+      alert("Error al subir la imagen. Inténtalo de nuevo." + error);
       setProfileImage(backupImage);
     } finally {
       setIsProfileImageUploading(false);
