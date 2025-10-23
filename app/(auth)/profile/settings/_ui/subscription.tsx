@@ -4,16 +4,16 @@ import { Store } from "lucide-react";
 import { Trash2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
-import { AccountType } from "@/types/enums";
+import { PersonSubscriptionPlan, BusinessSubscriptionPlan } from "@/types/enums";
 
 type SubscriptionSettingsType = {
-  accountType: AccountType;
+  accountType: PersonSubscriptionPlan | BusinessSubscriptionPlan;
   subscriptionStatus: "active" | "inactive" | "cancelled";
   nextBillingDate: string;
   autoRenew: boolean;
 };
 const initialSubscriptionSettings: SubscriptionSettingsType = {
-  accountType: "FREE",
+  accountType: "FREEMIUM",
   subscriptionStatus: "active",
   nextBillingDate: "2024-12-01T00:00:00Z",
   autoRenew: true,
@@ -37,22 +37,29 @@ export default function SubscriptionSettings() {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-xl font-bold mb-2">
-              Plan {settings.accountType === "FREE" ? "Gratuito" : settings.accountType === "PLUS" ? "Plus" : "Premium"}
+              Plan{" "}
+              {settings.accountType === "FREEMIUM"
+                ? "Gratuito"
+                : settings.accountType === "ADVANCED"
+                ? "Plus"
+                : "Premium"}
             </h3>
             <p className="text-white/80 mb-1">
               Estado: {settings.subscriptionStatus === "active" ? "Activo" : "Inactivo"}
             </p>
-            {settings.accountType !== "FREE" && (
+            {settings.accountType !== "FREEMIUM" && (
               <p className="text-white/80 text-sm">
                 Próxima facturación: {new Date(settings.nextBillingDate).toLocaleDateString()}
               </p>
             )}
           </div>
-          {settings.accountType === "FREE" && <MainButton text="Mejorar Plan" variant="outline" onClick={() => {}} />}
+          {settings.accountType === "FREEMIUM" && (
+            <MainButton text="Mejorar Plan" variant="outline" onClick={() => {}} />
+          )}
         </div>
       </div>
 
-      {settings.accountType !== "FREE" && (
+      {settings.accountType !== "FREEMIUM" && (
         <div className="space-y-4">
           <h3 className="text-lg font-medium text-text-primary">Configuración de Suscripción</h3>
           <Checkbox
@@ -74,14 +81,14 @@ export default function SubscriptionSettings() {
       <div className="bg-neutral-light/20 p-4 rounded-lg">
         <h4 className="font-medium text-text-primary mb-2">Características de tu plan:</h4>
         <ul className="text-text-muted text-sm space-y-1">
-          {settings.accountType === "FREE" && (
+          {settings.accountType === "FREEMIUM" && (
             <>
               <li>• Hasta 5 productos publicados</li>
               <li>• Comisión del 5% por venta</li>
               <li>• Soporte básico por email</li>
             </>
           )}
-          {settings.accountType === "PLUS" && (
+          {settings.accountType === "ADVANCED" && (
             <>
               <li>• Hasta 50 productos publicados</li>
               <li>• Comisión del 3% por venta</li>
@@ -89,7 +96,7 @@ export default function SubscriptionSettings() {
               <li>• Estadísticas avanzadas</li>
             </>
           )}
-          {settings.accountType === "PREMIUM" && (
+          {settings.accountType === "EXPERT" && (
             <>
               <li>• Productos ilimitados</li>
               <li>• Comisión del 1% por venta</li>
