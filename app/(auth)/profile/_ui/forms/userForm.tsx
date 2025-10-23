@@ -1,10 +1,27 @@
 import { City, Country, County, Region } from "@/types/location";
-import { PersonProfile, Seller, ServiceProfile, StoreProfile } from "@/types/user";
+import { PersonProfile, Seller, BusinessProfile } from "@/types/user";
 import { ContactMethod } from "@/types/enums";
-import { Cake, Flag, Globe, MapPin, MessageCircle, Phone, UserRound } from "lucide-react";
+import {
+  Briefcase,
+  Cake,
+  Calendar,
+  Calendar1,
+  Flag,
+  Globe,
+  List,
+  MapIcon,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Pin,
+  UserRound,
+} from "lucide-react";
 import Input from "@/ui/inputs/input";
 import Select from "@/ui/inputs/select";
 import TextArea from "@/ui/inputs/textarea";
+import BusinessHoursInput from "@/ui/inputs/businessHoursInput";
+import useSessionData from "@/hooks/useSessionData";
+import { BusinessHours } from "@/utils/businessHoursUtils";
 
 type Props = {
   formData: Seller;
@@ -24,8 +41,15 @@ type Props = {
   updatePreferredContactMethod: (method: string) => void;
   handleUpdateProfile: (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => void;
   handleBirthdayChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleBusinessStartDateChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handlePhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleTaxIdChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleLegalRepresentativeTaxIdChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleBusinessHoursChange: (hours: BusinessHours) => void;
   validateBirthdayField: () => { isValid: boolean; error?: string };
+  validateBusinessStartDateField: () => { isValid: boolean; error?: string };
+  validateTaxIdField: () => { isValid: boolean; error?: string };
+  validateLegalRepresentativeTaxIdField: () => { isValid: boolean; error?: string };
   validatePhoneField: () => {
     isValid: boolean;
     error?: string;
@@ -69,16 +93,36 @@ export default function UserForm({
   updatePreferredContactMethod,
   handleUpdateProfile,
   handleBirthdayChange,
+  handleBusinessStartDateChange,
   handlePhoneChange,
+  handleTaxIdChange,
+  handleLegalRepresentativeTaxIdChange,
+  handleBusinessHoursChange,
   validateBirthdayField,
+  validateBusinessStartDateField,
+  validateTaxIdField,
+  validateLegalRepresentativeTaxIdField,
   validatePhoneField,
   handleSocialMediaLinkChange,
 }: Props) {
-  const sellerType = formData?.sellerType;
+  const { isPersonProfile, isBusinessProfile, isMixedBusiness, isRetailBusiness, isServicesBusiness } =
+    useSessionData();
+
+  // Helper to get the correct profile based on seller type
+  const getProfile = (): PersonProfile | BusinessProfile | undefined => {
+    return isPersonProfile ? (formData.profile as PersonProfile) : (formData.profile as BusinessProfile);
+  };
+
+  // Helper to get field value with fallback
+  const getProfileField = (field: string, defaultValue: string = ""): string => {
+    const profile = getProfile();
+    return (profile?.[field as keyof typeof profile] as string) || defaultValue;
+  };
 
   return (
     <form className="">
       <Wrapper>
+        {/* SELLER FIELDS */}
         <Select
           label="País"
           icon={Flag}
@@ -120,7 +164,7 @@ export default function UserForm({
           icon={MapPin}
           label="Dirección"
           type="text"
-          value={formData.address}
+          value={formData.address as string}
           onChange={handleUpdateUser as React.ChangeEventHandler<HTMLInputElement>}
           placeholder="Calle, número"
         />
@@ -129,7 +173,7 @@ export default function UserForm({
           icon={Phone}
           label="Celular"
           type="text"
-          value={formData.phone}
+          value={formData.phone as string}
           onChange={handlePhoneChange}
           placeholder="+56-9-12345678"
           maxLength={20}
@@ -138,40 +182,6 @@ export default function UserForm({
         />
       </Wrapper>
       <Wrapper>
-        <Input
-          name="displayName"
-          icon={UserRound}
-          label={sellerType === "PERSON" ? "Nickname/Apodo" : "Nombre de la empresa"}
-          type="text"
-          value={formData.profile?.displayName || ""}
-          onChange={handleUpdateProfile as React.ChangeEventHandler<HTMLInputElement>}
-          placeholder={sellerType === "PERSON" ? "Ej: Juanito123" : "Ej: Mi Empresa"}
-        />
-        <Input
-          icon={Globe}
-          name="website"
-          label="Sitio Web"
-          type="text"
-          value={formData.website || ""}
-          onChange={handleUpdateUser as React.ChangeEventHandler<HTMLInputElement>}
-          placeholder="Ej: www.misitioweb.com"
-        />
-      </Wrapper>
-      <Wrapper>
-        {sellerType === "PERSON" && (
-          <Input
-            name="birthday"
-            icon={Cake}
-            label="Fecha de Nacimiento"
-            type="text"
-            value={(formData.profile as PersonProfile)?.birthday || ""}
-            onChange={handleBirthdayChange}
-            placeholder="DD-MM-YYYY"
-            maxLength={10}
-            isInvalid={!validateBirthdayField().isValid}
-            errorMessage={validateBirthdayField().error}
-          />
-        )}
         <Select
           name="preferredContactMethod"
           icon={MessageCircle}
@@ -183,7 +193,169 @@ export default function UserForm({
           value={formData.preferredContactMethod || undefined}
           onChange={(e) => updatePreferredContactMethod(e as string)}
         />
+        <Input
+          icon={Globe}
+          name="website"
+          label="Sitio Web"
+          type="text"
+          value={formData.website || ""}
+          onChange={handleUpdateUser as React.ChangeEventHandler<HTMLInputElement>}
+          placeholder="Ej: www.misitioweb.com"
+        />
       </Wrapper>
+      {isPersonProfile && (
+        <Wrapper>
+          <Input
+            name="birthday"
+            icon={Cake}
+            label="Fecha de Nacimiento"
+            type="text"
+            value={getProfileField("birthday")}
+            onChange={handleBirthdayChange}
+            placeholder="DD-MM-YYYY"
+            maxLength={10}
+            isInvalid={!validateBirthdayField().isValid}
+            errorMessage={validateBirthdayField().error}
+          />
+          <Input
+            name="displayName"
+            icon={UserRound}
+            label={"Nickname/Apodo"}
+            type="text"
+            value={getProfileField("displayName")}
+            onChange={handleUpdateProfile as React.ChangeEventHandler<HTMLInputElement>}
+            placeholder={"Ej: Juanito123"}
+          />
+        </Wrapper>
+      )}
+      {isBusinessProfile && (
+        <Wrapper>
+          <Input
+            name="legalBusinessName"
+            icon={UserRound}
+            label="Razón Social"
+            type="text"
+            value={getProfileField("legalBusinessName")}
+            onChange={handleUpdateProfile as React.ChangeEventHandler<HTMLInputElement>}
+            placeholder="Ej: Mi Empresa S.A."
+          />
+          <Input
+            name="taxId"
+            icon={Briefcase}
+            label="RUT"
+            type="text"
+            value={getProfileField("taxId")}
+            onChange={handleTaxIdChange}
+            placeholder="Ej: 72.345.678-9"
+            maxLength={12}
+            isInvalid={!validateTaxIdField().isValid}
+            errorMessage={validateTaxIdField().error}
+          />
+        </Wrapper>
+      )}
+      {isBusinessProfile && (
+        <Wrapper>
+          <Input
+            name="businessStartDate"
+            icon={Calendar}
+            label="Fecha Inicio de Actividades"
+            type="text"
+            value={getProfileField("businessStartDate")}
+            onChange={handleBusinessStartDateChange}
+            placeholder="DD-MM-YYYY"
+            maxLength={10}
+            isInvalid={!validateBusinessStartDateField().isValid}
+            errorMessage={validateBusinessStartDateField().error}
+          />
+          <Input
+            name="legalRepresentative"
+            icon={UserRound}
+            label="Representante Legal"
+            type="text"
+            value={getProfileField("legalRepresentative")}
+            onChange={handleUpdateProfile as React.ChangeEventHandler<HTMLInputElement>}
+            placeholder="Ej: Juan Pérez"
+          />
+          <Input
+            name="legalRepresentativeTaxId"
+            icon={Briefcase}
+            label="RUT Representante Legal"
+            type="text"
+            value={getProfileField("legalRepresentativeTaxId")}
+            onChange={handleLegalRepresentativeTaxIdChange}
+            placeholder="Ej: 12.345.678-9"
+            maxLength={12}
+            isInvalid={!validateLegalRepresentativeTaxIdField().isValid}
+            errorMessage={validateLegalRepresentativeTaxIdField().error}
+          />
+        </Wrapper>
+      )}
+      {(isRetailBusiness || isMixedBusiness) && (
+        <>
+          <Wrapper>
+            <TextArea
+              name="shippingPolicy"
+              label="Política de Envío"
+              value={getProfileField("shippingPolicy")}
+              onChange={handleUpdateProfile as React.ChangeEventHandler<HTMLTextAreaElement>}
+              placeholder="Escribe tu política de envío..."
+            />
+          </Wrapper>
+          <Wrapper>
+            <TextArea
+              name="returnPolicy"
+              label="Política de Devoluciones"
+              value={getProfileField("returnPolicy")}
+              onChange={handleUpdateProfile as React.ChangeEventHandler<HTMLTextAreaElement>}
+              placeholder="Escribe tu política de devoluciones..."
+            />
+          </Wrapper>
+        </>
+      )}
+      {(isServicesBusiness || isMixedBusiness) && (
+        <>
+          <Wrapper>
+            <Input
+              name="serviceArea"
+              label="Área de Servicio"
+              type="text"
+              value={getProfileField("serviceArea")}
+              onChange={handleUpdateProfile as React.ChangeEventHandler<HTMLInputElement>}
+              placeholder="Ej: Santiago, Valparaíso"
+              icon={MapIcon}
+            />
+            <Input
+              name="travelRadius"
+              label="Radio de Desplazamiento (km)"
+              type="number"
+              value={getProfileField("travelRadius")}
+              onChange={handleUpdateProfile as React.ChangeEventHandler<HTMLInputElement>}
+              placeholder="Ej: 10"
+              icon={Pin}
+            />
+          </Wrapper>
+          <Wrapper>
+            <Input
+              name="certifications"
+              label="Certificaciones"
+              type="text"
+              value={getProfileField("certifications")}
+              onChange={handleUpdateProfile as React.ChangeEventHandler<HTMLInputElement>}
+              placeholder="Ej: Certificación en Ventas"
+              icon={List}
+            />
+            <Input
+              name="yearsOfExperience"
+              label="Años de Experiencia"
+              type="number"
+              value={getProfileField("yearsOfExperience")}
+              onChange={handleUpdateProfile as React.ChangeEventHandler<HTMLInputElement>}
+              placeholder="Ej: 5"
+              icon={Calendar1}
+            />
+          </Wrapper>
+        </>
+      )}
       <Wrapper>
         <Input
           hasIcon={false}
@@ -213,17 +385,21 @@ export default function UserForm({
           placeholder="Ej: @miusuario"
         />
       </Wrapper>
+      {isBusinessProfile && (
+        <Wrapper>
+          <BusinessHoursInput
+            value={(formData.profile as BusinessProfile)?.businessHours || {}}
+            onChange={handleBusinessHoursChange}
+          />
+        </Wrapper>
+      )}
       <Wrapper>
         <TextArea
-          label={sellerType === "PERSON" ? "Biografía" : "Descripción de la empresa"}
-          value={
-            sellerType === "PERSON"
-              ? (formData.profile as PersonProfile)?.bio || ""
-              : (formData.profile as StoreProfile | ServiceProfile)?.description || ""
-          }
-          name={sellerType === "PERSON" ? "bio" : "description"}
+          label={isPersonProfile ? "Biografía" : "Descripción de la empresa"}
+          value={getProfileField(isPersonProfile ? "bio" : "description")}
+          name={isPersonProfile ? "bio" : "description"}
           onChange={handleUpdateProfile as React.ChangeEventHandler<HTMLTextAreaElement>}
-          placeholder={sellerType === "PERSON" ? "Escribe algo sobre ti..." : "Escribe algo sobre tu empresa..."}
+          placeholder={isPersonProfile ? "Escribe algo sobre ti..." : "Escribe algo sobre tu negocio..."}
         />
       </Wrapper>
     </form>

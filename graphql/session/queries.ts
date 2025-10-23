@@ -15,7 +15,6 @@ export const GET_ME = gql`
       website
       preferredContactMethod
       socialMediaLinks
-      accountType
       points
       profile {
         ... on PersonProfile {
@@ -34,33 +33,22 @@ export const GET_ME = gql`
           id
           sellerId
           businessName
-          displayName
           description
           logo
           coverImage
           businessType
           legalBusinessName
           taxId
-          businessActivity
           businessStartDate
           legalRepresentative
           legalRepresentativeTaxId
-          formalizationStatus
-          formalizationDeadline
-          formalizationNotes
-          minOrderAmount
           shippingPolicy
           returnPolicy
           serviceArea
           yearsOfExperience
-          licenseNumber
-          insuranceInfo
           certifications
-          emergencyService
           travelRadius
           businessHours
-          taxDocuments
-          verificationDocuments
           createdAt
           updatedAt
         }

@@ -10,8 +10,8 @@ export const GET_COUNTRIES = gql`
 `;
 
 export const GET_REGIONS = gql`
-  query Regions($countryId: ID!) {
-    regions(countryId: $countryId) {
+  query RegionsByCountryId($countryId: ID!) {
+    regionsByCountryId(countryId: $countryId) {
       id
       region
     }
@@ -19,8 +19,8 @@ export const GET_REGIONS = gql`
 `;
 
 export const GET_CITIES = gql`
-  query Cities($regionId: ID!) {
-    cities(regionId: $regionId) {
+  query CitiesByRegionId($regionId: ID!) {
+    citiesByRegionId(regionId: $regionId) {
       id
       city
     }
@@ -28,8 +28,8 @@ export const GET_CITIES = gql`
 `;
 
 export const GET_COUNTIES = gql`
-  query Counties($cityId: ID!) {
-    counties(cityId: $cityId) {
+  query CountiesByCityId($cityId: ID!) {
+    countiesByCityId(cityId: $cityId) {
       id
       county
     }

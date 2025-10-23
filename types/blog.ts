@@ -1,4 +1,4 @@
-import { BlogCategory } from "./enums";
+import { BlogCategory, BlogType, BlogReactionType } from "./enums";
 
 export interface BlogAuthor {
   id: string;
@@ -28,27 +28,50 @@ export interface BlogTag {
 }
 
 export interface BlogPost {
-  id: string;
+  id: number;
   title: string;
   slug: string;
   excerpt: string;
   content: string;
   featuredImage?: string;
-  author: BlogAuthor;
-  category: BlogCategory;
-  tags: BlogTag[];
-  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
-  readingTime: number; // in minutes
+  authorId: string; // Admin who wrote the post
+  author?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  blogType: BlogType;
+  blogCategoryId?: number;
+  tags?: string[];
+  isPublished: boolean;
+  readingTime?: number;
   views: number;
-  likes: number;
-  publishedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  likeCount: number;
+  dislikeCount: number;
+  publishedAt?: string;
+  createdAt: string;
+  updatedAt: string;
   seo?: {
     metaTitle?: string;
     metaDescription?: string;
     keywords?: string[];
   };
+}
+
+export interface BlogReaction {
+  id: number;
+  blogPostId: number;
+  sellerId: string;
+  reactionType: BlogReactionType;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BlogCategoryModel {
+  id: number;
+  categoryName: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface BlogCategoryInfo {

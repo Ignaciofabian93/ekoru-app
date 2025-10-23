@@ -7,7 +7,7 @@ import Input from "@/ui/inputs/input";
 import Select from "@/ui/inputs/select";
 import MainButton from "@/ui/buttons/mainButton";
 import Link from "next/link";
-import useRegister, { RegisterPerson, RegisterService, RegisterStore } from "./_hooks/useRegister";
+import useRegister, { RegisterPerson, RegisterBusiness } from "./_hooks/useRegister";
 import { validateEmail } from "@/utils/regexValidations";
 import { Title } from "@/ui/text/title";
 import { Text } from "@/ui/text/text";
@@ -18,10 +18,10 @@ export default function RegisterPage() {
     showPassword,
     showConfirmPassword,
     registerPersonLoading,
-    registerStoreLoading,
-    registerServiceLoading,
+    registerBusinessLoading,
     handleFormData,
     handleAccountTypeChange,
+    handleBusinessTypeChange,
     togglePasswordVisibility,
     toggleConfirmPasswordVisibility,
     handleSubmit,
@@ -36,20 +36,18 @@ export default function RegisterPage() {
       input1: "firstName",
       input2: "lastName",
     },
-    STORE: {
-      label1: "Nombre de la tienda",
+    STARTUP: {
+      label1: "Nombre del negocio",
       label2: "Razón social (opcional)",
-      placeholder1: "Ingresa el nombre de la tienda",
-      placeholder2: "Ingresa la razón social",
-      input1: "displayName",
+      placeholder1: "Ingresa el nombre del negocio",
+      input1: "businessName",
       input2: "businessName",
     },
-    SERVICE: {
-      label1: "Nombre del servicio",
+    COMPANY: {
+      label1: "Nombre del negocio",
       label2: "Razón social (opcional)",
-      placeholder1: "Ingresa el nombre del servicio",
-      placeholder2: "Ingresa la razón social",
-      input1: "displayName",
+      placeholder1: "Ingresa el nombre del negocio",
+      input1: "businessName",
       input2: "businessName",
     },
   };
@@ -96,11 +94,25 @@ export default function RegisterPage() {
                 onChange={(e) => handleAccountTypeChange(e as SellerType)}
                 options={[
                   { value: "PERSON", label: "Persona" },
-                  { value: "STORE", label: "Tienda" },
-                  { value: "SERVICE", label: "Servicio" },
+                  { value: "STARTUP", label: "Emprendimiento" },
+                  { value: "COMPANY", label: "Empresa" },
                 ]}
                 searchEnabled={false}
               />
+
+              {formData.sellerType !== "PERSON" && (
+                <Select
+                  label="Tipo de negocio"
+                  name="businessType"
+                  value={(formData as RegisterBusiness).businessType}
+                  onChange={handleBusinessTypeChange}
+                  options={[
+                    { value: "RETAIL", label: "Retail" },
+                    { value: "SERVICES", label: "Servicios" },
+                    { value: "MIXED", label: "Mixto" },
+                  ]}
+                />
+              )}
 
               {/* Name Field */}
               <Input
@@ -109,7 +121,7 @@ export default function RegisterPage() {
                 value={
                   formData.sellerType === "PERSON"
                     ? (formData as RegisterPerson).firstName ?? ""
-                    : (formData as RegisterStore | RegisterService).displayName ?? ""
+                    : (formData as RegisterBusiness).businessName ?? ""
                 }
                 onChange={handleFormData}
                 type="text"
@@ -120,22 +132,20 @@ export default function RegisterPage() {
               />
 
               {/* LastName Field */}
-              <Input
-                label={userDictionary[formData.sellerType].label2}
-                name={userDictionary[formData.sellerType].input2}
-                value={
-                  formData.sellerType === "PERSON"
-                    ? (formData as RegisterPerson).lastName ?? ""
-                    : (formData as RegisterStore | RegisterService).businessName ?? ""
-                }
-                onChange={handleFormData}
-                type="text"
-                icon={UserRound}
-                placeholder={userDictionary[formData.sellerType].placeholder2}
-                required={false}
-                minLength={2}
-                maxLength={100}
-              />
+              {formData.sellerType === "PERSON" && (
+                <Input
+                  label={userDictionary[formData.sellerType].label2}
+                  name={userDictionary[formData.sellerType].input2}
+                  value={(formData as RegisterPerson).lastName ?? ""}
+                  onChange={handleFormData}
+                  type="text"
+                  icon={UserRound}
+                  placeholder={userDictionary[formData.sellerType].placeholder2}
+                  required={false}
+                  minLength={2}
+                  maxLength={100}
+                />
+              )}
 
               {/* Email Field */}
               <Input
@@ -186,7 +196,7 @@ export default function RegisterPage() {
               <MainButton
                 type="submit"
                 form="register-form"
-                isLoading={registerPersonLoading || registerStoreLoading || registerServiceLoading}
+                isLoading={registerPersonLoading || registerBusinessLoading}
                 loadingText="Creando cuenta..."
                 text="Registrarse"
                 hasIcon

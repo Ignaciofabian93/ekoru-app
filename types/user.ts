@@ -1,4 +1,13 @@
-import { type AccountType, type ContactMethod, type SellerType } from "./enums";
+import {
+  type AdminType,
+  type AdminRole,
+  type AdminPermission,
+  type ContactMethod,
+  type SellerType,
+  type PersonSubscriptionPlan,
+  type BusinessSubscriptionPlan,
+  type BusinessType,
+} from "./enums";
 import { City, Country, County, Region } from "./location";
 
 export type Admin = {
@@ -6,8 +15,50 @@ export type Admin = {
   email: string;
   password: string;
   name: string;
+  lastName?: string;
+
+  // Admin type and access control
+  adminType: AdminType;
+  role: AdminRole;
+  permissions: AdminPermission[];
+
+  // Location
+  countryId?: number;
+  country?: Country;
+  regionId?: number;
+  region?: Region;
+  cityId?: number;
+  city?: City;
+  countyId?: number;
+  county?: County;
+
+  // Business admin relation (null for platform admins)
+  sellerId?: string;
+
+  // Account status and security
+  isActive: boolean;
+  isEmailVerified: boolean;
+  accountLocked: boolean;
+  loginAttempts: number;
+  lastLoginAt?: string;
+  lastLoginIp?: string;
+
+  // Timestamps
   createdAt: string;
   updatedAt: string;
+};
+
+export type AdminActivityLog = {
+  id: number;
+  adminId: string;
+  action: string;
+  entityType?: string;
+  entityId?: string;
+  changes?: Record<string, unknown>;
+  ipAddress?: string;
+  userAgent?: string;
+  metadata?: Record<string, unknown>;
+  createdAt: string;
 };
 
 export type Seller = {
@@ -19,32 +70,33 @@ export type Seller = {
   isVerified: boolean;
   createdAt: string;
   updatedAt: string;
-  profile: PersonProfile | StoreProfile | ServiceProfile;
+
+  // Profile Relations - Each seller has ONE profile based on sellerType
+  profile: PersonProfile | BusinessProfile;
 
   // Location information
-  address: string;
+  address?: string;
   cityId?: number;
   countryId?: number;
   countyId?: number;
   regionId?: number;
+  county?: County;
+  region?: Region;
+  country?: Country;
+  city?: City;
 
   // Contact information
-  phone: string;
+  phone?: string;
   website?: string;
-  preferredContactMethod: ContactMethod;
+  preferredContactMethod?: ContactMethod;
+  socialMediaLinks?: Record<string, string>;
 
-  // Social media links
-  socialMediaLinks?: Record<string, string>; // {instagram: "url", facebook: "url", etc}
-
-  // Business/Account information
-  accountType: AccountType;
+  // Points and Level System
   points: number;
-  userCategoryId?: number;
-  county: County | null;
-  region: Region | null;
-  country: Country | null;
-  city: City | null;
-  userCategory?: UserCategory | null;
+  sellerLevelId?: number;
+  sellerLevel?: SellerLevel;
+  sellerCategoryId?: number;
+  sellerCategory?: SellerCategory;
 };
 
 export type PersonProfile = {
@@ -53,68 +105,83 @@ export type PersonProfile = {
   sellerId: string;
   firstName: string;
   lastName?: string;
-  displayName?: string; // Custom display name
+  displayName?: string;
   bio?: string;
   birthday?: string;
   profileImage?: string;
   coverImage?: string;
-
-  // Person-specific preferences
   allowExchanges: boolean;
+  personSubscriptionPlan: PersonSubscriptionPlan;
 };
 
-export type StoreProfile = {
-  __typename: "StoreProfile";
+export type BusinessProfile = {
+  __typename: "BusinessProfile";
   id: string;
   sellerId: string;
+
+  // Basic Information
   businessName: string;
-  displayName?: string; // Custom display name
   description?: string;
   logo?: string;
   coverImage?: string;
-  businessType?: string; // "retail", "manufacturer", etc.
-  taxId?: string;
-  businessRegistration?: string;
+  businessType: BusinessType;
 
-  // Store-specific settings
-  allowExchanges: boolean; // Stores typically don't exchange
-  minOrderAmount?: number; // Minimum order amount in cents
+  // Chilean Legal Requirements
+  legalBusinessName?: string;
+  taxId?: string;
+  businessStartDate?: string;
+  legalRepresentative?: string;
+  legalRepresentativeTaxId?: string;
+
+  // For RETAIL and MIXED
   shippingPolicy?: string;
   returnPolicy?: string;
 
-  // Business hours
-  businessHours?: Record<string, { open: string; close: string }>; // {monday: {open: "9:00", close: "17:00"}, etc}
+  // For SERVICES and MIXED
+  serviceArea?: string;
+  yearsOfExperience?: number;
+  certifications?: string[];
+  travelRadius?: number;
+
+  // Operating Hours
+  businessHours?: Record<string, unknown>;
+
+  businessSubscriptionPlan: BusinessSubscriptionPlan;
+  createdAt: string;
+  updatedAt: string;
 };
 
-export type ServiceProfile = {
-  __typename: "ServiceProfile";
-  id: string;
-  sellerId: string;
-  businessName: string;
-  displayName?: string; // Custom display name
-  description?: string;
-  logo?: string;
-  coverImage?: string;
-  businessType?: string; // "retail", "manufacturer", etc.
-  taxId?: string;
-  businessRegistration?: string;
-
-  // Store-specific settings
-  allowExchanges: boolean; // Stores typically don't exchange
-  minOrderAmount?: number; // Minimum order amount in cents
-  shippingPolicy?: string;
-  returnPolicy?: string;
-
-  // Business hours
-  businessHours?: Record<string, { open: string; close: string }>; // {monday: {open: "9:00", close: "17:00"}, etc}
-};
-
-export type UserCategory = {
+export type SellerCategory = {
   id: number;
   name: string;
-  level: number;
   categoryDiscountAmount: number;
   pointsThreshold: number;
+  level: number;
+};
+
+export type SellerPreferences = {
+  id: number;
+  sellerId: string;
+  preferredLanguage?: string;
+  currency?: string;
+  emailNotifications: boolean;
+  pushNotifications: boolean;
+  orderUpdates: boolean;
+  communityUpdates: boolean;
+  securityAlerts: boolean;
+  weeklySummary: boolean;
+  twoFactorAuth: boolean;
+};
+
+export type SellerLevel = {
+  id: number;
+  levelName: string;
+  minPoints: number;
+  maxPoints?: number;
+  benefits?: Record<string, unknown>;
+  badgeIcon?: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type Session = {

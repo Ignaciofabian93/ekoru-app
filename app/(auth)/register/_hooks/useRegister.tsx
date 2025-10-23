@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { REGISTER_PERSON, REGISTER_SERVICE, REGISTER_STORE } from "@/graphql/session/mutations";
-import { type SellerType } from "@/types/enums";
+import { REGISTER_PERSON, REGISTER_BUSINESS } from "@/graphql/session/mutations";
+import { type BusinessType, type SellerType } from "@/types/enums";
 import useAlert from "@/hooks/useAlert";
 import { useRouter } from "next/navigation";
 import { sanitizeNameInput, sanitizeEmailInput, sanitizeTextInput } from "@/security/sanitizeInputs";
@@ -15,19 +15,10 @@ export type RegisterPerson = {
   sellerType: SellerType;
 };
 
-export type RegisterStore = {
-  displayName: string;
-  businessName?: string; // Optional for STORE type
+export type RegisterBusiness = {
+  businessType: BusinessType;
   sellerType: SellerType;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
-
-export type RegisterService = {
-  displayName: string;
-  businessName?: string; // Optional for SERVICE type
-  sellerType: SellerType;
+  businessName: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -37,13 +28,15 @@ export default function useRegister() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formData, setFormData] = useState<RegisterPerson | RegisterStore | RegisterService>({
+  const [formData, setFormData] = useState<RegisterPerson | RegisterBusiness>({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
     sellerType: "PERSON",
+    businessType: "MIXED",
+    businessName: "",
   });
   const { notifyError, notify } = useAlert();
   const [RegisterPerson, { loading: registerPersonLoading }] = useMutation(REGISTER_PERSON, {
@@ -55,16 +48,7 @@ export default function useRegister() {
       redirectToLogin();
     },
   });
-  const [RegisterStore, { loading: registerStoreLoading }] = useMutation(REGISTER_STORE, {
-    onError: () => {
-      notifyError("Error al registrarse. Por favor, inténtalo de nuevo.");
-    },
-    onCompleted: () => {
-      notify(`Gracias por registrarte!. Ahora podrás iniciar sesión con tu correo y contraseña.`);
-      redirectToLogin();
-    },
-  });
-  const [RegisterService, { loading: registerServiceLoading }] = useMutation(REGISTER_SERVICE, {
+  const [RegisterBusiness, { loading: registerBusinessLoading }] = useMutation(REGISTER_BUSINESS, {
     onError: () => {
       notifyError("Error al registrarse. Por favor, inténtalo de nuevo.");
     },
@@ -84,6 +68,13 @@ export default function useRegister() {
     setFormData((prev) => ({
       ...prev,
       sellerType: e,
+    }));
+  };
+
+  const handleBusinessTypeChange = (value: string | number) => {
+    setFormData((prev) => ({
+      ...prev,
+      businessType: value as BusinessType,
     }));
   };
 
@@ -147,9 +138,9 @@ export default function useRegister() {
       },
     });
   };
-  const submitStore = () => {
-    const { email, password, confirmPassword, displayName, businessName } = formData as RegisterStore;
-    if (!email || !password || !confirmPassword || !displayName) {
+  const submitBusiness = () => {
+    const { email, password, confirmPassword, businessName, businessType, sellerType } = formData as RegisterBusiness;
+    if (!email || !password || !confirmPassword || !businessName || !businessType || !sellerType) {
       notifyError("Por favor, completa todos los campos obligatorios.");
       return;
     }
@@ -160,38 +151,14 @@ export default function useRegister() {
 
     // Final sanitization before submission
     const sanitizedData = {
-      displayName: sanitizeTextInput(displayName),
       businessName: businessName ? sanitizeTextInput(businessName) : undefined,
       email: sanitizeEmailInput(email),
       password: password, // Don't sanitize password
+      businessType,
+      sellerType,
     };
 
-    RegisterStore({
-      variables: {
-        input: sanitizedData,
-      },
-    });
-  };
-  const submitService = () => {
-    const { email, password, confirmPassword, displayName, businessName } = formData as RegisterService;
-    if (!email || !password || !confirmPassword || !displayName) {
-      notifyError("Por favor, completa todos los campos obligatorios.");
-      return;
-    }
-    if (password !== confirmPassword) {
-      notifyError("Las contraseñas no coinciden.");
-      return;
-    }
-
-    // Final sanitization before submission
-    const sanitizedData = {
-      displayName: sanitizeTextInput(displayName),
-      businessName: businessName ? sanitizeTextInput(businessName) : undefined,
-      email: sanitizeEmailInput(email),
-      password: password, // Don't sanitize password
-    };
-
-    RegisterService({
+    RegisterBusiness({
       variables: {
         input: sanitizedData,
       },
@@ -204,10 +171,8 @@ export default function useRegister() {
 
     if (sellerType === "PERSON") {
       submitPerson();
-    } else if (sellerType === "STORE") {
-      submitStore();
-    } else if (sellerType === "SERVICE") {
-      submitService();
+    } else if (sellerType === "STARTUP" || sellerType === "COMPANY") {
+      submitBusiness();
     }
   };
 
@@ -216,10 +181,10 @@ export default function useRegister() {
     showPassword,
     showConfirmPassword,
     registerPersonLoading,
-    registerStoreLoading,
-    registerServiceLoading,
+    registerBusinessLoading,
     handleFormData,
     handleAccountTypeChange,
+    handleBusinessTypeChange,
     togglePasswordVisibility,
     toggleConfirmPasswordVisibility,
     handleSubmit,

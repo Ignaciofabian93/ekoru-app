@@ -1,21 +1,14 @@
-import {
-  type Badge,
-  type ProductSize,
-  type WeightUnit,
-  type ProductCondition,
-} from "./enums";
+import { type Badge, type ProductSize, type WeightUnit, type ProductCondition } from "./enums";
 
 export type Product = {
   id: number;
   name: string;
   description: string;
-  price: number; // Price in cents
+  price: number;
   hasOffer: boolean;
-  offerPrice: number;
-  stock: number;
-  sellerId: string; // Changed from userId to sellerId
+  offerPrice?: number;
+  sellerId: string;
   badges: Badge[];
-  barcode?: string;
   brand: string;
   color?: string;
   createdAt: string;
@@ -24,20 +17,70 @@ export type Product = {
   isActive: boolean;
   isExchangeable: boolean;
   productCategoryId: number;
-  ratingCount: number;
-  ratings: number;
-  reviewsNumber: number;
-  sku?: string;
   updatedAt: string;
-
-  // Product condition for recycled items
   condition: ProductCondition;
-  conditionDescription?: string; // Detailed condition description
+  conditionDescription?: string;
+  deletedAt?: string; // Soft delete - null means active
+};
 
-  // Sustainability info
-  sustainabilityScore?: number; // 1-100 score
-  materialComposition?: string; // e.g., "80% cotton, 20% polyester"
-  recycledContent?: number; // Percentage of recycled materials
+export type StoreProduct = {
+  id: number;
+  name: string;
+  description: string;
+  stock: number;
+  barcode?: string;
+  sku?: string;
+  price: number;
+  hasOffer: boolean;
+  offerPrice?: number;
+  sellerId: string;
+  createdAt: string;
+  images: string[];
+  isActive: boolean;
+  updatedAt: string;
+  badges: Badge[];
+  brand?: string;
+  color?: string;
+  ratingCount: number;
+  averageRating: number;
+  reviewsNumber: number;
+  storeSubCategoryId: number;
+  deletedAt?: string;
+};
+
+export type ProductVariant = {
+  id: number;
+  storeProductId: number;
+  variantName: string;
+  sku?: string;
+  price: number;
+  stock: number;
+  attributes?: Record<string, unknown>;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type StoreProductMaterial = {
+  id: number;
+  storeProductId: number;
+  materialTypeId: number;
+  quantity: number;
+  unit: string;
+  isPrimary: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ProductCategoryMaterial = {
+  id: number;
+  productCategoryId: number;
+  materialTypeId: number;
+  quantity: number;
+  unit: string;
+  isPrimary: boolean;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type ProductLike = {
@@ -63,22 +106,13 @@ export type MaterialImpactEstimate = {
 export type ProductCategory = {
   id: number;
   departmentCategoryId: number;
-  averageWeight?: number;
-  fifthMaterialTypeId?: number;
-  fifthMaterialTypeQuantity?: number;
-  firstMaterialTypeId?: number;
-  firstMaterialTypeQuantity?: number;
-  fourthMaterialTypeId?: number;
-  fourthMaterialTypeQuantity?: number;
   keywords: string[];
   productCategoryName: string;
-  secondMaterialTypeId?: number;
-  secondMaterialTypeQuantity?: number;
   size?: ProductSize;
-  thirdMaterialTypeId?: number;
-  thirdMaterialTypeQuantity?: number;
+  averageWeight?: number;
   weightUnit?: WeightUnit;
-  products: Product[];
+  products?: Product[];
+  materials?: ProductCategoryMaterial[];
 };
 
 export type DepartmentCategory = {

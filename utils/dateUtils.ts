@@ -16,10 +16,7 @@ export const formatBirthdayInput = (value: string): string => {
   } else if (numericValue.length <= 4) {
     return `${numericValue.slice(0, 2)}-${numericValue.slice(2)}`;
   } else {
-    return `${numericValue.slice(0, 2)}-${numericValue.slice(
-      2,
-      4
-    )}-${numericValue.slice(4, 8)}`;
+    return `${numericValue.slice(0, 2)}-${numericValue.slice(2, 4)}-${numericValue.slice(4, 8)}`;
   }
 };
 
@@ -46,15 +43,7 @@ export const convertToDateObject = (displayDate: string): Date | null => {
   if (!day || !month || !year) return null;
 
   // Create date at noon local time to avoid timezone issues with birthdays
-  const date = new Date(
-    parseInt(year),
-    parseInt(month) - 1,
-    parseInt(day),
-    12,
-    0,
-    0,
-    0
-  );
+  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), 12, 0, 0, 0);
 
   return date;
 };
@@ -81,9 +70,7 @@ export const convertToDisplayFormat = (storageDate: string): string => {
 /**
  * Validates if the date is valid and not in the future
  */
-export const validateBirthday = (
-  displayDate: string
-): { isValid: boolean; error?: string } => {
+export const validateBirthday = (displayDate: string): { isValid: boolean; error?: string } => {
   if (!displayDate || displayDate.length !== 10) {
     return { isValid: false, error: "Fecha debe tener formato DD-MM-YYYY" };
   }
@@ -114,11 +101,7 @@ export const validateBirthday = (
   const date = new Date(year, month - 1, day);
 
   // Check if date is valid (handles leap years, etc.)
-  if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day
-  ) {
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
     return { isValid: false, error: "Fecha no es válida" };
   }
 
@@ -161,4 +144,52 @@ export const extractDatePart = (dateInput: string | Date): string => {
   const month = String(dateInput.getMonth() + 1).padStart(2, "0");
   const day = String(dateInput.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+};
+
+/**
+ * Validates business start date for Chilean businesses (Fecha Inicio de Actividades)
+ * Must be between 1990 (when current tax system was established) and today
+ */
+export const validateBusinessStartDate = (displayDate: string): { isValid: boolean; error?: string } => {
+  if (!displayDate || displayDate.length !== 10) {
+    return { isValid: false, error: "Fecha debe tener formato DD-MM-YYYY" };
+  }
+
+  const [dayStr, monthStr, yearStr] = displayDate.split("-");
+  const day = parseInt(dayStr, 10);
+  const month = parseInt(monthStr, 10);
+  const year = parseInt(yearStr, 10);
+
+  // Basic range checks
+  if (day < 1 || day > 31) {
+    return { isValid: false, error: "Día debe estar entre 1 y 31" };
+  }
+
+  if (month < 1 || month > 12) {
+    return { isValid: false, error: "Mes debe estar entre 1 y 12" };
+  }
+
+  const currentYear = new Date().getFullYear();
+  // Chilean businesses: modern tax system started in 1990
+  if (year < 1990 || year > currentYear) {
+    return {
+      isValid: false,
+      error: `Año debe estar entre 1990 y ${currentYear}`,
+    };
+  }
+
+  // Create date object and validate
+  const date = new Date(year, month - 1, day);
+
+  // Check if date is valid (handles leap years, etc.)
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+    return { isValid: false, error: "Fecha no es válida" };
+  }
+
+  // Check if date is not in the future
+  if (date > new Date()) {
+    return { isValid: false, error: "La fecha no puede ser futura" };
+  }
+
+  return { isValid: true };
 };

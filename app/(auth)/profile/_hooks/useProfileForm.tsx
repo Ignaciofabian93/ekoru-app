@@ -1,19 +1,27 @@
 import { GET_CITIES, GET_COUNTIES, GET_COUNTRIES, GET_REGIONS } from "@/graphql/location/queries";
-import useSessionStore, { defaultSeller } from "@/store/session";
 import { City, Country, County, Region } from "@/types/location";
-import { Seller, PersonProfile } from "@/types/user";
+import { Seller, PersonProfile, BusinessProfile } from "@/types/user";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
-import { formatBirthdayInput, convertToDisplayFormat, validateBirthday, convertToDateObject } from "@/utils/dateUtils";
+import {
+  formatBirthdayInput,
+  convertToDisplayFormat,
+  validateBirthday,
+  validateBusinessStartDate,
+  convertToDateObject,
+} from "@/utils/dateUtils";
 import {
   formatPhoneInput,
   validatePhoneNumber,
   getPhoneForStorage as getPhoneStorageFormat,
   isWhatsAppCompatible,
 } from "@/utils/phoneUtils";
+import { formatRutInput, validateRut, getRutForStorage, convertRutToDisplayFormat } from "@/utils/rutUtils";
+import { BusinessHours } from "@/utils/businessHoursUtils";
+import { UPDATE_BUSINESS_PROFILE, UPDATE_PERSON_PROFILE } from "@/graphql/session/mutations";
+import { UPDATE_SELLER } from "@/graphql/user/mutations";
+import useSessionStore, { defaultSeller } from "@/store/session";
 import useAlert from "@/hooks/useAlert";
-import { UPDATE_PERSON_PROFILE } from "@/graphql/session/mutations";
-import { UPDATE_USER } from "@/graphql/user/mutations";
 
 export default function useProfileForm() {
   const { notify, notifyError } = useAlert();
@@ -22,28 +30,44 @@ export default function useProfileForm() {
   const [form, setForm] = useState<Seller>(defaultSeller);
 
   const [Countries, { data: countriesData, loading: countriesLoading }] = useLazyQuery(GET_COUNTRIES);
-  const [Regions, { data: regionsData, loading: regionsLoading }] = useLazyQuery(GET_REGIONS);
-  const [Cities, { data: citiesData, loading: citiesLoading }] = useLazyQuery(GET_CITIES);
-  const [Counties, { data: countiesData, loading: countiesLoading }] = useLazyQuery(GET_COUNTIES);
+  const [RegionsByCountryId, { data: regionsData, loading: regionsLoading }] = useLazyQuery(GET_REGIONS);
+  const [CitiesByRegionId, { data: citiesData, loading: citiesLoading }] = useLazyQuery(GET_CITIES);
+  const [CountiesByCityId, { data: countiesData, loading: countiesLoading }] = useLazyQuery(GET_COUNTIES);
 
-  const [UpdateUser] = useMutation(UPDATE_USER, {
-    onCompleted: (data) => {
-      handleSession(data.updateUser as Seller);
+  const [UpdateSeller, { loading: updatingSeller }] = useMutation(UPDATE_SELLER, {
+    onCompleted: (response) => {
+      console.log("Seller update response:", response);
+
+      handleSession(response.updateSeller as Seller);
     },
     onError: (error) => {
       console.error("Error updating user:", error);
-      notifyError("Error al intentar actualizar el usuario. Por favor, inténtalo de nuevo más tarde.");
+      notifyError("Error al intentar actualizar el perfil.");
     },
   });
-  const [UpdatePersonProfile] = useMutation(UPDATE_PERSON_PROFILE, {
-    onCompleted: (data) => {
-      handleSession(data.updatePersonProfile as Seller);
+  const [UpdatePersonProfile, { loading: updatingPersonProfile }] = useMutation(UPDATE_PERSON_PROFILE, {
+    onCompleted: (response) => {
+      handleSession(response.updatePersonProfile as Seller);
+      notify("Perfil actualizado con éxito");
+      setIsOpen(false);
+    },
+    onError: () => {
+      notifyError("Error al intentar actualizar el perfil. Por favor, inténtalo de nuevo más tarde.");
+    },
+  });
+
+  const [UpdateBusinessProfile, { loading: updatingBusinessProfile }] = useMutation(UPDATE_BUSINESS_PROFILE, {
+    onCompleted: (response) => {
+      const updated = { ...data, profile: response.updateBusinessProfile };
+      handleSession(updated as Seller);
       notify("Perfil actualizado con éxito");
       setIsOpen(false);
     },
     onError: (error) => {
-      console.error("Error updating profile:", error);
-      notifyError("Error al intentar actualizar el perfil. Por favor, inténtalo de nuevo más tarde.");
+      console.error("Error updating business profile:", error);
+      console.error("GraphQL errors:", error.graphQLErrors);
+      console.error("Network error:", error.networkError);
+      notifyError("Error al intentar actualizar el perfil.");
     },
   });
 
@@ -53,21 +77,21 @@ export default function useProfileForm() {
 
   useEffect(() => {
     if (form.country?.id) {
-      Regions({ variables: { countryId: form.country.id } });
+      RegionsByCountryId({ variables: { countryId: form.country.id } });
     }
-  }, [form.country?.id, Regions]);
+  }, [form.country?.id, RegionsByCountryId]);
 
   useEffect(() => {
     if (form.region?.id) {
-      Cities({ variables: { regionId: form.region.id } });
+      CitiesByRegionId({ variables: { regionId: form.region.id } });
     }
-  }, [form.region?.id, Cities]);
+  }, [form.region?.id, CitiesByRegionId]);
 
   useEffect(() => {
     if (form.city?.id) {
-      Counties({ variables: { cityId: form.city.id } });
+      CountiesByCityId({ variables: { cityId: form.city.id } });
     }
-  }, [form.city?.id, Counties]);
+  }, [form.city?.id, CountiesByCityId]);
 
   useEffect(() => {
     const loadProfile = () => {
@@ -78,6 +102,34 @@ export default function useProfileForm() {
         profileData.profile = {
           ...profileData.profile,
           birthday: convertToDisplayFormat(profileData.profile.birthday),
+        };
+      }
+
+      // Convert businessStartDate from storage format (YYYY-MM-DD) to display format (DD-MM-YYYY)
+      if (profileData.profile && "businessStartDate" in profileData.profile && profileData.profile.businessStartDate) {
+        profileData.profile = {
+          ...profileData.profile,
+          businessStartDate: convertToDisplayFormat(profileData.profile.businessStartDate),
+        };
+      }
+
+      // Convert taxId (RUT) to display format
+      if (profileData.profile && "taxId" in profileData.profile && profileData.profile.taxId) {
+        profileData.profile = {
+          ...profileData.profile,
+          taxId: convertRutToDisplayFormat(profileData.profile.taxId),
+        };
+      }
+
+      // Convert legalRepresentativeTaxId (RUT) to display format
+      if (
+        profileData.profile &&
+        "legalRepresentativeTaxId" in profileData.profile &&
+        profileData.profile.legalRepresentativeTaxId
+      ) {
+        profileData.profile = {
+          ...profileData.profile,
+          legalRepresentativeTaxId: convertRutToDisplayFormat(profileData.profile.legalRepresentativeTaxId),
         };
       }
 
@@ -104,7 +156,7 @@ export default function useProfileForm() {
   };
 
   const updateRegion = (regionId: number) => {
-    const region = regionsData.regions.find((r: Region) => Number(r.id) === regionId);
+    const region = regionsData.regionsByCountryId.find((r: Region) => Number(r.id) === regionId);
     if (region) {
       setForm({
         ...form,
@@ -116,7 +168,7 @@ export default function useProfileForm() {
   };
 
   const updateCity = (cityId: number) => {
-    const city = citiesData.cities.find((c: City) => Number(c.id) === cityId);
+    const city = citiesData.citiesByRegionId.find((c: City) => Number(c.id) === cityId);
     if (city) {
       setForm({
         ...form,
@@ -127,7 +179,7 @@ export default function useProfileForm() {
   };
 
   const updateCounty = (countyId: number) => {
-    const county = countiesData.counties.find((c: County) => Number(c.id) === countyId);
+    const county = countiesData.countiesByCityId.find((c: County) => Number(c.id) === countyId);
     if (county) {
       setForm({
         ...form,
@@ -165,6 +217,18 @@ export default function useProfileForm() {
     }
   };
 
+  const handleBusinessStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedValue = formatBirthdayInput(e.target.value); // Same format as birthday (DD-MM-YYYY)
+
+    // Only update if this is a business profile
+    if ((form.sellerType === "STARTUP" || form.sellerType === "COMPANY") && form.profile) {
+      setForm({
+        ...form,
+        profile: { ...form.profile, businessStartDate: formattedValue } as BusinessProfile,
+      });
+    }
+  };
+
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formattedValue = formatPhoneInput(e.target.value);
     setForm({
@@ -173,9 +237,50 @@ export default function useProfileForm() {
     });
   };
 
+  const handleTaxIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedValue = formatRutInput(e.target.value);
+
+    // Only update if this is a business profile
+    if ((form.sellerType === "STARTUP" || form.sellerType === "COMPANY") && form.profile) {
+      setForm({
+        ...form,
+        profile: { ...form.profile, taxId: formattedValue } as BusinessProfile,
+      });
+    }
+  };
+
+  const handleLegalRepresentativeTaxIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedValue = formatRutInput(e.target.value);
+
+    // Only update if this is a business profile
+    if ((form.sellerType === "STARTUP" || form.sellerType === "COMPANY") && form.profile) {
+      setForm({
+        ...form,
+        profile: { ...form.profile, legalRepresentativeTaxId: formattedValue } as BusinessProfile,
+      });
+    }
+  };
+
+  const handleBusinessHoursChange = (hours: BusinessHours) => {
+    // Only update if this is a business profile
+    if ((form.sellerType === "STARTUP" || form.sellerType === "COMPANY") && form.profile) {
+      setForm({
+        ...form,
+        profile: { ...form.profile, businessHours: hours as Record<string, unknown> } as BusinessProfile,
+      });
+    }
+  };
+
   const getBirthdayForStorage = (): Date | null => {
     if (form.profile && "birthday" in form.profile && form.profile.birthday) {
       return convertToDateObject(form.profile.birthday);
+    }
+    return null;
+  };
+
+  const getBusinessStartDateForStorage = (): Date | null => {
+    if (form.profile && "businessStartDate" in form.profile && form.profile.businessStartDate) {
+      return convertToDateObject(form.profile.businessStartDate);
     }
     return null;
   };
@@ -190,6 +295,27 @@ export default function useProfileForm() {
   const validateBirthdayField = (): { isValid: boolean; error?: string } => {
     if (form.profile && "birthday" in form.profile && form.profile.birthday) {
       return validateBirthday(form.profile.birthday);
+    }
+    return { isValid: true };
+  };
+
+  const validateBusinessStartDateField = (): { isValid: boolean; error?: string } => {
+    if (form.profile && "businessStartDate" in form.profile && form.profile.businessStartDate) {
+      return validateBusinessStartDate(form.profile.businessStartDate);
+    }
+    return { isValid: true };
+  };
+
+  const validateTaxIdField = (): { isValid: boolean; error?: string } => {
+    if (form.profile && "taxId" in form.profile && form.profile.taxId) {
+      return validateRut(form.profile.taxId);
+    }
+    return { isValid: true };
+  };
+
+  const validateLegalRepresentativeTaxIdField = (): { isValid: boolean; error?: string } => {
+    if (form.profile && "legalRepresentativeTaxId" in form.profile && form.profile.legalRepresentativeTaxId) {
+      return validateRut(form.profile.legalRepresentativeTaxId);
     }
     return { isValid: true };
   };
@@ -274,12 +400,11 @@ export default function useProfileForm() {
       socialMediaLinks: form.socialMediaLinks,
       preferredContactMethod: form.preferredContactMethod,
       website: form.website || null,
-      accountType: form.accountType,
     };
 
-    const { data } = await UpdateUser({ variables: { input: userInput } });
+    const { data } = await UpdateSeller({ variables: { input: userInput } });
     // Update Profile after user is updated
-    if (data.updateUser) {
+    if (data.updateSeller) {
       const profileInput = {
         bio: bio || null,
         birthday: getBirthdayForStorage(),
@@ -290,11 +415,134 @@ export default function useProfileForm() {
     }
   };
 
+  const submitBusinessProfile = async () => {
+    const { country, region, city, county, profile, phone, address } = form;
+
+    if (!profile) {
+      notifyError("Error: No se encontró el perfil de la empresa.");
+      return;
+    }
+
+    const {
+      businessName,
+      legalBusinessName,
+      taxId,
+      travelRadius,
+      serviceArea,
+      certifications,
+      description,
+      legalRepresentative,
+      legalRepresentativeTaxId,
+      returnPolicy,
+      shippingPolicy,
+      yearsOfExperience,
+      businessHours,
+      businessStartDate,
+    } = profile as BusinessProfile;
+    if (!country?.id) {
+      notifyError("Por favor, selecciona un país.");
+      return;
+    }
+    if (!region?.id) {
+      notifyError("Por favor, selecciona una región.");
+      return;
+    }
+    if (!city?.id) {
+      notifyError("Por favor, selecciona una ciudad.");
+      return;
+    }
+    if (!county?.id) {
+      notifyError("Por favor, selecciona una comuna.");
+      return;
+    }
+    if (!address) {
+      notifyError("Por favor, ingresa una dirección.");
+      return;
+    }
+    if (!phone) {
+      notifyError("Por favor, ingresa un número de teléfono.");
+      return;
+    }
+    if (!legalBusinessName) {
+      notifyError("Por favor, ingresa la razón social.");
+      return;
+    }
+
+    // Validate taxId (RUT) if provided
+    if (taxId) {
+      const taxIdValidation = validateTaxIdField();
+      if (!taxIdValidation.isValid) {
+        notifyError(taxIdValidation.error || "RUT inválido.");
+        return;
+      }
+    }
+
+    // Validate legalRepresentativeTaxId (RUT) if provided
+    if (legalRepresentativeTaxId) {
+      const legalRepTaxIdValidation = validateLegalRepresentativeTaxIdField();
+      if (!legalRepTaxIdValidation.isValid) {
+        notifyError(legalRepTaxIdValidation.error || "RUT del representante legal inválido.");
+        return;
+      }
+    }
+
+    // Validate businessStartDate if provided
+    if (businessStartDate) {
+      const businessStartDateValidation = validateBusinessStartDateField();
+      if (!businessStartDateValidation.isValid) {
+        notifyError(businessStartDateValidation.error || "Fecha de inicio de actividades inválida.");
+        return;
+      }
+    }
+
+    const userInput = {
+      email: form.email,
+      countryId: Number(form.country?.id),
+      regionId: Number(form.region?.id),
+      cityId: Number(form.city?.id),
+      countyId: Number(form.county?.id),
+      phone: getPhoneForStorage(),
+      address,
+      socialMediaLinks: form.socialMediaLinks,
+      preferredContactMethod: form.preferredContactMethod,
+      website: form.website || null,
+    };
+
+    const businessInput = {
+      businessName: businessName || null,
+      description: description || null,
+      legalBusinessName: legalBusinessName || null,
+      taxId: taxId ? getRutForStorage(taxId) : null,
+      businessStartDate: getBusinessStartDateForStorage(),
+      legalRepresentative: legalRepresentative || null,
+      legalRepresentativeTaxId: legalRepresentativeTaxId ? getRutForStorage(legalRepresentativeTaxId) : null,
+      shippingPolicy: shippingPolicy || null,
+      returnPolicy: returnPolicy || null,
+      serviceArea: serviceArea || null,
+      yearsOfExperience: yearsOfExperience ? Number(yearsOfExperience) : null,
+      certifications: certifications || null,
+      travelRadius: travelRadius ? Number(travelRadius) : null,
+      businessHours: businessHours || null,
+    };
+
+    try {
+      const { data } = await UpdateSeller({ variables: { input: userInput } });
+
+      if (data?.updateSeller) {
+        // Update Profile after user is updated
+        await UpdateBusinessProfile({ variables: { input: businessInput } });
+      }
+    } catch (error) {
+      console.error("Error in submitBusinessProfile:", error);
+      throw error; // Re-throw to let the mutation's onError handler catch it
+    }
+  };
+
   const handleSubmit = () => {
     if (form.sellerType === "PERSON") {
       submitPersonProfile();
-    } else if (form.sellerType === "STORE") {
-    } else if (form.sellerType === "SERVICE") {
+    } else if (form.sellerType === "STARTUP" || form.sellerType === "COMPANY") {
+      submitBusinessProfile();
     }
   };
 
@@ -305,11 +553,11 @@ export default function useProfileForm() {
     closeModal,
     countriesData: (countriesData?.countries as Country[]) || [],
     countriesLoading,
-    regionsData: (regionsData?.regions as Region[]) || [],
+    regionsData: (regionsData?.regionsByCountryId as Region[]) || [],
     regionsLoading,
-    citiesData: (citiesData?.cities as City[]) || [],
+    citiesData: (citiesData?.citiesByRegionId as City[]) || [],
     citiesLoading,
-    countiesData: (countiesData?.counties as County[]) || [],
+    countiesData: (countiesData?.countiesByCityId as County[]) || [],
     countiesLoading,
     updateCountry,
     updateRegion,
@@ -319,12 +567,22 @@ export default function useProfileForm() {
     updatePreferredContactMethod,
     handleUpdateProfile,
     handleBirthdayChange,
+    handleBusinessStartDateChange,
     handlePhoneChange,
+    handleTaxIdChange,
+    handleLegalRepresentativeTaxIdChange,
+    handleBusinessHoursChange,
     getBirthdayForStorage,
     getPhoneForStorage,
     validateBirthdayField,
+    validateBusinessStartDateField,
+    validateTaxIdField,
+    validateLegalRepresentativeTaxIdField,
     validatePhoneField,
     handleSocialMediaLinkChange,
     handleSubmit,
+    updatingSeller,
+    updatingPersonProfile,
+    updatingBusinessProfile,
   };
 }

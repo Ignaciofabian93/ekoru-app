@@ -41,8 +41,6 @@ export default function useCoverImage() {
 
       // Upload file and get URL
       const imageUrl = await uploadCoverImage(file);
-      console.log("Uploaded cover image URL:", imageUrl);
-
       // Update state with permanent URL
       setCoverImage(imageUrl);
     } catch (error) {

@@ -30,18 +30,26 @@ export default function ProfileNavigation() {
     updatePreferredContactMethod,
     handleUpdateProfile,
     handleBirthdayChange,
+    handleBusinessStartDateChange,
     handlePhoneChange,
+    handleTaxIdChange,
+    handleLegalRepresentativeTaxIdChange,
+    handleBusinessHoursChange,
     validateBirthdayField,
+    validateBusinessStartDateField,
+    validateTaxIdField,
+    validateLegalRepresentativeTaxIdField,
     validatePhoneField,
     handleSocialMediaLinkChange,
     handleSubmit,
+    updatingBusinessProfile,
+    updatingPersonProfile,
+    updatingSeller,
   } = useProfileForm();
 
   return (
     <section className="bg-white rounded-xl shadow-sm border border-neutral/20 p-6">
-      <h3 className="text-lg font-bold text-text-primary mb-4">
-        Gestionar Perfil
-      </h3>
+      <h3 className="text-lg font-bold text-text-primary mb-4">Gestionar Perfil</h3>
       <nav className="space-y-2">
         {profileMenu.map((item) => {
           const IconComponent = item.icon;
@@ -68,12 +76,9 @@ export default function ProfileNavigation() {
               <Link
                 key={item.title}
                 href={item.href}
-                className={clsx(
-                  "flex items-center p-3 rounded-lg hover:bg-neutral-light/50 transition-colors group",
-                  {
-                    "opacity-50 pointer-events-none": !item.enabled,
-                  }
-                )}
+                className={clsx("flex items-center p-3 rounded-lg hover:bg-neutral-light/50 transition-colors group", {
+                  "opacity-50 pointer-events-none": !item.enabled,
+                })}
               >
                 <IconComponent className="w-5 h-5 mr-3 text-neutral group-hover:text-primary transition-colors" />
                 <span className="font-medium text-text-secondary group-hover:text-primary transition-colors">
@@ -84,13 +89,7 @@ export default function ProfileNavigation() {
           }
         })}
       </nav>
-      <Modal
-        key={"profile-modal"}
-        isOpen={isOpen}
-        onClose={closeModal}
-        title={"Editar Perfil"}
-        size="lg"
-      >
+      <Modal key={"profile-modal"} isOpen={isOpen} onClose={closeModal} title={"Editar Perfil"} size="lg">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -117,8 +116,15 @@ export default function ProfileNavigation() {
               updatePreferredContactMethod={updatePreferredContactMethod}
               handleUpdateProfile={handleUpdateProfile}
               handleBirthdayChange={handleBirthdayChange}
+              handleBusinessStartDateChange={handleBusinessStartDateChange}
               handlePhoneChange={handlePhoneChange}
+              handleTaxIdChange={handleTaxIdChange}
+              handleLegalRepresentativeTaxIdChange={handleLegalRepresentativeTaxIdChange}
+              handleBusinessHoursChange={handleBusinessHoursChange}
               validateBirthdayField={validateBirthdayField}
+              validateBusinessStartDateField={validateBusinessStartDateField}
+              validateTaxIdField={validateTaxIdField}
+              validateLegalRepresentativeTaxIdField={validateLegalRepresentativeTaxIdField}
               validatePhoneField={validatePhoneField}
               handleSocialMediaLinkChange={handleSocialMediaLinkChange}
             />
@@ -131,13 +137,7 @@ export default function ProfileNavigation() {
             transition={{ delay: 0.2, duration: 0.3 }}
             className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4 border-t border-gray-200"
           >
-            <MainButton
-              text="Cancelar"
-              onClick={closeModal}
-              disabled={false}
-              variant="outline"
-              hasIcon={false}
-            />
+            <MainButton text="Cancelar" onClick={closeModal} disabled={false} variant="outline" hasIcon={false} />
             <MainButton
               text={"Actualizar Perfil"}
               variant="primary"
@@ -145,6 +145,8 @@ export default function ProfileNavigation() {
               hasIcon
               icon={Save}
               onClick={handleSubmit}
+              isLoading={updatingSeller || updatingPersonProfile || updatingBusinessProfile}
+              loadingText="Actualizando..."
             />
           </motion.div>
         </motion.div>

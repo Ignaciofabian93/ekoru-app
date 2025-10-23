@@ -1,11 +1,19 @@
-import { type TransactionKind, type ExchangeStatus } from "./enums";
+import {
+  type TransactionKind,
+  type ExchangeStatus,
+  type PaymentStatus,
+  type PaymentType,
+  type PaymentEnvironment,
+  type ChileanPaymentProvider,
+  type RefundStatus,
+} from "./enums";
 
 export type Transaction = {
   id: number;
   kind: TransactionKind;
   pointsCollected: number;
   createdAt: string;
-  sellerId: string; // Changed from userId to sellerId
+  sellerId: string;
 };
 
 export type Exchange = {
@@ -17,4 +25,70 @@ export type Exchange = {
   notes?: string;
   createdAt: string;
   completedAt?: string;
+};
+
+export type Payment = {
+  id: string;
+  paymentType: PaymentType;
+  amount: number;
+  currency: string;
+  status: PaymentStatus;
+  payerId: string;
+  receiverId: string;
+  orderId?: number;
+  quotationId?: number;
+  provider: string;
+  providerTransactionId?: string;
+  providerPaymentUrl?: string;
+  metadata?: Record<string, unknown>;
+  expiresAt?: string;
+  paidAt?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type PaymentRefund = {
+  id: string;
+  paymentId: string;
+  amount: number;
+  reason?: string;
+  status: RefundStatus;
+  providerRefundId?: string;
+  processedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type PaymentTransaction = {
+  id: string;
+  paymentId: string;
+  transactionType: string;
+  amount: number;
+  providerResponse?: Record<string, unknown>;
+  status: string;
+  createdAt: string;
+};
+
+export type ChileanPaymentConfig = {
+  id: number;
+  sellerId: string;
+  provider: ChileanPaymentProvider;
+  environment: PaymentEnvironment;
+  isActive: boolean;
+  credentials?: Record<string, unknown>;
+  webhookSecret?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type PaymentWebhook = {
+  id: string;
+  provider: string;
+  eventType: string;
+  payload: Record<string, unknown>;
+  processed: boolean;
+  paymentId?: string;
+  error?: string;
+  createdAt: string;
+  processedAt?: string;
 };
