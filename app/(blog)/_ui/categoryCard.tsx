@@ -99,7 +99,7 @@ export default function CategoryCard({ category }: Props) {
   };
 
   const Icon = getIconComponent(category?.icon || "");
-  const blogCount = category?.blogs?.length || 0;
+  const blogCount = [category]?.length || 0;
 
   return (
     <Link
