@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PersonProfile, Seller, ServiceProfile, StoreProfile } from "@/types/user";
+import { PersonProfile, Seller, BusinessProfile } from "@/types/user";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,11 +28,10 @@ export const SideBarProfile = ({ data, closeMobileMenu }: { data: Seller | null;
 
     if (!isPerson) {
       setIsPerson(false);
-      const profile = data?.profile as StoreProfile | ServiceProfile;
+      const profile = data?.profile as BusinessProfile;
       const businessName = profile?.businessName;
-      const displayName = profile?.displayName;
       const logoImg = profile?.logo || "/brand/icon.webp";
-      setBusinessDisplayName(businessName || displayName || "");
+      setBusinessDisplayName(businessName || "");
       setLogo(logoImg);
     }
   }, [data]);
