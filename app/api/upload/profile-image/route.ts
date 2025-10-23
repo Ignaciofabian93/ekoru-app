@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       body: forwardData,
       credentials: "include",
     });
-
+    alert("gateway response status: " + response);
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.error || "Gateway upload failed");

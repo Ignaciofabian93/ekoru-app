@@ -66,6 +66,7 @@ export default function useProfileImage() {
       method: "POST",
       body: formData,
     });
+    alert("response status: " + response);
 
     if (!response.ok) {
       throw new Error("Failed to upload profile image");
