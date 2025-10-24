@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { compressImageClient } from "../_utils/imageCompress";
 import useSessionStore from "@/store/session";
 import useSessionData from "@/hooks/useSessionData";
+import useAlert from "@/hooks/useAlert";
 
 export default function useCoverImage() {
   const { data } = useSessionStore();
+  const { notifyError } = useAlert();
   const { backgroundImage } = useSessionData();
   const [coverImage, setCoverImage] = useState<string | null>(null);
 
@@ -20,13 +23,13 @@ export default function useCoverImage() {
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      alert("Por favor, selecciona un archivo de imagen válido.");
+      notifyError("Por favor, selecciona un archivo de imagen válido.");
       return;
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert("El archivo debe ser menor a 5MB.");
+    // Validate file size (max 10MB for original file)
+    if (file.size > 10 * 1024 * 1024) {
+      notifyError("El archivo debe ser menor a 10MB.");
       return;
     }
 
@@ -37,13 +40,14 @@ export default function useCoverImage() {
       const blobUrl = URL.createObjectURL(file);
       setCoverImage(blobUrl);
 
+      // Compress image on client side before upload
+      const compressedFile = await compressImageClient({ file, maxWidth: 1600, maxHeight: 600 });
       // Upload file and get URL
-      const imageUrl = await uploadCoverImage(file);
+      const imageUrl = await uploadCoverImage(compressedFile);
       // Update state with permanent URL
       setCoverImage(imageUrl);
-    } catch (error) {
-      console.error("Error uploading cover image:", error);
-      alert("Error al subir la imagen. Inténtalo de nuevo.");
+    } catch {
+      notifyError("Error al subir imagen de portada. Inténtalo de nuevo.");
       setCoverImage(data.profile?.coverImage || null);
     } finally {
       setIsUploading(false);
@@ -66,11 +70,20 @@ export default function useCoverImage() {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to upload cover image");
+      const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+      const errorMessage = errorData.error || `HTTP ${response.status}: ${response.statusText}`;
+      notifyError("Hubo un error al subir la imagen de portada.");
+      throw new Error(errorMessage);
     }
 
-    const { imageUrl } = await response.json();
-    return imageUrl;
+    const result = await response.json();
+
+    if (!result.imageUrl) {
+      notifyError("No se recibió respuesta del servidor.");
+      throw new Error("No se recibió URL de la imagen del servidor");
+    }
+
+    return result.imageUrl;
   };
 
   return {

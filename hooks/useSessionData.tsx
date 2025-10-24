@@ -1,5 +1,5 @@
-import useSessionStore from "@/store/session";
 import { BusinessProfile, PersonProfile } from "@/types/user";
+import useSessionStore from "@/store/session";
 
 export default function useSessionData() {
   const { data } = useSessionStore();
@@ -19,6 +19,28 @@ export default function useSessionData() {
 
   const backgroundImage = data.profile?.coverImage || "/brand/logo.webp";
 
+  const personFullName = `${(data.profile as PersonProfile)?.firstName ?? ""} ${
+    (data.profile as PersonProfile)?.lastName ?? ""
+  }`;
+  const personDisplayedName = (data.profile as PersonProfile)?.displayName ?? personFullName;
+  const businessName = (data.profile as BusinessProfile)?.businessName ?? "";
+  const displayedName = isPersonProfile ? personDisplayedName : businessName;
+
+  const address =
+    data.address && data.county?.county ? `${data.address}, ${data.county?.county}` : "Sin dirección registrada";
+
+  const memberSince = data.createdAt.split("T")[0].split("-").toReversed().join("-");
+
+  const description = isPersonProfile
+    ? (data.profile as PersonProfile)?.bio || "Sin biografía"
+    : (data.profile as BusinessProfile)?.description || "Sin descripción";
+
+  const phone = data.phone || "Sin teléfono registrado";
+
+  const isVerified = data.isVerified;
+
+  const email = data.email;
+
   return {
     sellerType,
     isPersonProfile,
@@ -28,5 +50,12 @@ export default function useSessionData() {
     isMixedBusiness,
     sellerImage,
     backgroundImage,
+    displayedName,
+    address,
+    memberSince,
+    description,
+    phone,
+    isVerified,
+    email,
   };
 }

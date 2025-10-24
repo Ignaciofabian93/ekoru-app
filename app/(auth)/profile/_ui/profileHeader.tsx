@@ -1,36 +1,16 @@
 import { useState, useEffect } from "react";
-import {
-  Calendar,
-  Camera,
-  Edit3,
-  Mail,
-  MapPin,
-  Phone,
-  Shield,
-} from "lucide-react";
+import { Calendar, Camera, Edit3, Mail, MapPin, Phone, Shield } from "lucide-react";
 import Image from "next/image";
 import useCoverImage from "../_hooks/useCoverImage";
 import useProfileImage from "../_hooks/useProfileImage";
-import usePersonalInfo from "../_hooks/usePersonalInfo";
 import ImageViewer from "@/ui/modals/imageViewer";
+import useSessionData from "@/hooks/useSessionData";
 
 export default function ProfileHeader() {
-  const { username, bio, location, email, phone, memberSince, isVerified } =
-    usePersonalInfo();
-  const {
-    profileImage,
-    profileInputRef,
-    isProfileImageUploading,
-    handleProfileImageUpload,
-    triggerProfileFileUpload,
-  } = useProfileImage();
-  const {
-    coverImage,
-    isUploading,
-    fileInputRef,
-    handleCoverImageUpload,
-    triggerFileUpload,
-  } = useCoverImage();
+  const { displayedName, description, phone, memberSince, isVerified, email, address } = useSessionData();
+  const { profileImage, profileInputRef, isProfileImageUploading, handleProfileImageUpload, triggerProfileFileUpload } =
+    useProfileImage();
+  const { coverImage, isUploading, fileInputRef, handleCoverImageUpload, triggerFileUpload } = useCoverImage();
 
   const [showImageModal, setShowImageModal] = useState(false);
 
@@ -70,18 +50,13 @@ export default function ProfileHeader() {
       {/* Cover Image or Gradient Background with Overlaid Content */}
       <div className="relative h-80 sm:h-96 lg:h-[400px]">
         {coverImage ? (
-          <Image
-            src={coverImage}
-            alt="Cover Image"
-            fill
-            className="object-cover"
-          />
+          <Image src={coverImage} alt="Cover Image" fill className="object-cover" />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary-dark" />
         )}
 
         {/* Cover Image Overlay */}
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/70" />
 
         {/* Cover Image Upload Button */}
         <button
@@ -98,13 +73,7 @@ export default function ProfileHeader() {
         </button>
 
         {/* Hidden File Input */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleCoverImageUpload}
-          className="hidden"
-        />
+        <input ref={fileInputRef} type="file" accept="image/*" onChange={handleCoverImageUpload} className="hidden" />
 
         {/* Profile Content Overlaid on Cover Image */}
         <div className="absolute inset-0 z-10 flex items-center">
@@ -118,7 +87,7 @@ export default function ProfileHeader() {
                 >
                   <Image
                     src={profileImage}
-                    alt={username || "Profile Image"}
+                    alt={displayedName || "Profile Image"}
                     width={120}
                     height={120}
                     className="w-full h-full object-cover"
@@ -144,9 +113,7 @@ export default function ProfileHeader() {
               {/* Profile Info */}
               <div className="flex-1 text-center sm:text-left min-w-0">
                 <div className="flex flex-col sm:flex-row sm:items-end gap-2 mb-2 sm:mb-3">
-                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white truncate">
-                    {username}
-                  </h1>
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white truncate">{displayedName}</h1>
                   {isVerified && (
                     <span className="inline-flex items-center px-2 py-1 sm:px-3 bg-white/20 backdrop-blur-sm rounded-full text-xs sm:text-sm font-medium text-white flex-shrink-0">
                       <Shield className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
@@ -155,7 +122,7 @@ export default function ProfileHeader() {
                   )}
                 </div>
                 <p className="text-white text-sm sm:text-base md:text-lg mb-3 sm:mb-4 line-clamp-2 sm:line-clamp-3">
-                  {bio}
+                  {description}
                 </p>
                 <div className="flex flex-wrap justify-center sm:justify-start max-w-md gap-3 sm:gap-4 text-xs sm:text-sm text-white">
                   <div className="flex items-center">
@@ -168,13 +135,11 @@ export default function ProfileHeader() {
                   </div>
                   <div className="flex items-center">
                     <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
-                    <span className="truncate">{location}</span>
+                    <span className="truncate">{address}</span>
                   </div>
                   <div className="flex items-center">
                     <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
-                    <span className="truncate">
-                      Miembro desde {memberSince}
-                    </span>
+                    <span className="truncate">Miembro desde {memberSince}</span>
                   </div>
                 </div>
               </div>
@@ -190,7 +155,7 @@ export default function ProfileHeader() {
         {/* Large Profile Image */}
         <Image
           src={profileImage}
-          alt={username || "Profile Image"}
+          alt={displayedName || "Profile Image"}
           fill
           className="object-cover rounded-2xl shadow-2xl"
           sizes="(max-width: 768px) 90vw, 512px"
