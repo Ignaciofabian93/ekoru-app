@@ -47,21 +47,50 @@ export default function useProfileForm() {
   });
   const [UpdatePersonProfile, { loading: updatingPersonProfile }] = useMutation(UPDATE_PERSON_PROFILE, {
     onCompleted: (response) => {
-      handleSession(response.updatePersonProfile as Seller);
-      notify("Perfil actualizado con éxito");
-      setIsOpen(false);
+      try {
+        // Merge the updated profile with existing seller data
+        if (!response?.updatePersonProfile) {
+          throw new Error("No se recibió respuesta del servidor");
+        }
+
+        const updated = {
+          ...data,
+          profile: response.updatePersonProfile,
+        };
+
+        handleSession(updated as Seller);
+        notify("Perfil actualizado con éxito");
+        setIsOpen(false);
+      } catch (error) {
+        console.error("Error processing profile update response:", error);
+        notifyError("Error al procesar la respuesta del servidor");
+      }
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Error updating person profile:", error);
       notifyError("Error al intentar actualizar el perfil. Por favor, inténtalo de nuevo más tarde.");
     },
   });
 
   const [UpdateBusinessProfile, { loading: updatingBusinessProfile }] = useMutation(UPDATE_BUSINESS_PROFILE, {
     onCompleted: (response) => {
-      const updated = { ...data, profile: response.updateBusinessProfile };
-      handleSession(updated as Seller);
-      notify("Perfil actualizado con éxito");
-      setIsOpen(false);
+      try {
+        if (!response?.updateBusinessProfile) {
+          throw new Error("No se recibió respuesta del servidor");
+        }
+
+        const updated = {
+          ...data,
+          profile: response.updateBusinessProfile,
+        };
+
+        handleSession(updated as Seller);
+        notify("Perfil actualizado con éxito");
+        setIsOpen(false);
+      } catch (error) {
+        console.error("Error processing business profile update response:", error);
+        notifyError("Error al procesar la respuesta del servidor");
+      }
     },
     onError: (error) => {
       console.error("Error updating business profile:", error);
@@ -272,24 +301,39 @@ export default function useProfileForm() {
   };
 
   const getBirthdayForStorage = (): Date | null => {
-    if (form.profile && "birthday" in form.profile && form.profile.birthday) {
-      return convertToDateObject(form.profile.birthday);
+    if (!form.profile || !("birthday" in form.profile) || !form.profile.birthday) {
+      return null;
     }
-    return null;
+    try {
+      return convertToDateObject(form.profile.birthday);
+    } catch (error) {
+      console.error("Error converting birthday to date:", error);
+      return null;
+    }
   };
 
   const getBusinessStartDateForStorage = (): Date | null => {
-    if (form.profile && "businessStartDate" in form.profile && form.profile.businessStartDate) {
-      return convertToDateObject(form.profile.businessStartDate);
+    if (!form.profile || !("businessStartDate" in form.profile) || !form.profile.businessStartDate) {
+      return null;
     }
-    return null;
+    try {
+      return convertToDateObject(form.profile.businessStartDate);
+    } catch (error) {
+      console.error("Error converting business start date to date:", error);
+      return null;
+    }
   };
 
   const getPhoneForStorage = (): string => {
-    if (form.phone) {
-      return getPhoneStorageFormat(form.phone);
+    if (!form.phone) {
+      return "";
     }
-    return "";
+    try {
+      return getPhoneStorageFormat(form.phone);
+    } catch (error) {
+      console.error("Error formatting phone for storage:", error);
+      return "";
+    }
   };
 
   const validateBirthdayField = (): { isValid: boolean; error?: string } => {
@@ -347,71 +391,77 @@ export default function useProfileForm() {
   };
 
   const submitPersonProfile = async () => {
-    const { country, region, city, county, profile, phone, address } = form;
-    const { birthday, bio, displayName } = profile as PersonProfile;
-    if (!country?.id) {
-      notifyError("Por favor, selecciona un país.");
-      return;
-    }
-    if (!region?.id) {
-      notifyError("Por favor, selecciona una región.");
-      return;
-    }
-    if (!city?.id) {
-      notifyError("Por favor, selecciona una ciudad.");
-      return;
-    }
-    if (!county?.id) {
-      notifyError("Por favor, selecciona una comuna.");
-      return;
-    }
-    if (!address) {
-      notifyError("Por favor, ingresa una dirección.");
-      return;
-    }
-    if (!phone) {
-      notifyError("Por favor, ingresa un número de teléfono.");
-      return;
-    }
-    if (!birthday) {
-      notifyError("Por favor, ingresa una fecha de nacimiento.");
-      return;
-    }
-    const birthdayValidation = validateBirthdayField();
-    if (!birthdayValidation.isValid) {
-      notifyError(birthdayValidation.error || "Fecha de nacimiento inválida.");
-      return;
-    }
-    const phoneValidation = validatePhoneField();
-    if (!phoneValidation.isValid) {
-      notifyError(phoneValidation.error || "Número de teléfono inválido.");
-      return;
-    }
+    try {
+      const { country, region, city, county, profile, phone, address } = form;
+      const { birthday, bio, displayName } = profile as PersonProfile;
+      if (!country?.id) {
+        notifyError("Por favor, selecciona un país.");
+        return;
+      }
+      if (!region?.id) {
+        notifyError("Por favor, selecciona una región.");
+        return;
+      }
+      if (!city?.id) {
+        notifyError("Por favor, selecciona una ciudad.");
+        return;
+      }
+      if (!county?.id) {
+        notifyError("Por favor, selecciona una comuna.");
+        return;
+      }
+      if (!address) {
+        notifyError("Por favor, ingresa una dirección.");
+        return;
+      }
+      if (!phone) {
+        notifyError("Por favor, ingresa un número de teléfono.");
+        return;
+      }
+      if (!birthday) {
+        notifyError("Por favor, ingresa una fecha de nacimiento.");
+        return;
+      }
+      const birthdayValidation = validateBirthdayField();
+      if (!birthdayValidation.isValid) {
+        notifyError(birthdayValidation.error || "Fecha de nacimiento inválida.");
+        return;
+      }
+      const phoneValidation = validatePhoneField();
+      if (!phoneValidation.isValid) {
+        notifyError(phoneValidation.error || "Número de teléfono inválido.");
+        return;
+      }
 
-    // Update User first
-    const userInput = {
-      email: form.email,
-      countryId: Number(form.country?.id),
-      regionId: Number(form.region?.id),
-      cityId: Number(form.city?.id),
-      countyId: Number(form.county?.id),
-      phone: getPhoneForStorage(),
-      address,
-      socialMediaLinks: form.socialMediaLinks,
-      preferredContactMethod: form.preferredContactMethod,
-      website: form.website || null,
-    };
-
-    const { data } = await UpdateSeller({ variables: { input: userInput } });
-    // Update Profile after user is updated
-    if (data.updateSeller) {
-      const profileInput = {
-        bio: bio || null,
-        birthday: getBirthdayForStorage(),
-        displayName: displayName || null,
+      // Update User first
+      const userInput = {
+        email: form.email,
+        countryId: Number(form.country?.id),
+        regionId: Number(form.region?.id),
+        cityId: Number(form.city?.id),
+        countyId: Number(form.county?.id),
+        phone: getPhoneForStorage(),
+        address,
+        socialMediaLinks: form.socialMediaLinks,
+        preferredContactMethod: form.preferredContactMethod,
+        website: form.website || null,
       };
 
-      await UpdatePersonProfile({ variables: { input: profileInput } });
+      const { data: sellerData } = await UpdateSeller({ variables: { input: userInput } });
+
+      // Update Profile after user is updated
+      if (sellerData?.updateSeller) {
+        const profileInput = {
+          bio: bio || null,
+          birthday: getBirthdayForStorage(),
+          displayName: displayName || null,
+        };
+
+        await UpdatePersonProfile({ variables: { input: profileInput } });
+      }
+    } catch (error) {
+      console.error("Error in submitPersonProfile:", error);
+      notifyError("Error al actualizar el perfil. Por favor, inténtalo de nuevo.");
     }
   };
 

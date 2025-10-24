@@ -42,8 +42,20 @@ export const convertToDateObject = (displayDate: string): Date | null => {
   const [day, month, year] = displayDate.split("-");
   if (!day || !month || !year) return null;
 
+  // Validate numeric values
+  const dayNum = parseInt(day, 10);
+  const monthNum = parseInt(month, 10);
+  const yearNum = parseInt(year, 10);
+
+  if (isNaN(dayNum) || isNaN(monthNum) || isNaN(yearNum)) return null;
+
   // Create date at noon local time to avoid timezone issues with birthdays
-  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), 12, 0, 0, 0);
+  const date = new Date(yearNum, monthNum - 1, dayNum, 12, 0, 0, 0);
+
+  // Validate the date was created correctly (handles invalid dates like Feb 31)
+  if (date.getFullYear() !== yearNum || date.getMonth() !== monthNum - 1 || date.getDate() !== dayNum) {
+    return null;
+  }
 
   return date;
 };
