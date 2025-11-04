@@ -9,7 +9,7 @@ import MegaMenu from "./megaMenu";
 export default function Subheader() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isHovering, setIsHovering] = useState(false);
-  const { marketData, storeData, blogData } = useCatalogStore();
+  const { marketData, storeData, blogData, serviceData } = useCatalogStore();
 
   const handleClick = (title: string) => {
     if (["Mercado", "Tiendas", "Servicios", "Comunidad", "Blog"].includes(title)) {
@@ -37,6 +37,8 @@ export default function Subheader() {
     setActiveDropdown(null);
     setIsHovering(false);
   };
+
+  console.log("service in subheader:: ", serviceData);
 
   return (
     <section className="relative">
@@ -76,9 +78,10 @@ export default function Subheader() {
             <MegaMenu
               activeTab={activeDropdown}
               onClose={handleMegaMenuClose}
-              marketData={Array.isArray(marketData) ? marketData : marketData}
+              marketData={Array.isArray(marketData) ? { marketCatalog: marketData } : marketData}
               storeData={Array.isArray(storeData) ? { storeCatalog: storeData } : storeData}
               blogData={Array.isArray(blogData) ? { blogCategories: blogData } : blogData}
+              serviceData={Array.isArray(serviceData) ? { serviceCatalog: serviceData } : serviceData}
             />
           </div>
         )}

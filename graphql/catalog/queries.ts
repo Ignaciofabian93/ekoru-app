@@ -7,7 +7,7 @@ export const GET_STORE_CATALOG = gql`
       category
       subcategories {
         id
-        subcategory
+        subCategory
       }
     }
   }
@@ -30,6 +30,19 @@ export const GET_MARKET_CATALOG = gql`
           averageWeight
           weightUnit
         }
+      }
+    }
+  }
+`;
+
+export const GET_SERVICES_CATALOG = gql`
+  query ServiceCatalog {
+    serviceCatalog {
+      id
+      category
+      subcategories {
+        id
+        subCategory
       }
     }
   }

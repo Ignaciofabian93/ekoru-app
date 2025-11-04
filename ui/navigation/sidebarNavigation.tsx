@@ -16,11 +16,14 @@ type Props = {
 
 export default function SidebarNavigation({ closeMobileMenu }: Props) {
   const { redirectTo } = useRedirect();
-  const { marketData, blogData } = useCatalogStore();
+  const { marketData, blogData, storeData, serviceData } = useCatalogStore();
 
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
   const [openDepartment, setOpenDepartment] = useState<number | null>(null);
   const [openCategory, setOpenCategory] = useState<number | null>(null);
+  // Additional states for stores and services
+  const [openStoreCategory, setOpenStoreCategory] = useState<number | null>(null);
+  const [openServiceCategory, setOpenServiceCategory] = useState<number | null>(null);
 
   const toggleAccordion = (section: string) => {
     setOpenAccordion(openAccordion === section ? null : section);
@@ -28,6 +31,8 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
     if (openAccordion !== section) {
       setOpenDepartment(null);
       setOpenCategory(null);
+      setOpenStoreCategory(null);
+      setOpenServiceCategory(null);
     }
   };
 
@@ -38,6 +43,14 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
 
   const toggleCategory = (categoryId: number) => {
     setOpenCategory(openCategory === categoryId ? null : categoryId);
+  };
+
+  const toggleStoreCategory = (categoryId: number) => {
+    setOpenStoreCategory(openStoreCategory === categoryId ? null : categoryId);
+  };
+
+  const toggleServiceCategory = (categoryId: number) => {
+    setOpenServiceCategory(openServiceCategory === categoryId ? null : categoryId);
   };
 
   return (
@@ -157,11 +170,42 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="overflow-hidden"
             >
-              <div className="bg-gradient-to-r from-card-light-200 to-card-light-100 dark:from-card-dark-700 dark:to-card-dark-600 rounded-lg mt-2 border border-neutral-200 dark:border-neutral-600 shadow-sm p-4">
-                <p className="text-sm text-text-500 dark:text-text-400 text-center italic">
-                  Próximamente: Categorías de tiendas
-                </p>
-              </div>
+              <NavigationListItemWrapper>
+                {Array.isArray(storeData?.storeCatalog) &&
+                  storeData?.storeCatalog.map(({ id, category, subcategories }, index) => (
+                    <CategoryWrapper key={id} index={index}>
+                      <CategoryButton
+                        onClick={() => toggleStoreCategory(id)}
+                        name={category}
+                        id={id}
+                        section={openStoreCategory}
+                      />
+
+                      <AnimatePresence>
+                        {openStoreCategory === id && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25, ease: "easeInOut" }}
+                            className="overflow-hidden"
+                          >
+                            <NavigationListItemWrapper>
+                              {subcategories.map(({ id, subcategory }) => (
+                                <NavigationItem
+                                  key={id}
+                                  href={`/stores/category/${category}/subcategory/${id}`}
+                                  closeMobileMenu={closeMobileMenu}
+                                  title={subcategory}
+                                />
+                              ))}
+                            </NavigationListItemWrapper>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </CategoryWrapper>
+                  ))}
+              </NavigationListItemWrapper>
             </motion.div>
           )}
         </AnimatePresence>
@@ -186,11 +230,42 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="overflow-hidden"
             >
-              <div className="bg-gradient-to-r from-card-light-200 to-card-light-100 dark:from-card-dark-700 dark:to-card-dark-600 rounded-lg mt-2 border border-neutral-200 dark:border-neutral-600 shadow-sm p-4">
-                <p className="text-sm text-text-500 dark:text-text-400 text-center italic">
-                  Próximamente: Categorías de servicios
-                </p>
-              </div>
+              <NavigationListItemWrapper>
+                {Array.isArray(serviceData?.serviceCatalog) &&
+                  serviceData?.serviceCatalog.map(({ id, category, subcategories }, index) => (
+                    <CategoryWrapper key={id} index={index}>
+                      <CategoryButton
+                        onClick={() => toggleServiceCategory(id)}
+                        name={category}
+                        id={id}
+                        section={openServiceCategory}
+                      />
+
+                      <AnimatePresence>
+                        {openServiceCategory === id && subcategories && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25, ease: "easeInOut" }}
+                            className="overflow-hidden"
+                          >
+                            <NavigationListItemWrapper>
+                              {subcategories.map(({ id, subCategory }) => (
+                                <NavigationItem
+                                  key={id}
+                                  href={`/services/category/${category}/subcategory/${id}`}
+                                  closeMobileMenu={closeMobileMenu}
+                                  title={subCategory}
+                                />
+                              ))}
+                            </NavigationListItemWrapper>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </CategoryWrapper>
+                  ))}
+              </NavigationListItemWrapper>
             </motion.div>
           )}
         </AnimatePresence>

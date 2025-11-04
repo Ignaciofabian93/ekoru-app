@@ -2,15 +2,14 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Package, Store, Wrench, Users, BookOpen } from "lucide-react";
-import { serviceCategories } from "@/constants/navigation/data";
 import { Department } from "@/types/product";
 import { BlogCategories } from "@/types/blog";
-import Link from "next/link";
 import { Title } from "../text/title";
-import BlogCategoryCard from "../cards/blog/blogCategory";
 import { Text } from "../text/text";
-import { StoreCatalog } from "@/types/catalog";
+import { ServiceCategory, StoreCatalog } from "@/types/catalog";
 import { MegaMenuColumn, SecondaryColumn, LeafColumn, MenuItem } from "./megaMenuColumn";
+import Link from "next/link";
+import BlogCategoryCard from "../cards/blog/blogCategory";
 
 interface MegaMenuProps {
   activeTab: string | null;
@@ -18,11 +17,17 @@ interface MegaMenuProps {
   marketData: { marketCatalog: Department[] | null } | null;
   storeData: { storeCatalog: StoreCatalog[] | null } | null;
   blogData: { blogCategories: BlogCategories[] | null } | null;
+  serviceData: { serviceCatalog: ServiceCategory[] | null } | null;
 }
 
-export default function MegaMenu({ activeTab, onClose, marketData, storeData, blogData }: MegaMenuProps) {
+export default function MegaMenu({ activeTab, onClose, marketData, storeData, blogData, serviceData }: MegaMenuProps) {
   const [selectedDepartment, setSelectedDepartment] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+
+  console.log("market:: ", marketData);
+  console.log("store:: ", storeData);
+  console.log("service:: ", serviceData);
+  console.log("blog:: ", blogData);
 
   // Use marketData from props for Mercado
   const renderMarketplaceMenu = () => {
@@ -155,27 +160,56 @@ export default function MegaMenu({ activeTab, onClose, marketData, storeData, bl
     );
   };
 
-  const renderServicesMenu = () => (
-    <div className="p-6">
-      <h3 className="text-lg font-semibold text-text-primary mb-6 flex items-center">
-        <Wrench className="h-5 w-5 mr-2 text-primary" />
-        Servicios Ecológicos
-      </h3>
-      <div className="grid grid-cols-2 gap-4 max-w-2xl">
-        {serviceCategories.map((service) => (
-          <Link
-            key={service.id}
-            href={`/services?category=${service.id}`}
-            onClick={onClose}
-            className="p-4 rounded-lg border border-neutral/20 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200 group"
-          >
-            <h4 className="font-semibold text-text-primary group-hover:text-primary mb-2">{service.title}</h4>
-            <p className="text-sm text-text-muted">{service.description}</p>
-          </Link>
-        ))}
+  const renderServicesMenu = () => {
+    if (!serviceData || !serviceData.serviceCatalog) {
+      return <div className="p-6">No hay datos de servicios disponibles.</div>;
+    }
+
+    // Transform API data to MenuItem structure
+    const services: MenuItem<ServiceCategory>[] = serviceData.serviceCatalog.map((service) => ({
+      id: service.id,
+      title: service.category,
+      data: service,
+    }));
+
+    const selectedServiceData = serviceData.serviceCatalog.find((s) => s.id === selectedDepartment);
+    const subcategories =
+      selectedServiceData && selectedServiceData.subcategories
+        ? selectedServiceData.subcategories.map((subcat) => ({
+            id: subcat.id,
+            title: subcat.subCategory,
+            href: `/services/category/${selectedServiceData.id}/subcategory/${subcat.id}`,
+          }))
+        : [];
+
+    return (
+      <div className="flex min-h-[400px]">
+        {/* Service Categories Column */}
+        <MegaMenuColumn
+          icon={Wrench}
+          title="Servicios Ecológicos"
+          items={services}
+          selectedId={selectedDepartment}
+          onSelectItem={setSelectedDepartment}
+        />
+
+        {/* Subcategories Column */}
+        <AnimatePresence mode="wait">
+          {selectedDepartment && subcategories.length > 0 && (
+            <motion.div
+              key={selectedDepartment}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2 }}
+            >
+              <LeafColumn title="Subcategorías" items={subcategories} onClose={onClose} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderCommunityMenu = () => (
     <div className="p-6">
