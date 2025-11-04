@@ -16,7 +16,7 @@ type Props = {
 
 export default function SidebarNavigation({ closeMobileMenu }: Props) {
   const { redirectTo } = useRedirect();
-  const { marketData, blogData, storeData, serviceData } = useCatalogStore();
+  const { marketData, blogData, storeData, serviceData, communityData } = useCatalogStore();
 
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
   const [openDepartment, setOpenDepartment] = useState<number | null>(null);
@@ -24,6 +24,7 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
   // Additional states for stores and services
   const [openStoreCategory, setOpenStoreCategory] = useState<number | null>(null);
   const [openServiceCategory, setOpenServiceCategory] = useState<number | null>(null);
+  const [openCommunityCategory, setOpenCommunityCategory] = useState<number | null>(null);
 
   const toggleAccordion = (section: string) => {
     setOpenAccordion(openAccordion === section ? null : section);
@@ -33,6 +34,7 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
       setOpenCategory(null);
       setOpenStoreCategory(null);
       setOpenServiceCategory(null);
+      setOpenCommunityCategory(null);
     }
   };
 
@@ -51,6 +53,10 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
 
   const toggleServiceCategory = (categoryId: number) => {
     setOpenServiceCategory(openServiceCategory === categoryId ? null : categoryId);
+  };
+
+  const toggleCommunityCategory = (categoryId: number) => {
+    setOpenCommunityCategory(openCommunityCategory === categoryId ? null : categoryId);
   };
 
   return (
@@ -191,12 +197,12 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
                             className="overflow-hidden"
                           >
                             <NavigationListItemWrapper>
-                              {subcategories.map(({ id, subcategory }) => (
+                              {subcategories.map(({ id, subCategory }) => (
                                 <NavigationItem
                                   key={id}
                                   href={`/stores/category/${category}/subcategory/${id}`}
                                   closeMobileMenu={closeMobileMenu}
-                                  title={subcategory}
+                                  title={subCategory}
                                 />
                               ))}
                             </NavigationListItemWrapper>
@@ -290,24 +296,40 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
               className="overflow-hidden"
             >
               <NavigationListItemWrapper>
-                <NavigationItem
-                  title="Foros"
-                  text="Discute temas ambientales"
-                  href="/community/forums"
-                  closeMobileMenu={closeMobileMenu}
-                />
-                <NavigationItem
-                  title="Eventos"
-                  text="Actividades ecológicas"
-                  href="/community/events"
-                  closeMobileMenu={closeMobileMenu}
-                />
-                <NavigationItem
-                  title="Grupos"
-                  text="Únete a comunidades"
-                  href="/community/groups"
-                  closeMobileMenu={closeMobileMenu}
-                />
+                {Array.isArray(communityData?.communityCatalog) &&
+                  communityData?.communityCatalog.map(({ id, category, subcategories }, index) => (
+                    <CategoryWrapper key={id} index={index}>
+                      <CategoryButton
+                        onClick={() => toggleCommunityCategory(id)}
+                        name={category}
+                        id={id}
+                        section={openCommunityCategory}
+                      />
+
+                      <AnimatePresence>
+                        {openCommunityCategory === id && subcategories && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25, ease: "easeInOut" }}
+                            className="overflow-hidden"
+                          >
+                            <NavigationListItemWrapper>
+                              {subcategories.map(({ id, subCategory }) => (
+                                <NavigationItem
+                                  key={id}
+                                  href={`/community/category/${category}/subcategory/${id}`}
+                                  closeMobileMenu={closeMobileMenu}
+                                  title={subCategory}
+                                />
+                              ))}
+                            </NavigationListItemWrapper>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </CategoryWrapper>
+                  ))}
               </NavigationListItemWrapper>
             </motion.div>
           )}
@@ -333,8 +355,8 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
               className="overflow-hidden"
             >
               <NavigationListItemWrapper>
-                {Array.isArray(blogData?.blogCategories) &&
-                  blogData?.blogCategories.map(({ id, name }) => (
+                {Array.isArray(blogData?.blogCatalog) &&
+                  blogData?.blogCatalog.map(({ id, name }) => (
                     <NavigationItem
                       key={id}
                       title={name}

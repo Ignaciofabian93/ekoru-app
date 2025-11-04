@@ -4,30 +4,31 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Package, Store, Wrench, Users, BookOpen } from "lucide-react";
 import { Department } from "@/types/product";
 import { BlogCategories } from "@/types/blog";
-import { Title } from "../text/title";
-import { Text } from "../text/text";
 import { ServiceCategory, StoreCatalog } from "@/types/catalog";
 import { MegaMenuColumn, SecondaryColumn, LeafColumn, MenuItem } from "./megaMenuColumn";
-import Link from "next/link";
-import BlogCategoryCard from "../cards/blog/blogCategory";
+import { CommunityCategory } from "@/types/community";
 
 interface MegaMenuProps {
   activeTab: string | null;
   onClose: () => void;
   marketData: { marketCatalog: Department[] | null } | null;
   storeData: { storeCatalog: StoreCatalog[] | null } | null;
-  blogData: { blogCategories: BlogCategories[] | null } | null;
+  blogData: { blogCatalog: BlogCategories[] | null } | null;
   serviceData: { serviceCatalog: ServiceCategory[] | null } | null;
+  communityData: { communityCatalog: CommunityCategory[] | null } | null;
 }
 
-export default function MegaMenu({ activeTab, onClose, marketData, storeData, blogData, serviceData }: MegaMenuProps) {
+export default function MegaMenu({
+  activeTab,
+  onClose,
+  marketData,
+  storeData,
+  blogData,
+  serviceData,
+  communityData,
+}: MegaMenuProps) {
   const [selectedDepartment, setSelectedDepartment] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-
-  console.log("market:: ", marketData);
-  console.log("store:: ", storeData);
-  console.log("service:: ", serviceData);
-  console.log("blog:: ", blogData);
 
   // Use marketData from props for Mercado
   const renderMarketplaceMenu = () => {
@@ -123,14 +124,14 @@ export default function MegaMenu({ activeTab, onClose, marketData, storeData, bl
     }));
 
     const selectedStoreData = storeData.storeCatalog.find((s) => s.id === selectedDepartment);
+
     const subcategories = selectedStoreData
       ? selectedStoreData.subcategories.map((subcat) => ({
           id: subcat.id,
-          title: subcat.subcategory,
+          title: subcat.subCategory,
           href: `/stores/category/${selectedStoreData.id}/subcategory/${subcat.id}`,
         }))
       : [];
-
     return (
       <div className="flex min-h-[400px]">
         {/* Store Categories Column */}
@@ -211,62 +212,92 @@ export default function MegaMenu({ activeTab, onClose, marketData, storeData, bl
     );
   };
 
-  const renderCommunityMenu = () => (
-    <div className="p-6">
-      <h3 className="text-lg font-semibold text-text-primary mb-6 flex items-center">
-        <Users className="h-5 w-5 mr-2 text-primary" />
-        Comunidad Ecológica
-      </h3>
-      <div className="grid grid-cols-3 gap-4 max-w-3xl">
-        <Link
-          href="/community/forums"
-          onClick={onClose}
-          className="p-4 rounded-lg border border-neutral/20 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200"
-        >
-          <h4 className="font-semibold text-text-primary mb-2">Foros</h4>
-          <p className="text-sm text-text-muted">Discute temas ambientales</p>
-        </Link>
-        <Link
-          href="/community/events"
-          onClick={onClose}
-          className="p-4 rounded-lg border border-neutral/20 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200"
-        >
-          <h4 className="font-semibold text-text-primary mb-2">Eventos</h4>
-          <p className="text-sm text-text-muted">Actividades ecológicas</p>
-        </Link>
-        <Link
-          href="/community/groups"
-          onClick={onClose}
-          className="p-4 rounded-lg border border-neutral/20 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200"
-        >
-          <h4 className="font-semibold text-text-primary mb-2">Grupos</h4>
-          <p className="text-sm text-text-muted">Únete a comunidades</p>
-        </Link>
+  const renderCommunityMenu = () => {
+    if (!communityData || !communityData.communityCatalog) {
+      return <div className="p-6">No hay datos de comunidad disponibles.</div>;
+    }
+
+    // Transform API data to MenuItem structure
+    const communityCategories: MenuItem<CommunityCategory>[] = communityData.communityCatalog.map((community) => ({
+      id: community.id,
+      title: community.category,
+      data: community,
+    }));
+
+    const selectedCommunityData = communityData.communityCatalog.find((c) => c.id === selectedDepartment);
+    const subcategories =
+      selectedCommunityData && selectedCommunityData.subcategories
+        ? selectedCommunityData.subcategories.map((subcat) => ({
+            id: subcat.id,
+            title: subcat.subCategory,
+            href: `/community/category/${selectedCommunityData.id}/subcategory/${subcat.id}`,
+          }))
+        : [];
+
+    return (
+      <div className="flex min-h-[400px]">
+        {/* Community Categories Column */}
+        <MegaMenuColumn
+          icon={Users}
+          title="Comunidad Ecológica"
+          items={communityCategories}
+          selectedId={selectedDepartment}
+          onSelectItem={setSelectedDepartment}
+        />
+
+        {/* Subcategories Column */}
+        <AnimatePresence mode="wait">
+          {selectedDepartment && subcategories.length > 0 && (
+            <motion.div
+              key={selectedDepartment}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2 }}
+            >
+              <LeafColumn title="Subcategorías" items={subcategories} onClose={onClose} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderBlogMenu = () => {
+    if (!blogData || !blogData.blogCatalog) {
+      return <div className="p-6">No hay datos de blog disponibles.</div>;
+    }
+
+    // Transform API data to MenuItem structure with direct links
+    const blogCategories = blogData.blogCatalog.map((blog) => ({
+      id: blog.id,
+      title: blog.name,
+      href: `/blog/category/${blog.id}`,
+    }));
+
     return (
-      <div className="p-6">
-        <Title variant="h4" className="flex items-center gap-2 font-semibold mb-6">
-          <BookOpen className="h-5 w-5 mr-2 text-primary" />
-          Blog Ecológico
-        </Title>
-        {!blogData || !blogData.blogCategories ? (
-          <div className="p-6 text-center text-text-muted">
-            <BookOpen className="h-12 w-12 mx-auto mb-3 text-neutral/40" />
-            <Text variant="p">No hay datos de blog disponibles.</Text>
-          </div>
-        ) : (
-          <div className="flex justify-center">
-            <div className="flex flex-wrap gap-6 max-w-5xl">
-              {blogData.blogCategories.map(({ id, name, icon, description }) => {
-                return <BlogCategoryCard key={id} id={id} name={name} icon={icon} description={description} />;
-              })}
+      <div className="flex min-h-[400px]">
+        {/* Blog Categories Column */}
+        <div className="w-80">
+          <div className="p-4">
+            <h4 className="text-lg font-semibold text-text-primary mb-4 flex items-center">
+              <BookOpen className="h-5 w-5 mr-2 text-primary" />
+              Blog Ecológico
+            </h4>
+            <div className="space-y-1">
+              {blogCategories.map((item) => (
+                <a
+                  key={item.id}
+                  href={item.href}
+                  onClick={onClose}
+                  className="block px-3 py-2 rounded-lg text-text-secondary hover:bg-neutral-light hover:text-primary transition-colors duration-200"
+                >
+                  {item.title}
+                </a>
+              ))}
             </div>
           </div>
-        )}
+        </div>
       </div>
     );
   };

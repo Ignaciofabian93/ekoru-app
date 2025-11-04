@@ -1,5 +1,4 @@
 import { Text } from "@/ui/text/text";
-import { Title } from "@/ui/text/title";
 import clsx from "clsx";
 import Link from "next/link";
 
@@ -10,12 +9,10 @@ export const NavigationListItemWrapper = ({ children }: { children: React.ReactN
 export const NavigationItem = ({
   closeMobileMenu,
   title,
-  text,
   href,
 }: {
   closeMobileMenu: () => void;
   title: string;
-  text?: string;
   href: string;
 }) => {
   return (
@@ -32,14 +29,9 @@ export const NavigationItem = ({
         "transition-all duration-200"
       )}
     >
-      <Title variant="h6" className="font-medium">
+      <Text variant="span" className="font-medium">
         {title}
-      </Title>
-      {text && (
-        <Text variant="small" className="font-light">
-          {text}
-        </Text>
-      )}
+      </Text>
     </Link>
   );
 };

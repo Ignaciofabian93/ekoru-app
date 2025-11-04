@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import {
   GET_BLOG_CATALOG,
+  GET_COMMUNITY_CATALOG,
   GET_MARKET_CATALOG,
   GET_SERVICES_CATALOG,
   GET_STORE_CATALOG,
@@ -8,6 +9,7 @@ import {
 import { BlogCategories } from "@/types/blog";
 import { Department } from "@/types/product";
 import { ServiceCategory, StoreCatalog } from "@/types/catalog";
+import { CommunityCategory } from "@/types/community";
 
 export default function useCatalog() {
   const {
@@ -34,14 +36,22 @@ export default function useCatalog() {
   } = useQuery(GET_BLOG_CATALOG, {
     fetchPolicy: "cache-first",
   });
+  const {
+    data: CommunityData,
+    loading: communityLoading,
+    error: communityError,
+  } = useQuery(GET_COMMUNITY_CATALOG, {
+    fetchPolicy: "cache-first",
+  });
 
-  console.log("fetching service:: ", ServiceData);
+  console.log("fetching blog data: ", BlogData);
 
   return {
     StoreData: StoreData?.storeCatalog as StoreCatalog[] | null,
-    BlogData: BlogData?.blogCategories as BlogCategories[] | null,
+    BlogData: BlogData?.blogCatalog as BlogCategories[] | null,
     MarketData: MarketData?.marketCatalog as Department[] | null,
     ServiceData: ServiceData?.serviceCatalog as ServiceCategory[] | null,
+    CommunityData: CommunityData?.communityCatalog as CommunityCategory[] | null,
     storeLoading,
     storeError,
     marketLoading,
@@ -50,5 +60,7 @@ export default function useCatalog() {
     serviceError,
     blogLoading,
     blogError,
+    communityLoading,
+    communityError,
   };
 }

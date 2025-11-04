@@ -36,8 +36,6 @@ export default function useProfileForm() {
 
   const [UpdateSeller, { loading: updatingSeller }] = useMutation(UPDATE_SELLER, {
     onCompleted: (response) => {
-      console.log("Seller update response:", response);
-
       handleSession(response.updateSeller as Seller);
     },
     onError: (error) => {

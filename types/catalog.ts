@@ -5,7 +5,7 @@ export type StoreCatalog = {
   category: string;
   subcategories: {
     id: number;
-    subcategory: string;
+    subCategory: string;
   }[];
 };
 

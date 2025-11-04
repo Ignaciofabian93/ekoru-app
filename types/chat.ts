@@ -23,38 +23,6 @@ export type Message = {
   createdAt: string;
 };
 
-export type CommunityPost = {
-  id: number;
-  title: string;
-  content: string;
-  sellerId: string;
-  communitySubCategoryId: number;
-  images?: string[];
-  likeCount: number;
-  commentCount: number;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type CommunityComment = {
-  id: number;
-  content: string;
-  communityPostId: number;
-  sellerId: string;
-  createdAt: string;
-};
-
-export type CommunityCategory = {
-  id: number;
-  category: string;
-};
-
-export type CommunitySubCategory = {
-  id: number;
-  subCategory: string;
-  communityCategoryId: number;
-};
-
 export type Co2ImpactMessage = {
   id: number;
   min: number;

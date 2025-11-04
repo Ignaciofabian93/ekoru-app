@@ -49,12 +49,25 @@ export const GET_SERVICES_CATALOG = gql`
 `;
 
 export const GET_BLOG_CATALOG = gql`
-  query BlogCategories {
-    blogCategories {
+  query BlogCatalog {
+    blogCatalog {
       id
       name
       icon
       description
+    }
+  }
+`;
+
+export const GET_COMMUNITY_CATALOG = gql`
+  query CommunityCatalog {
+    communityCatalog {
+      id
+      category
+      subcategories {
+        id
+        subCategory
+      }
     }
   }
 `;
