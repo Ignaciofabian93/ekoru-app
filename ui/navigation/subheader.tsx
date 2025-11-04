@@ -38,8 +38,6 @@ export default function Subheader() {
     setIsHovering(false);
   };
 
-  console.log("service in subheader:: ", serviceData);
-
   return (
     <section className="relative">
       <div

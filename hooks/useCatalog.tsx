@@ -44,8 +44,6 @@ export default function useCatalog() {
     fetchPolicy: "cache-first",
   });
 
-  console.log("fetching blog data: ", BlogData);
-
   return {
     StoreData: StoreData?.storeCatalog as StoreCatalog[] | null,
     BlogData: BlogData?.blogCatalog as BlogCategories[] | null,
