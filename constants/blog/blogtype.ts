@@ -1,0 +1,16 @@
+export const blogTypeMapping: Record<string, string> = {
+  seguridad: "SECURITY",
+  reciclaje: "RECYCLING",
+  contaminacion: "POLLUTION",
+  sostenibilidad: "SUSTAINABILITY",
+  "economia-circular": "CIRCULAR_ECONOMY",
+  "productos-usados": "USED_PRODUCTS",
+  reutilizacion: "REUSE",
+  "medio-ambiente": "ENVIRONMENT",
+  upcycling: "UPCYCLING",
+  "consumo-responsable": "RESPONSIBLE_CONSUMPTION",
+  "consejos-ecologicos": "ECO_TIPS",
+  "impacto-ambiental": "ENVIRONMENTAL_IMPACT",
+  "vida-sostenible": "SUSTAINABLE_LIVING",
+  otros: "OTHER",
+};

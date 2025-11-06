@@ -55,7 +55,7 @@ export const SideBarProfile = ({ data, closeMobileMenu }: { data: Seller | null;
       )}
     >
       <div className="flex flex-col items-center mb-3">
-        <div className="w-18 h-18 bg-primary/20 rounded-full flex items-center justify-center">
+        <div className="w-[150px] h-[150px] bg-primary/20 rounded-full flex items-center justify-center overflow-hidden">
           {isPerson ? (
             profileImage ? (
               <Image

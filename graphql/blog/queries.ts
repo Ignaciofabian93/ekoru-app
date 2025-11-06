@@ -1,89 +1,35 @@
 import { gql } from "@apollo/client";
 
-export const GET_BLOGS = gql`
-  query Blogs {
-    blogs(take: 10, skip: 0, orderBy: { field: "title", direction: asc }) {
-      id
-      title
-      content
-      excerpt
-      slug
-      category
-      status
-      featuredImage
-      images
-      tags
-      metaTitle
-      metaDescription
-      readingTime
-      views
-      publishedAt
-      createdAt
-      updatedAt
-      likesCount
-      commentsCount
-      likes {
-        id
-      }
-      comments {
-        id
-        comment
-        userId
-        createdAt
-        user {
-          id
-          email
-          sellerType
-          isActive
-          isVerified
-          createdAt
-          updatedAt
-          profile {
-            ... on ServiceProfile {
-              id
-              sellerId
-              businessName
-              displayName
-              logo
-            }
-            ... on StoreProfile {
-              id
-              sellerId
-              businessName
-              displayName
-              logo
-            }
-            ... on PersonProfile {
-              id
-              sellerId
-              firstName
-              lastName
-              displayName
-              profileImage
-            }
-          }
-        }
-      }
-      admin {
-        id
-        email
-        name
-        lastName
-      }
-    }
-  }
-`;
-
-export const GET_BLOG_CATEGORIES = gql`
-  query BlogCategories {
-    blogCategories {
-      id
-      name
-      icon
-      description
-      blogs {
+export const GET_BLOGS_BY_CATEGORY = gql`
+  query BlogsByCategory($category: BlogType!, $page: Int!, $pageSize: Int!) {
+    blogsByCategory(category: $category, page: $page, pageSize: $pageSize) {
+      nodes {
         id
         title
+        content
+        authorId
+        isPublished
+        publishedAt
+        createdAt
+        updatedAt
+        likes
+        dislikes
+        author {
+          id
+          email
+          name
+          lastName
+        }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+        totalCount
+        totalPages
+        currentPage
+        pageSize
       }
     }
   }
