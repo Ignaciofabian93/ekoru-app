@@ -91,70 +91,96 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
             >
               <NavigationListItemWrapper>
                 {Array.isArray(marketData?.marketCatalog) &&
-                  marketData?.marketCatalog.map(({ id, departmentName, departmentCategory, href }, index) => (
-                    <CategoryWrapper key={id} index={index}>
-                      <CategoryButton
-                        onClick={() => toggleDepartment(id)}
-                        name={departmentName}
-                        id={id}
-                        section={openDepartment}
-                        href={href}
-                        closeMobileMenu={closeMobileMenu}
-                      />
+                  marketData?.marketCatalog.map(({ id, departmentName, departmentCategory, href }, index) => {
+                    return (
+                      <CategoryWrapper key={id} index={index}>
+                        <CategoryButton
+                          onClick={() => toggleDepartment(id)}
+                          name={departmentName}
+                          id={id}
+                          section={openDepartment}
+                          href={`/departments/${href}`}
+                          closeMobileMenu={closeMobileMenu}
+                        />
 
-                      <AnimatePresence>
-                        {openDepartment === id && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.25, ease: "easeInOut" }}
-                            className="overflow-hidden"
-                          >
-                            <div className="border-t border-neutral-100 dark:border-neutral-700">
-                              {departmentCategory.map(
-                                ({ departmentCategoryName, productCategory, id, href }, catIndex) => (
-                                  <CategoryWrapper key={id} index={catIndex}>
-                                    <CategoryButton
-                                      onClick={() => toggleCategory(id)}
-                                      name={departmentCategoryName}
-                                      id={id}
-                                      section={openCategory}
-                                      href={href}
-                                      closeMobileMenu={closeMobileMenu}
-                                    />
+                        <AnimatePresence>
+                          {openDepartment === id && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.25, ease: "easeInOut" }}
+                              className="overflow-hidden"
+                            >
+                              <div className="border-t border-neutral-100 dark:border-neutral-700">
+                                {departmentCategory.map(
+                                  ({ departmentCategoryName, productCategory, id, href }, catIndex) => {
+                                    // Find the current department by openDepartment ID
+                                    const currentDepartment = marketData?.marketCatalog?.find(
+                                      (dept) => dept.id === openDepartment
+                                    );
+                                    return (
+                                      <CategoryWrapper key={id} index={catIndex}>
+                                        <CategoryButton
+                                          onClick={() => toggleCategory(id)}
+                                          name={departmentCategoryName}
+                                          id={id}
+                                          section={openCategory}
+                                          href={
+                                            currentDepartment
+                                              ? `/departments/${currentDepartment.href}/categories/${href}`
+                                              : `/categories/${href}`
+                                          }
+                                          closeMobileMenu={closeMobileMenu}
+                                        />
 
-                                    <AnimatePresence>
-                                      {openCategory === id && (
-                                        <motion.div
-                                          initial={{ height: 0, opacity: 0 }}
-                                          animate={{ height: "auto", opacity: 1 }}
-                                          exit={{ height: 0, opacity: 0 }}
-                                          transition={{ duration: 0.2, ease: "easeInOut" }}
-                                          className="overflow-hidden"
-                                        >
-                                          <NavigationListItemWrapper>
-                                            {productCategory.map(({ id, productCategoryName, href }) => (
-                                              <NavigationItem
-                                                key={id}
-                                                href={href}
-                                                closeMobileMenu={closeMobileMenu}
-                                                title={productCategoryName}
-                                              />
-                                            ))}
-                                          </NavigationListItemWrapper>
-                                        </motion.div>
-                                      )}
-                                    </AnimatePresence>
-                                  </CategoryWrapper>
-                                )
-                              )}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </CategoryWrapper>
-                  ))}
+                                        <AnimatePresence>
+                                          {openCategory === id && (
+                                            <motion.div
+                                              initial={{ height: 0, opacity: 0 }}
+                                              animate={{ height: "auto", opacity: 1 }}
+                                              exit={{ height: 0, opacity: 0 }}
+                                              transition={{ duration: 0.2, ease: "easeInOut" }}
+                                              className="overflow-hidden"
+                                            >
+                                              <NavigationListItemWrapper>
+                                                {productCategory.map(({ id, productCategoryName, href }) => {
+                                                  // Build complete subcategory URL
+                                                  const currentDepartment = marketData?.marketCatalog?.find(
+                                                    (dept) => dept.id === openDepartment
+                                                  );
+                                                  const currentCategory = currentDepartment?.departmentCategory.find(
+                                                    (cat) => cat.id === openCategory
+                                                  );
+                                                  const subcategoryUrl =
+                                                    currentDepartment && currentCategory
+                                                      ? `/departments/${currentDepartment.href}/categories/${currentCategory.href}/subcategories/${href}`
+                                                      : `/subcategories/${href}`;
+
+                                                  return (
+                                                    <NavigationItem
+                                                      key={id}
+                                                      href={subcategoryUrl}
+                                                      closeMobileMenu={closeMobileMenu}
+                                                      title={productCategoryName}
+                                                    />
+                                                  );
+                                                })}
+                                              </NavigationListItemWrapper>
+                                            </motion.div>
+                                          )}
+                                        </AnimatePresence>
+                                      </CategoryWrapper>
+                                    );
+                                  }
+                                )}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </CategoryWrapper>
+                    );
+                  })}
               </NavigationListItemWrapper>
             </motion.div>
           )}
@@ -189,7 +215,7 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
                         name={category}
                         id={id}
                         section={openStoreCategory}
-                        href={href}
+                        href={`/storecategories/${href}`}
                         closeMobileMenu={closeMobileMenu}
                       />
 
@@ -203,14 +229,24 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
                             className="overflow-hidden"
                           >
                             <NavigationListItemWrapper>
-                              {subcategories.map(({ id, subCategory, href }) => (
-                                <NavigationItem
-                                  key={id}
-                                  href={href}
-                                  closeMobileMenu={closeMobileMenu}
-                                  title={subCategory}
-                                />
-                              ))}
+                              {subcategories.map(({ id, subCategory, href }) => {
+                                // Find the current store category for URL building
+                                const currentStoreCategory = storeData?.storeCatalog?.find(
+                                  (store) => store.id === openStoreCategory
+                                );
+                                const subcategoryUrl = currentStoreCategory
+                                  ? `/storecategories/${currentStoreCategory.href}/subcategories/${href}`
+                                  : `/subcategories/${href}`;
+
+                                return (
+                                  <NavigationItem
+                                    key={id}
+                                    href={subcategoryUrl}
+                                    closeMobileMenu={closeMobileMenu}
+                                    title={subCategory}
+                                  />
+                                );
+                              })}
                             </NavigationListItemWrapper>
                           </motion.div>
                         )}
@@ -251,7 +287,7 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
                         name={category}
                         id={id}
                         section={openServiceCategory}
-                        href={href}
+                        href={`/servicecategories/${href}`}
                         closeMobileMenu={closeMobileMenu}
                       />
 
@@ -265,14 +301,24 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
                             className="overflow-hidden"
                           >
                             <NavigationListItemWrapper>
-                              {subcategories.map(({ id, subCategory, href }) => (
-                                <NavigationItem
-                                  key={id}
-                                  href={href}
-                                  closeMobileMenu={closeMobileMenu}
-                                  title={subCategory}
-                                />
-                              ))}
+                              {subcategories.map(({ id, subCategory, href }) => {
+                                // Find the current service category for URL building
+                                const currentServiceCategory = serviceData?.serviceCatalog?.find(
+                                  (service) => service.id === openServiceCategory
+                                );
+                                const subcategoryUrl = currentServiceCategory
+                                  ? `/servicecategories/${currentServiceCategory.href}/subcategories/${href}`
+                                  : `/subcategories/${href}`;
+
+                                return (
+                                  <NavigationItem
+                                    key={id}
+                                    href={subcategoryUrl}
+                                    closeMobileMenu={closeMobileMenu}
+                                    title={subCategory}
+                                  />
+                                );
+                              })}
                             </NavigationListItemWrapper>
                           </motion.div>
                         )}
@@ -312,7 +358,7 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
                         name={category}
                         id={id}
                         section={openCommunityCategory}
-                        href={href}
+                        href={`/communitycategories/${href}`}
                         closeMobileMenu={closeMobileMenu}
                       />
 
@@ -326,14 +372,24 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
                             className="overflow-hidden"
                           >
                             <NavigationListItemWrapper>
-                              {subcategories.map(({ id, subCategory, href }) => (
-                                <NavigationItem
-                                  key={id}
-                                  href={href}
-                                  closeMobileMenu={closeMobileMenu}
-                                  title={subCategory}
-                                />
-                              ))}
+                              {subcategories.map(({ id, subCategory, href }) => {
+                                // Find the current community category for URL building
+                                const currentCommunityCategory = communityData?.communityCatalog?.find(
+                                  (community) => community.id === openCommunityCategory
+                                );
+                                const subcategoryUrl = currentCommunityCategory
+                                  ? `/communitycategories/${currentCommunityCategory.href}/subcategories/${href}`
+                                  : `/subcategories/${href}`;
+
+                                return (
+                                  <NavigationItem
+                                    key={id}
+                                    href={subcategoryUrl}
+                                    closeMobileMenu={closeMobileMenu}
+                                    title={subCategory}
+                                  />
+                                );
+                              })}
                             </NavigationListItemWrapper>
                           </motion.div>
                         )}
@@ -367,7 +423,12 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
               <NavigationListItemWrapper>
                 {Array.isArray(blogData?.blogCatalog) &&
                   blogData?.blogCatalog.map(({ id, name, href }) => (
-                    <NavigationItem key={id} title={name} href={href} closeMobileMenu={closeMobileMenu} />
+                    <NavigationItem
+                      key={id}
+                      title={name}
+                      href={`/blog-ekoru/${href}`}
+                      closeMobileMenu={closeMobileMenu}
+                    />
                   ))}
               </NavigationListItemWrapper>
             </motion.div>

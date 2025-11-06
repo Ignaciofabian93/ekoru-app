@@ -3,8 +3,11 @@ ignorePaths: []
 dictionaryDefinitions: []
 dictionaries: []
 words:
+  - communitycategories
   - ekoru
   - EKORU
+  - servicecategories
+  - storecategories
   - subcat
   - Subcategorías
   - tiktok

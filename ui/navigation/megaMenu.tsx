@@ -41,7 +41,7 @@ export default function MegaMenu({
       id: department.id,
       title: department.departmentName,
       data: department,
-      href: department.href,
+      href: `/departments/${department.href}`,
     }));
 
     const selectedDepartmentData = marketData.marketCatalog.find((d) => d.id === selectedDepartment);
@@ -50,7 +50,7 @@ export default function MegaMenu({
           id: cat.id,
           title: cat.departmentCategoryName,
           data: cat,
-          href: cat.href,
+          href: `/departments/${selectedDepartmentData.href}/categories/${cat.href}`,
         }))
       : [];
 
@@ -60,7 +60,7 @@ export default function MegaMenu({
         ? selectedCategoryData.productCategory.map((subcat) => ({
             id: subcat.id,
             title: subcat.productCategoryName,
-            href: subcat.href,
+            href: `/departments/${selectedDepartmentData.href}/categories/${selectedCategoryData.href}/subcategories/${subcat.href}`,
           }))
         : [];
 
@@ -126,7 +126,7 @@ export default function MegaMenu({
       id: store.id,
       title: store.category,
       data: store,
-      href: store.href,
+      href: `/storecategories/${store.href}`,
     }));
 
     const selectedStoreData = storeData.storeCatalog.find((s) => s.id === selectedDepartment);
@@ -135,7 +135,7 @@ export default function MegaMenu({
       ? selectedStoreData.subcategories.map((subcat) => ({
           id: subcat.id,
           title: subcat.subCategory,
-          href: subcat.href,
+          href: `/storecategories/${selectedStoreData.href}/subcategories/${subcat.href}`,
         }))
       : [];
     return (
@@ -178,7 +178,7 @@ export default function MegaMenu({
       id: service.id,
       title: service.category,
       data: service,
-      href: service.href,
+      href: `/servicecategories/${service.href}`,
     }));
 
     const selectedServiceData = serviceData.serviceCatalog.find((s) => s.id === selectedDepartment);
@@ -187,7 +187,7 @@ export default function MegaMenu({
         ? selectedServiceData.subcategories.map((subcat) => ({
             id: subcat.id,
             title: subcat.subCategory,
-            href: subcat.href,
+            href: `/servicecategories/${selectedServiceData.href}/subcategories/${subcat.href}`,
           }))
         : [];
 
@@ -231,7 +231,7 @@ export default function MegaMenu({
       id: community.id,
       title: community.category,
       data: community,
-      href: community.href,
+      href: `/communitycategories/${community.href}`,
     }));
 
     const selectedCommunityData = communityData.communityCatalog.find((c) => c.id === selectedDepartment);
@@ -240,7 +240,7 @@ export default function MegaMenu({
         ? selectedCommunityData.subcategories.map((subcat) => ({
             id: subcat.id,
             title: subcat.subCategory,
-            href: subcat.href,
+            href: `/communitycategories/${selectedCommunityData.href}/subcategories/${subcat.href}`,
           }))
         : [];
 
@@ -283,7 +283,7 @@ export default function MegaMenu({
     const blogCategories = blogData.blogCatalog.map((blog) => ({
       id: blog.id,
       title: blog.name,
-      href: blog.href,
+      href: `/blog-ekoru/${blog.href}`,
     }));
 
     return (
