@@ -5,9 +5,11 @@ export const GET_STORE_CATALOG = gql`
     storeCatalog {
       id
       category
+      href
       subcategories {
         id
         subCategory
+        href
       }
     }
   }
@@ -18,9 +20,11 @@ export const GET_MARKET_CATALOG = gql`
     marketCatalog {
       id
       departmentName
+      href
       departmentCategory {
         id
         departmentCategoryName
+        href
         productCategory {
           id
           departmentCategoryId
@@ -29,6 +33,7 @@ export const GET_MARKET_CATALOG = gql`
           size
           averageWeight
           weightUnit
+          href
         }
       }
     }
@@ -40,9 +45,11 @@ export const GET_SERVICES_CATALOG = gql`
     serviceCatalog {
       id
       category
+      href
       subcategories {
         id
         subCategory
+        href
       }
     }
   }
@@ -55,6 +62,7 @@ export const GET_BLOG_CATALOG = gql`
       name
       icon
       description
+      href
     }
   }
 `;
@@ -64,9 +72,11 @@ export const GET_COMMUNITY_CATALOG = gql`
     communityCatalog {
       id
       category
+      href
       subcategories {
         id
         subCategory
+        href
       }
     }
   }

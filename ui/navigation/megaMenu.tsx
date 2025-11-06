@@ -41,25 +41,28 @@ export default function MegaMenu({
       id: department.id,
       title: department.departmentName,
       data: department,
+      href: department.href,
     }));
 
     const selectedDepartmentData = marketData.marketCatalog.find((d) => d.id === selectedDepartment);
     const categories: MenuItem[] = selectedDepartmentData
-      ? selectedDepartmentData.departmentCategories.map((cat) => ({
+      ? selectedDepartmentData.departmentCategory.map((cat) => ({
           id: cat.id,
           title: cat.departmentCategoryName,
           data: cat,
+          href: cat.href,
         }))
       : [];
 
-    const selectedCategoryData = selectedDepartmentData?.departmentCategories.find((c) => c.id === selectedCategory);
-    const subcategories = selectedCategoryData
-      ? selectedCategoryData.productCategories.map((subcat) => ({
-          id: subcat.id,
-          title: subcat.productCategoryName,
-          href: `/marketplace/departments/${selectedDepartment}/categories/${selectedCategory}/products/${subcat.id}`,
-        }))
-      : [];
+    const selectedCategoryData = selectedDepartmentData?.departmentCategory.find((c) => c.id === selectedCategory);
+    const subcategories =
+      selectedCategoryData && selectedDepartmentData
+        ? selectedCategoryData.productCategory.map((subcat) => ({
+            id: subcat.id,
+            title: subcat.productCategoryName,
+            href: subcat.href,
+          }))
+        : [];
 
     return (
       <div className="flex min-h-[400px]">
@@ -70,6 +73,7 @@ export default function MegaMenu({
           items={departments}
           selectedId={selectedDepartment}
           onSelectItem={setSelectedDepartment}
+          onClose={onClose}
         />
 
         {/* Categories Column */}
@@ -87,6 +91,7 @@ export default function MegaMenu({
                 items={categories}
                 selectedId={selectedCategory}
                 onSelectItem={setSelectedCategory}
+                onClose={onClose}
               />
             </motion.div>
           )}
@@ -121,6 +126,7 @@ export default function MegaMenu({
       id: store.id,
       title: store.category,
       data: store,
+      href: store.href,
     }));
 
     const selectedStoreData = storeData.storeCatalog.find((s) => s.id === selectedDepartment);
@@ -129,7 +135,7 @@ export default function MegaMenu({
       ? selectedStoreData.subcategories.map((subcat) => ({
           id: subcat.id,
           title: subcat.subCategory,
-          href: `/stores/category/${selectedStoreData.id}/subcategory/${subcat.id}`,
+          href: subcat.href,
         }))
       : [];
     return (
@@ -141,6 +147,7 @@ export default function MegaMenu({
           items={storeCategories}
           selectedId={selectedDepartment}
           onSelectItem={setSelectedDepartment}
+          onClose={onClose}
         />
 
         {/* Subcategories Column */}
@@ -171,6 +178,7 @@ export default function MegaMenu({
       id: service.id,
       title: service.category,
       data: service,
+      href: service.href,
     }));
 
     const selectedServiceData = serviceData.serviceCatalog.find((s) => s.id === selectedDepartment);
@@ -179,7 +187,7 @@ export default function MegaMenu({
         ? selectedServiceData.subcategories.map((subcat) => ({
             id: subcat.id,
             title: subcat.subCategory,
-            href: `/services/category/${selectedServiceData.id}/subcategory/${subcat.id}`,
+            href: subcat.href,
           }))
         : [];
 
@@ -192,6 +200,7 @@ export default function MegaMenu({
           items={services}
           selectedId={selectedDepartment}
           onSelectItem={setSelectedDepartment}
+          onClose={onClose}
         />
 
         {/* Subcategories Column */}
@@ -222,6 +231,7 @@ export default function MegaMenu({
       id: community.id,
       title: community.category,
       data: community,
+      href: community.href,
     }));
 
     const selectedCommunityData = communityData.communityCatalog.find((c) => c.id === selectedDepartment);
@@ -230,7 +240,7 @@ export default function MegaMenu({
         ? selectedCommunityData.subcategories.map((subcat) => ({
             id: subcat.id,
             title: subcat.subCategory,
-            href: `/community/category/${selectedCommunityData.id}/subcategory/${subcat.id}`,
+            href: subcat.href,
           }))
         : [];
 
@@ -243,6 +253,7 @@ export default function MegaMenu({
           items={communityCategories}
           selectedId={selectedDepartment}
           onSelectItem={setSelectedDepartment}
+          onClose={onClose}
         />
 
         {/* Subcategories Column */}
@@ -272,7 +283,7 @@ export default function MegaMenu({
     const blogCategories = blogData.blogCatalog.map((blog) => ({
       id: blog.id,
       title: blog.name,
-      href: `/blog/category/${blog.id}`,
+      href: blog.href,
     }));
 
     return (

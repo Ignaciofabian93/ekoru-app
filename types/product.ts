@@ -113,17 +113,20 @@ export type ProductCategory = {
   weightUnit?: WeightUnit;
   products?: Product[];
   materials?: ProductCategoryMaterial[];
+  href: string;
 };
 
 export type DepartmentCategory = {
   id: number;
   departmentCategoryName: string;
   departmentId: number;
-  productCategories: ProductCategory[];
+  productCategory: ProductCategory[];
+  href: string;
 };
 
 export type Department = {
   id: number;
   departmentName: string;
-  departmentCategories: DepartmentCategory[];
+  departmentCategory: DepartmentCategory[];
+  href: string;
 };

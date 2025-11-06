@@ -3,6 +3,7 @@ import { Admin, Seller } from "./user";
 export interface CommunityCategory {
   id: number;
   category: string;
+  href: string;
   subcategories: CommunitySubCategory[];
 }
 
@@ -11,6 +12,7 @@ export interface CommunitySubCategory {
   subCategory: string;
   communityCategoryId: number;
   communityCategory: CommunityCategory;
+  href: string;
 }
 
 export interface CommunityPost {

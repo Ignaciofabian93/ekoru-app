@@ -91,13 +91,15 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
             >
               <NavigationListItemWrapper>
                 {Array.isArray(marketData?.marketCatalog) &&
-                  marketData?.marketCatalog.map(({ id, departmentName, departmentCategories }, index) => (
+                  marketData?.marketCatalog.map(({ id, departmentName, departmentCategory, href }, index) => (
                     <CategoryWrapper key={id} index={index}>
                       <CategoryButton
                         onClick={() => toggleDepartment(id)}
                         name={departmentName}
                         id={id}
                         section={openDepartment}
+                        href={href}
+                        closeMobileMenu={closeMobileMenu}
                       />
 
                       <AnimatePresence>
@@ -110,14 +112,16 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
                             className="overflow-hidden"
                           >
                             <div className="border-t border-neutral-100 dark:border-neutral-700">
-                              {departmentCategories.map(
-                                ({ departmentCategoryName, productCategories, id }, catIndex) => (
+                              {departmentCategory.map(
+                                ({ departmentCategoryName, productCategory, id, href }, catIndex) => (
                                   <CategoryWrapper key={id} index={catIndex}>
                                     <CategoryButton
                                       onClick={() => toggleCategory(id)}
                                       name={departmentCategoryName}
                                       id={id}
                                       section={openCategory}
+                                      href={href}
+                                      closeMobileMenu={closeMobileMenu}
                                     />
 
                                     <AnimatePresence>
@@ -130,10 +134,10 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
                                           className="overflow-hidden"
                                         >
                                           <NavigationListItemWrapper>
-                                            {productCategories.map(({ id, productCategoryName }) => (
+                                            {productCategory.map(({ id, productCategoryName, href }) => (
                                               <NavigationItem
                                                 key={id}
-                                                href={`/market/category/${id}`}
+                                                href={href}
                                                 closeMobileMenu={closeMobileMenu}
                                                 title={productCategoryName}
                                               />
@@ -178,13 +182,15 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
             >
               <NavigationListItemWrapper>
                 {Array.isArray(storeData?.storeCatalog) &&
-                  storeData?.storeCatalog.map(({ id, category, subcategories }, index) => (
+                  storeData?.storeCatalog.map(({ id, category, subcategories, href }, index) => (
                     <CategoryWrapper key={id} index={index}>
                       <CategoryButton
                         onClick={() => toggleStoreCategory(id)}
                         name={category}
                         id={id}
                         section={openStoreCategory}
+                        href={href}
+                        closeMobileMenu={closeMobileMenu}
                       />
 
                       <AnimatePresence>
@@ -197,10 +203,10 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
                             className="overflow-hidden"
                           >
                             <NavigationListItemWrapper>
-                              {subcategories.map(({ id, subCategory }) => (
+                              {subcategories.map(({ id, subCategory, href }) => (
                                 <NavigationItem
                                   key={id}
-                                  href={`/stores/category/${category}/subcategory/${id}`}
+                                  href={href}
                                   closeMobileMenu={closeMobileMenu}
                                   title={subCategory}
                                 />
@@ -238,13 +244,15 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
             >
               <NavigationListItemWrapper>
                 {Array.isArray(serviceData?.serviceCatalog) &&
-                  serviceData?.serviceCatalog.map(({ id, category, subcategories }, index) => (
+                  serviceData?.serviceCatalog.map(({ id, category, subcategories, href }, index) => (
                     <CategoryWrapper key={id} index={index}>
                       <CategoryButton
                         onClick={() => toggleServiceCategory(id)}
                         name={category}
                         id={id}
                         section={openServiceCategory}
+                        href={href}
+                        closeMobileMenu={closeMobileMenu}
                       />
 
                       <AnimatePresence>
@@ -257,10 +265,10 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
                             className="overflow-hidden"
                           >
                             <NavigationListItemWrapper>
-                              {subcategories.map(({ id, subCategory }) => (
+                              {subcategories.map(({ id, subCategory, href }) => (
                                 <NavigationItem
                                   key={id}
-                                  href={`/services/category/${category}/subcategory/${id}`}
+                                  href={href}
                                   closeMobileMenu={closeMobileMenu}
                                   title={subCategory}
                                 />
@@ -297,13 +305,15 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
             >
               <NavigationListItemWrapper>
                 {Array.isArray(communityData?.communityCatalog) &&
-                  communityData?.communityCatalog.map(({ id, category, subcategories }, index) => (
+                  communityData?.communityCatalog.map(({ id, category, subcategories, href }, index) => (
                     <CategoryWrapper key={id} index={index}>
                       <CategoryButton
                         onClick={() => toggleCommunityCategory(id)}
                         name={category}
                         id={id}
                         section={openCommunityCategory}
+                        href={href}
+                        closeMobileMenu={closeMobileMenu}
                       />
 
                       <AnimatePresence>
@@ -316,10 +326,10 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
                             className="overflow-hidden"
                           >
                             <NavigationListItemWrapper>
-                              {subcategories.map(({ id, subCategory }) => (
+                              {subcategories.map(({ id, subCategory, href }) => (
                                 <NavigationItem
                                   key={id}
-                                  href={`/community/category/${category}/subcategory/${id}`}
+                                  href={href}
                                   closeMobileMenu={closeMobileMenu}
                                   title={subCategory}
                                 />
@@ -356,13 +366,8 @@ export default function SidebarNavigation({ closeMobileMenu }: Props) {
             >
               <NavigationListItemWrapper>
                 {Array.isArray(blogData?.blogCatalog) &&
-                  blogData?.blogCatalog.map(({ id, name }) => (
-                    <NavigationItem
-                      key={id}
-                      title={name}
-                      href={`/blog/category/${id}`}
-                      closeMobileMenu={closeMobileMenu}
-                    />
+                  blogData?.blogCatalog.map(({ id, name, href }) => (
+                    <NavigationItem key={id} title={name} href={href} closeMobileMenu={closeMobileMenu} />
                   ))}
               </NavigationListItemWrapper>
             </motion.div>
