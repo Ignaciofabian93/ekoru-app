@@ -2,7 +2,7 @@ import MainLayout from "@/ui/layout/mainLayout";
 import { AlertTriangle, Home, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-export default function CommunityNotFound() {
+export default function BlogNotFound() {
   return (
     <MainLayout>
       <div className="flex items-center justify-center min-h-[600px]">
