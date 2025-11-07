@@ -91,7 +91,7 @@ export default function EkoruBlogPage() {
 
               {/* Stats */}
               <div className="flex items-center justify-center gap-8 mt-12">
-                <div className="text-center">
+                <div className="text-center max-w-[120px] sm:max-w-[180px]">
                   <div className="w-16 h-16 mx-auto mb-4 bg-lime-100 rounded-2xl flex items-center justify-center">
                     <BookOpen className="w-8 h-8 text-lime-600" />
                   </div>
@@ -103,7 +103,7 @@ export default function EkoruBlogPage() {
                   </Text>
                 </div>
 
-                <div className="text-center">
+                <div className="text-center max-w-[120px] sm:max-w-[180px]">
                   <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-2xl flex items-center justify-center">
                     <TrendingUp className="w-8 h-8 text-blue-600" />
                   </div>
