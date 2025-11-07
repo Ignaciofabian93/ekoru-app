@@ -128,7 +128,7 @@ export default function Footer() {
           {/* Legal Links */}
           <nav aria-label="Enlaces legales">
             <h2 className="sr-only">Información legal</h2>
-            <ul className="flex gap-3 flex-wrap" role="list">
+            <ul className="flex gap-3 flex-wrap items-center justify-center" role="list">
               <li>
                 <Link
                   href="/legal/privacy-policy"

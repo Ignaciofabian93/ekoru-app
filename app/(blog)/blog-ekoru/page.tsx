@@ -53,7 +53,7 @@ export default function EkoruBlogPage() {
                 Error al cargar las categorías
               </Title>
               <Text variant="p" className="text-gray-600 mb-8 text-lg">
-                {error.message || "Ocurrió un problema al cargar las categorías del blog."}
+                {"Ocurrió un problema al cargar las categorías del blog."}
               </Text>
               <button
                 onClick={() => window.location.reload()}

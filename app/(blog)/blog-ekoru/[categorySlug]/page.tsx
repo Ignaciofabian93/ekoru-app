@@ -83,7 +83,6 @@ export default function BlogSlugPage() {
                 <ShieldCheck className="w-12 h-12 text-red-500" />
               </div>
               <h1 className="text-3xl font-bold text-gray-900 mb-4">Error al cargar los artículos</h1>
-              <p className="text-lg text-red-600 mb-8">{error.message}</p>
               <button
                 onClick={() => window.location.reload()}
                 className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"

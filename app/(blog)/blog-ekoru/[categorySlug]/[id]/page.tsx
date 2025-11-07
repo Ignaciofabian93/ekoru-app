@@ -118,7 +118,7 @@ export default function BlogPost() {
                 Artículo no encontrado
               </Title>
               <Text variant="p" className="text-gray-600 mb-8 text-lg">
-                {error?.message || "El artículo que buscas no existe o ha sido removido."}
+                {"El artículo que buscas no existe o ha sido removido."}
               </Text>
               <Link
                 href="/blog-ekoru"
