@@ -97,8 +97,6 @@ export default function BlogSlugPage() {
     );
   }
 
-  console.log("blogs:: ", blogPosts);
-
   return (
     <MainLayout>
       <div className="container mx-auto px-4 pt-4 pb-12 max-w-7xl">
@@ -115,7 +113,12 @@ export default function BlogSlugPage() {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {blogPosts.map((post: BlogPost) => (
-                <CategoryCard key={post.id} post={post} categoryInfo={categoryInfo} />
+                <CategoryCard
+                  key={post.id}
+                  post={post}
+                  categoryInfo={categoryInfo}
+                  slug={params.categorySlug as string}
+                />
               ))}
             </div>
 

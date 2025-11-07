@@ -1,4 +1,5 @@
 import { lime, stone, gray, white, neutral, red, amber } from "tailwindcss/colors";
+import typography from "@tailwindcss/typography";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -93,5 +94,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [typography],
 };

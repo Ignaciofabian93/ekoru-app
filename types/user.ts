@@ -34,6 +34,7 @@ export type Admin = {
 
   // Business admin relation (null for platform admins)
   sellerId?: string;
+  seller?: Seller;
 
   // Account status and security
   isActive: boolean;
