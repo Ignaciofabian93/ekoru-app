@@ -1,5 +1,21 @@
 import { gql } from "@apollo/client";
 
+export const GET_BLOG_CATEGORIES = gql`
+  query BlogCategories {
+    blogCategories {
+      id
+      name
+      icon
+      description
+      href
+      posts {
+        id
+        authorId
+      }
+    }
+  }
+`;
+
 export const GET_BLOGS_BY_CATEGORY = gql`
   query BlogsByCategory($category: BlogType!, $page: Int!, $pageSize: Int!) {
     blogsByCategory(category: $category, page: $page, pageSize: $pageSize) {

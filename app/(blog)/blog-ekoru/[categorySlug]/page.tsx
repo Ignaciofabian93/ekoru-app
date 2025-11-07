@@ -99,7 +99,7 @@ export default function BlogSlugPage() {
 
   return (
     <MainLayout>
-      <div className="container mx-auto px-4 pt-4 pb-12 max-w-7xl">
+      <div className="container mx-auto px-4 pb-12 max-w-7xl">
         {/* Category Header */}
         <CategoryHeader categoryInfo={categoryInfo} />
         {/* Blog Posts Grid */}

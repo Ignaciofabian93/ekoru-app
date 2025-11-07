@@ -64,7 +64,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/community"
-                    className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
+                    className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
                   >
                     Comunidad
                   </Link>
@@ -72,7 +72,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/blog"
-                    className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
+                    className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
                   >
                     Blog
                   </Link>
@@ -80,7 +80,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/departments"
-                    className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
+                    className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
                   >
                     Mercado
                   </Link>
@@ -88,7 +88,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/stores"
-                    className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
+                    className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
                   >
                     Tiendas
                   </Link>
@@ -96,7 +96,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/help"
-                    className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
+                    className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
                   >
                     Ayuda
                   </Link>
@@ -132,7 +132,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/legal/privacy-policy"
-                  className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
+                  className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
                 >
                   Privacidad
                 </Link>
@@ -140,15 +140,15 @@ export default function Footer() {
               <li>
                 <Link
                   href="/legal/terms-of-service"
-                  className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
+                  className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
                 >
-                  Términos
+                  Términos y Condiciones
                 </Link>
               </li>
               <li>
                 <Link
                   href="/legal/community-guidelines"
-                  className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
+                  className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-footer-dark-950 rounded px-1 py-0.5"
                 >
                   Normas de la comunidad
                 </Link>

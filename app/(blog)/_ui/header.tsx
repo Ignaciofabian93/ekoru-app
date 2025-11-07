@@ -15,14 +15,21 @@ export const CategoryHeader = ({ categoryInfo }: CategoryHeaderProps) => {
   return (
     <>
       {/* Breadcrumb Navigation */}
-      <nav className="flex items-center space-x-2 text-sm mb-6" aria-label="Breadcrumb">
-        <Link href="/blog-ekoru" className="font-medium hover:underline">
-          Blogs
-        </Link>
-        <ChevronRight className="w-4 h-4 text-gray-500" />
-        <Text variant="span" className="font-medium">
-          {categoryInfo?.name || "Categoría"}
-        </Text>
+      <nav className="border-b border-gray-100" aria-label="Breadcrumb">
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <div className="flex items-center space-x-2 text-sm">
+            <Link
+              href="/blog-ekoru"
+              className="text-lime-600 hover:text-lime-800 font-medium transition-colors duration-200 hover:underline"
+            >
+              Blogs
+            </Link>
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <Text variant="span" className="font-medium truncate max-w-xs">
+              {categoryInfo?.name || "Categoría"}
+            </Text>
+          </div>
+        </div>
       </nav>
 
       <div className="mb-12 flex items-center space-x-6">
