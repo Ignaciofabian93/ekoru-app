@@ -6,8 +6,16 @@ import ImpactSummary from "./_ui/impactSummary";
 import RecentActivity from "./_ui/recentActivity";
 import ProfileNavigation from "./_ui/profileNavigation";
 import ProfileHeader from "./_ui/profileHeader";
+import useSessionStore from "@/store/session";
+import { redirect } from "next/navigation";
 
 export default function ProfilePage() {
+  const { data } = useSessionStore();
+
+  if (!data.id) {
+    redirect("/feed");
+  }
+
   return (
     <MainLayout>
       <section className="min-h-screen bg-gradient-to-br from-neutral-light/20 to-white">
@@ -40,17 +48,11 @@ export default function ProfilePage() {
                   <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
                     <Award className="w-8 h-8" />
                   </div>
-                  <h3 className="text-lg font-bold mb-2">
-                    Eco-Warrior Certificado
-                  </h3>
-                  <p className="text-white/80 text-sm mb-4">
-                    Has ahorrado más de 100kg de CO₂ este mes. ¡Sigue así!
-                  </p>
+                  <h3 className="text-lg font-bold mb-2">Eco-Warrior Certificado</h3>
+                  <p className="text-white/80 text-sm mb-4">Has ahorrado más de 100kg de CO₂ este mes. ¡Sigue así!</p>
                   <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm">
-                        Progreso al siguiente nivel
-                      </span>
+                      <span className="text-sm">Progreso al siguiente nivel</span>
                       <span className="text-sm font-medium">75%</span>
                     </div>
                     <div className="w-full bg-white/20 rounded-full h-2">
@@ -62,9 +64,7 @@ export default function ProfilePage() {
 
               {/* Quick Stats */}
               <div className="bg-white rounded-xl shadow-sm border border-neutral/20 p-6">
-                <h3 className="text-lg font-bold text-text-primary mb-4">
-                  Estadísticas
-                </h3>
+                <h3 className="text-lg font-bold text-text-primary mb-4">Estadísticas</h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-text-muted">Perfil visitado</span>

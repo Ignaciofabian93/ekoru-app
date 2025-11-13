@@ -72,6 +72,13 @@ export type StoreProductMaterial = {
   updatedAt: string;
 };
 
+export type Material = {
+  id: number;
+  materialType: string;
+  estimatedCo2SavingsKG: number;
+  estimatedWaterSavingsLT: number;
+};
+
 export type ProductCategoryMaterial = {
   id: number;
   productCategoryId: number;
@@ -81,6 +88,24 @@ export type ProductCategoryMaterial = {
   isPrimary: boolean;
   createdAt: string;
   updatedAt: string;
+  material: MaterialImpactEstimate;
+};
+
+export type StoreCategory = {
+  id: number;
+  category: string;
+  subcategories: StoreSubCategory[];
+  href: string;
+};
+
+export type StoreSubCategory = {
+  id: number;
+  storeCategoryId: number;
+  subCategory: string;
+  storeCategory: StoreCategory;
+  products: StoreProduct[];
+  href: string;
+  materials: StoreProductMaterial[];
 };
 
 export type ProductLike = {

@@ -25,7 +25,11 @@ export default function Navbar() {
   const closeProductForm = () => setIsProductFormOpen(false);
   const openProductForm = () => setIsProductFormOpen(true);
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async (formData: Record<string, unknown>) => {
+    // TODO: Implement product submission logic
+    console.log("Product form data:", formData);
+    closeProductForm();
+  };
 
   // Handle escape key to close mobile menu
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -153,13 +157,13 @@ export default function Navbar() {
             transition={{ delay: 0.1, duration: 0.3 }}
             className="space-y-6"
           >
-            <ProductForm onSubmit={handleSubmit} mode="create" />
+            <ProductForm onSubmit={handleSubmit} mode="create" sellerData={data} />
             {/* Action Buttons */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.3 }}
-              className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4 border-t border-gray-200"
+              className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4 border-t border-gray-200 dark:border-gray-700"
             >
               <MainButton
                 text="Cancelar"
@@ -169,12 +173,12 @@ export default function Navbar() {
                 hasIcon={false}
               />
               <MainButton
-                text={"Actualizar Perfil"}
+                text="Publicar Producto"
                 variant="primary"
                 type="submit"
+                form="product-form"
                 hasIcon
                 icon={Save}
-                onClick={handleSubmit}
               />
             </motion.div>
           </motion.div>
