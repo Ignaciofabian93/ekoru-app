@@ -33,7 +33,7 @@ export default function DepartmentSlugPage() {
   const [departmentId, setDepartmentId] = useState<number | null>(null);
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<string>("newest");
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage] = useState<number>(1);
   const [itemsPerPage] = useState(10);
   const [departmentInfo, setDepartmentInfo] = useState<Department>();
 
