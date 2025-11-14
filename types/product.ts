@@ -72,13 +72,6 @@ export type StoreProductMaterial = {
   updatedAt: string;
 };
 
-export type Material = {
-  id: number;
-  materialType: string;
-  estimatedCo2SavingsKG: number;
-  estimatedWaterSavingsLT: number;
-};
-
 export type ProductCategoryMaterial = {
   id: number;
   productCategoryId: number;

@@ -57,5 +57,6 @@ export default function useSessionData() {
     phone,
     isVerified,
     email,
+    data,
   };
 }

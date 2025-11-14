@@ -13,23 +13,59 @@ import Input from "../inputs/input";
 import Modal from "../modals/modal";
 import ProductForm from "../forms/product";
 import MainButton from "../buttons/mainButton";
+import useProductForm from "@/hooks/useProductForm";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
-  const [isProductFormOpen, setIsProductFormOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const { data } = useSessionStore();
+  const {
+    departments,
+    departmentError,
+    departmentLoading,
+    departmentCategories,
+    departmentCategoriesError,
+    departmentCategoriesLoading,
+    productCategories,
+    productCategoriesError,
+    productCategoriesLoading,
+    departmentSelected,
+    departmentCategorySelected,
+    productCategorySelected,
+    formData,
+    handleDepartmentSelect,
+    handleDepartmentCategorySelect,
+    handleProductCategorySelect,
+    handleFormDataChange,
+    handleStoreCategorySelect,
+    handleStoreSubcategorySelect,
+    storeCategorySelected,
+    storeSubcategorySelected,
+    storeCategories,
+    storeCategoriesError,
+    storeCategoriesLoading,
+    storeSubcategories,
+    storeSubcategoriesError,
+    storeSubcategoriesLoading,
+    sellerType,
+    isPersonProfile,
+    environmentalImpact,
+    productImages,
+    handleImagesChange,
+    maxImages,
+    tagInput,
+    setTagInput,
+    handleAddTag,
+    handleRemoveTag,
+    handleBadgeToggle,
+    handleSubmit,
+    isSubmitting,
+    isProductFormOpen,
+    closeProductForm,
+    openProductForm,
+  } = useProductForm();
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
-
-  const closeProductForm = () => setIsProductFormOpen(false);
-  const openProductForm = () => setIsProductFormOpen(true);
-
-  const handleSubmit = async (formData: Record<string, unknown>) => {
-    // TODO: Implement product submission logic
-    console.log("Product form data:", formData);
-    closeProductForm();
-  };
 
   // Handle escape key to close mobile menu
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -157,7 +193,48 @@ export default function Navbar() {
             transition={{ delay: 0.1, duration: 0.3 }}
             className="space-y-6"
           >
-            <ProductForm onSubmit={handleSubmit} mode="create" sellerData={data} />
+            <ProductForm
+              departments={departments}
+              departmentError={departmentError}
+              departmentLoading={departmentLoading}
+              departmentCategories={departmentCategories}
+              departmentCategoriesError={departmentCategoriesError}
+              departmentCategoriesLoading={departmentCategoriesLoading}
+              productCategories={productCategories}
+              productCategoriesError={productCategoriesError}
+              productCategoriesLoading={productCategoriesLoading}
+              departmentSelected={departmentSelected}
+              departmentCategorySelected={departmentCategorySelected}
+              productCategorySelected={productCategorySelected}
+              handleDepartmentSelect={handleDepartmentSelect}
+              handleDepartmentCategorySelect={handleDepartmentCategorySelect}
+              handleProductCategorySelect={handleProductCategorySelect}
+              handleFormDataChange={handleFormDataChange}
+              storeCategorySelected={storeCategorySelected}
+              storeSubcategorySelected={storeSubcategorySelected}
+              handleStoreCategorySelect={handleStoreCategorySelect}
+              handleStoreSubcategorySelect={handleStoreSubcategorySelect}
+              storeCategories={storeCategories}
+              storeCategoriesError={storeCategoriesError}
+              storeCategoriesLoading={storeCategoriesLoading}
+              storeSubcategories={storeSubcategories}
+              storeSubcategoriesError={storeSubcategoriesError}
+              storeSubcategoriesLoading={storeSubcategoriesLoading}
+              sellerType={sellerType}
+              isPersonProfile={isPersonProfile}
+              environmentalImpact={environmentalImpact}
+              formData={formData}
+              productImages={productImages}
+              handleImagesChange={handleImagesChange}
+              maxImages={maxImages}
+              tagInput={tagInput}
+              setTagInput={setTagInput}
+              handleAddTag={handleAddTag}
+              handleRemoveTag={handleRemoveTag}
+              handleBadgeToggle={handleBadgeToggle}
+              handleSubmit={handleSubmit}
+              isSubmitting={isSubmitting}
+            />
             {/* Action Buttons */}
             <motion.div
               initial={{ opacity: 0 }}
