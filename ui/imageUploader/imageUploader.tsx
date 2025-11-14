@@ -68,7 +68,9 @@ export default function ImageUploader({ images, onImagesChange, maxImages = 3, i
   return (
     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}>
       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-        Imágenes del Producto * (Mínimo 1, Máximo {maxImages})
+        Imágenes del Producto *
+        <br />
+        (Mínimo 1, Máximo {maxImages})
       </label>
       <Text variant="span" className="text-xs text-gray-500 dark:text-gray-400 mb-3 block">
         Las imágenes se enviarán cuando envíes el formulario

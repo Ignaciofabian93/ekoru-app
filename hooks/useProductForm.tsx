@@ -36,12 +36,27 @@ export default function useProductForm() {
   const [storeCategorySelected, setStoreCategorySelected] = useState<StoreCategory | null>();
   const [storeSubcategorySelected, setStoreSubcategorySelected] = useState<StoreSubCategory | null>();
 
-  const [formData, setFormData] = useState<Partial<Product | StoreProduct>>({
-    badges: [],
-    images: [],
-    name: "",
-    description: "",
-    price: 0,
+  const [formData, setFormData] = useState<Partial<Product | StoreProduct>>(() => {
+    // Initialize with type-specific fields based on seller type
+    const baseData = {
+      badges: [],
+      images: [],
+      name: "",
+      description: "",
+      price: 0,
+    };
+
+    // Add isExchangeable for Person profiles (Product type)
+    if (isPersonProfile) {
+      return {
+        ...baseData,
+        isExchangeable: false, // Default to selling
+        interests: [],
+      } as Partial<Product>;
+    }
+
+    // Return base data for Business profiles (StoreProduct type)
+    return baseData as Partial<StoreProduct>;
   });
   const [productImages, setProductImages] = useState<(File | string)[]>(["", "", ""]);
   const [tagInput, setTagInput] = useState("");

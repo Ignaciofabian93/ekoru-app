@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "motion/react";
+import { memo, useCallback } from "react";
 import {
   Department,
   DepartmentCategory,
@@ -22,7 +23,6 @@ import {
   ScanLine,
   Target,
   LucideIcon,
-  X,
 } from "lucide-react";
 import clsx from "clsx";
 import Select from "../inputs/select";
@@ -31,6 +31,7 @@ import ImageUploader from "../imageUploader/imageUploader";
 import BadgeSelector from "../badgeSelector/badgeSelector";
 import { ApolloError } from "@apollo/client";
 import { EnvironmentalImpactResult } from "@/utils/calculateEnvImpact";
+import TagSelector from "../tagSelector/tagSelector";
 
 type Props = {
   isSubmitting?: boolean;
@@ -89,6 +90,63 @@ const conditions: { value: ProductCondition; label: string; description: string 
   { value: "REFURBISHED", label: "Reacondicionado", description: "Restaurado a condición funcional" },
 ];
 
+// Memoized Transaction Type Button to prevent unnecessary re-renders
+const TransactionTypeButton = memo(
+  ({
+    isSelected,
+    icon: Icon,
+    text,
+    description,
+    onClick,
+    isSubmitting,
+  }: {
+    isSelected: boolean;
+    icon: LucideIcon;
+    text: string;
+    description: string;
+    onClick: () => void;
+    isSubmitting?: boolean;
+  }) => {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        disabled={isSubmitting}
+        className={clsx(
+          "relative p-4 rounded-lg border-2 transition-all duration-300 group",
+          "hover:shadow-lg hover:scale-[1.02]",
+          isSelected
+            ? "border-primary bg-primary/10 dark:bg-primary/20 shadow-md"
+            : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-primary/50"
+        )}
+      >
+        <div className="flex flex-col items-center space-y-2">
+          <Icon
+            className={clsx(
+              "w-8 h-8 transition-colors",
+              isSelected ? "text-primary" : "text-gray-500 group-hover:text-primary"
+            )}
+          />
+          <Text
+            variant="span"
+            className={clsx(
+              "font-medium text-center",
+              isSelected ? "text-primary" : "text-gray-700 dark:text-gray-300"
+            )}
+          >
+            {text}
+          </Text>
+          <Text variant="span" className="text-xs text-gray-500 dark:text-gray-400 text-center">
+            {description}
+          </Text>
+        </div>
+      </button>
+    );
+  }
+);
+
+TransactionTypeButton.displayName = "TransactionTypeButton";
+
 export default function ProductForm({
   isSubmitting = false,
   departments,
@@ -126,82 +184,44 @@ export default function ProductForm({
 }: Props) {
   const isExchangeable = isPersonProfile && (formData as Product).isExchangeable;
 
-  const TransactionTypeButton = ({
-    isExchangeable,
-    icon: Icon,
-    text,
-    description,
-  }: {
-    isExchangeable: boolean;
-    icon: LucideIcon;
-    text: string;
-    description: string;
-  }) => {
-    return (
-      <button
-        type="button"
-        onClick={() => handleFormDataChange({ isExchangeable: isExchangeable })}
-        disabled={isSubmitting}
-        className={clsx(
-          "relative p-4 rounded-lg border-2 transition-all duration-300 group",
-          "hover:shadow-lg hover:scale-[1.02]",
-          !isExchangeable
-            ? "border-primary bg-primary/10 dark:bg-primary/20 shadow-md"
-            : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-primary/50"
-        )}
-      >
-        <div className="flex flex-col items-center space-y-2">
-          <Icon
-            className={clsx(
-              "w-8 h-8 transition-colors",
-              !isExchangeable ? "text-primary" : "text-gray-500 group-hover:text-primary"
-            )}
-          />
-          <Text
-            variant="span"
-            className={clsx(
-              "font-medium text-center",
-              !isExchangeable ? "text-primary" : "text-gray-700 dark:text-gray-300"
-            )}
-          >
-            {text}
-          </Text>
-          <Text variant="span" className="text-xs text-gray-500 dark:text-gray-400 text-center">
-            {description}
-          </Text>
-        </div>
-      </button>
-    );
-  };
+  // Memoize click handlers to prevent re-renders
+  const handleSetSell = useCallback(() => {
+    handleFormDataChange({ isExchangeable: false });
+  }, [handleFormDataChange]);
 
-  const TransactionSelection = () =>
-    isPersonProfile && (
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-        <Text variant="label" className="mb-3 font-semibold">
-          ¿Qué deseas hacer con este producto?
-        </Text>
-        <div className="grid grid-cols-2 gap-3 mt-2">
-          <TransactionTypeButton
-            isExchangeable={false}
-            icon={DollarSign}
-            text="Vender"
-            description="Recibe dinero por tu producto"
-          />
-
-          <TransactionTypeButton
-            isExchangeable={true}
-            icon={ArrowLeftRight}
-            text="Intercambiar"
-            description="Cambia por otro producto"
-          />
-        </div>
-      </motion.div>
-    );
+  const handleSetExchange = useCallback(() => {
+    handleFormDataChange({ isExchangeable: true });
+  }, [handleFormDataChange]);
 
   return (
     <form id="product-form" onSubmit={handleSubmit} className="space-y-6">
       {/* Listing Type Selection - Only for PERSON sellers */}
-      <TransactionSelection />
+      {isPersonProfile && (
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+          <Text variant="label" className="mb-3 font-semibold">
+            ¿Qué deseas hacer con este producto?
+          </Text>
+          <div className="grid grid-cols-2 gap-3 mt-2">
+            <TransactionTypeButton
+              isSelected={!(formData as Product).isExchangeable}
+              icon={DollarSign}
+              text="Vender"
+              description="Recibe dinero por tu producto"
+              onClick={handleSetSell}
+              isSubmitting={isSubmitting}
+            />
+
+            <TransactionTypeButton
+              isSelected={(formData as Product).isExchangeable}
+              icon={ArrowLeftRight}
+              text="Intercambiar"
+              description="Cambia por otro producto"
+              onClick={handleSetExchange}
+              isSubmitting={isSubmitting}
+            />
+          </div>
+        </motion.div>
+      )}
 
       {/* Product Name */}
       <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}>
@@ -247,15 +267,15 @@ export default function ProductForm({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
           <label htmlFor="price" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            {!isExchangeable ? "Precio ($) *" : "Precio Referencial ($)"}
+            {!isExchangeable ? "Precio *" : "Precio Referencial"}
           </label>
           <input
             type="number"
             id="price"
             required={!isExchangeable}
-            value={formData.price || 0}
-            onChange={(e) => handleFormDataChange({ price: parseFloat(e.target.value) || 0 })}
-            placeholder="0"
+            value={formData.price}
+            onChange={(e) => handleFormDataChange({ price: parseFloat(e.target.value) })}
+            placeholder="10000"
             min={0}
             step={1}
             className={clsx(
@@ -481,75 +501,14 @@ export default function ProductForm({
 
       {/* Tags */}
       {isPersonProfile && (
-        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.55 }}>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Intereses/Etiquetas (Opcional, máx. 10)
-          </label>
-          <div className="flex gap-2 mb-3">
-            <input
-              type="text"
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
-              className={clsx(
-                "flex-1 px-4 py-2 border rounded-lg",
-                "focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent",
-                "dark:bg-gray-800 dark:border-gray-600 dark:text-white",
-                "disabled:opacity-50 disabled:cursor-not-allowed"
-              )}
-              placeholder="Ej: vintage, gaming, portátil..."
-              disabled={isSubmitting || ((formData as Product).interests || []).length >= 10}
-              maxLength={20}
-            />
-            <button
-              type="button"
-              onClick={handleAddTag}
-              className={clsx(
-                "px-6 py-2 rounded-lg font-medium transition-all duration-200",
-                "bg-primary text-white hover:bg-primary-dark",
-                "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
-                "disabled:opacity-50 disabled:cursor-not-allowed"
-              )}
-              disabled={isSubmitting || !tagInput.trim() || ((formData as Product).interests || []).length >= 10}
-            >
-              Agregar
-            </button>
-          </div>
-          {((formData as Product).interests || []).length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {((formData as Product).interests || []).map((tag) => (
-                <motion.span
-                  key={tag}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  className={clsx(
-                    "inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium",
-                    "bg-gradient-to-r from-primary/20 to-teal-500/20",
-                    "border border-primary/30 dark:border-primary/40",
-                    "text-primary-dark dark:text-primary-light"
-                  )}
-                >
-                  {tag}
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveTag(tag)}
-                    className="hover:text-red-500 transition-colors"
-                    disabled={isSubmitting}
-                    aria-label={`Eliminar etiqueta ${tag}`}
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </motion.span>
-              ))}
-            </div>
-          )}
-          {((formData as Product).interests || []).length > 0 && (
-            <Text variant="span" className="text-xs text-gray-500 dark:text-gray-400 mt-2 block">
-              {((formData as Product).interests || []).length}/10 etiquetas
-            </Text>
-          )}
-        </motion.div>
+        <TagSelector
+          interests={(formData as Product).interests ?? []}
+          tagInput={tagInput}
+          setTagInput={setTagInput}
+          isSubmitting={isSubmitting}
+          handleAddTag={handleAddTag}
+          handleRemoveTag={handleRemoveTag}
+        />
       )}
 
       {/* Environmental Impact Preview Card */}

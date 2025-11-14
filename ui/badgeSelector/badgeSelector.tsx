@@ -34,14 +34,17 @@ type Props = {
   onBadgeToggle: (badge: Badge) => void;
   isSubmitting?: boolean;
   maxBadges?: number;
+  sellerTypeBadges?: "PERSON" | "BUSINESS";
 };
 
-const badgeConfig: {
+type BadgeOption = {
   value: Badge;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   color: string;
-}[] = [
+};
+
+const storeBadges: BadgeOption[] = [
   { value: "POPULAR", label: "Popular", icon: TrendingUp, color: "text-purple-500" },
   { value: "DISCOUNTED", label: "Con Descuento", icon: Percent, color: "text-red-500" },
   { value: "WOMAN_OWNED", label: "Mujer Emprendedora", icon: Award, color: "text-pink-500" },
@@ -72,7 +75,24 @@ const badgeConfig: {
   { value: "IN_MID_POINT_PICKUP", label: "Retiro Punto Medio", icon: MapPin, color: "text-cyan-600" },
 ];
 
-export default function BadgeSelector({ selectedBadges, onBadgeToggle, isSubmitting = false, maxBadges = 5 }: Props) {
+const marketPlaceBadges: BadgeOption[] = [
+  { value: "FOR_REPAIR", label: "Para Reparar", icon: Wrench, color: "text-gray-500" },
+  { value: "REFURBISHED", label: "Reacondicionado", icon: Sparkles, color: "text-violet-500" },
+  { value: "EXCHANGEABLE", label: "Intercambiable", icon: Repeat, color: "text-emerald-500" },
+  { value: "OPEN_BOX", label: "Caja Abierta", icon: PackageOpen, color: "text-orange-600" },
+  { value: "DELIVERED_TO_HOME", label: "Entrega a Domicilio", icon: Home, color: "text-blue-700" },
+  { value: "IN_HOUSE_PICKUP", label: "Retiro en Domicilio", icon: Home, color: "text-purple-600" },
+  { value: "IN_MID_POINT_PICKUP", label: "Retiro Punto Medio", icon: MapPin, color: "text-cyan-600" },
+];
+
+export default function BadgeSelector({
+  selectedBadges,
+  onBadgeToggle,
+  isSubmitting = false,
+  maxBadges = 5,
+  sellerTypeBadges = "PERSON",
+}: Props) {
+  const badgeConfig = sellerTypeBadges === "BUSINESS" ? storeBadges : marketPlaceBadges;
   return (
     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}>
       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -82,7 +102,7 @@ export default function BadgeSelector({ selectedBadges, onBadgeToggle, isSubmitt
         Selecciona etiquetas que describan características especiales de tu producto
       </Text>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 max-h-64 overflow-y-auto p-2 border border-gray-200 dark:border-gray-700 rounded-lg">
+      <div className="flex flex-wrap items-center justify-center gap-2">
         {badgeConfig.map((badge) => {
           const isSelected = selectedBadges.includes(badge.value);
           const isDisabled = !isSelected && selectedBadges.length >= maxBadges;

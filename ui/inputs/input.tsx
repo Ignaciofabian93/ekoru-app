@@ -93,7 +93,7 @@ export default function Input({
               "border border-gray-300",
               "rounded-lg outline-0",
               "transition-all duration-200",
-              "bg-input-light-100 focus:bg-white",
+              "bg-input-light-50 focus:bg-white",
               "focus:ring-1 focus:ring-primary focus:border-primary",
               "dark:bg-input-dark-800 dark:focus:bg-input-dark-900",
               "placeholder:text-gray-400",

@@ -17,26 +17,29 @@ export async function POST(request: NextRequest) {
     const productId = data.get("productId") as string | null;
 
     if (!files || files.length === 0) {
-      return NextResponse.json({ error: "No files received." }, { status: 400 });
+      return NextResponse.json({ error: "Ningún archivo recibido." }, { status: 400 });
     }
 
     if (files.length > 3) {
-      return NextResponse.json({ error: "Maximum 3 images allowed." }, { status: 400 });
+      return NextResponse.json({ error: "Máximo 3 imágenes permitidas." }, { status: 400 });
     }
 
     if (!userId) {
-      return NextResponse.json({ error: "User ID is required." }, { status: 400 });
+      return NextResponse.json({ error: "Se requiere el ID de usuario." }, { status: 400 });
     }
 
     // Validate each file
     for (const file of files) {
       if (!file.type.startsWith("image/")) {
-        return NextResponse.json({ error: "All files must be images." }, { status: 400 });
+        return NextResponse.json({ error: "Todos los archivos deben ser imágenes." }, { status: 400 });
       }
 
       // Validate file size (4MB limit per file - client already compressed)
       if (file.size > 4 * 1024 * 1024) {
-        return NextResponse.json({ error: "Each file must be less than 4MB after compression." }, { status: 400 });
+        return NextResponse.json(
+          { error: "Cada archivo debe ser menor a 4MB después de la compresión." },
+          { status: 400 }
+        );
       }
     }
 

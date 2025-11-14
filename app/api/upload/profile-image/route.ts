@@ -16,21 +16,24 @@ export async function POST(request: NextRequest) {
     const userId = data.get("userId") as string;
 
     if (!file) {
-      return NextResponse.json({ error: "No file received." }, { status: 400 });
+      return NextResponse.json({ error: "Ningún archivo recibido." }, { status: 400 });
     }
 
     if (!userId) {
-      return NextResponse.json({ error: "User ID is required." }, { status: 400 });
+      return NextResponse.json({ error: "Se requiere el ID de usuario." }, { status: 400 });
     }
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      return NextResponse.json({ error: "File must be an image." }, { status: 400 });
+      return NextResponse.json({ error: "El archivo debe ser una imagen." }, { status: 400 });
     }
 
     // Validate file size (4MB limit - client already compressed it)
     if (file.size > 4 * 1024 * 1024) {
-      return NextResponse.json({ error: "File size must be less than 2MB after compression." }, { status: 400 });
+      return NextResponse.json(
+        { error: "El tamaño del archivo debe ser menor a 4MB después de la compresión." },
+        { status: 400 }
+      );
     }
 
     // Create FormData to forward to gateway (no need to compress again)
