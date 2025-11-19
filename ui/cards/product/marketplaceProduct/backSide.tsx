@@ -61,8 +61,8 @@ export default function CardBackSide({ product, setIsFlipped, isFlipped }: Props
             {/* Material Breakdown */}
             {product.environmentalImpact.materialBreakdown.length > 0 && (
               <div className="space-y-1">
-                <p className="text-[9px] font-semibold text-text-muted dark:text-stone-400 mb-1">Materiales:</p>
-                {product.environmentalImpact.materialBreakdown.slice(0, 3).map((material, index) => (
+                <p className="text-[9px] font-semibold text-text-muted dark:text-stone-400">Materiales:</p>
+                {product.environmentalImpact.materialBreakdown.map((material, index) => (
                   <div key={index} className="flex items-center justify-between text-[10px]">
                     <span className="text-text-secondary dark:text-stone-300 truncate">{material.materialType}</span>
                     <span className="font-semibold text-text-primary dark:text-stone-100 ml-1">
