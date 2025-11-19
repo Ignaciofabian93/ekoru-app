@@ -72,7 +72,7 @@ export default function CardFrontSide({
 
         <h3 className="font-semibold text-lg mb-2 line-clamp-2">{product.name}</h3>
 
-        <p className="text-text-muted text-sm mb-3 line-clamp-2">{product.description}</p>
+        <p className="text-text-muted text-sm mb-3 line-clamp-1">{product.description}</p>
         <footer className="flex items-center justify-between">
           <p className="text-primary font-bold text-xl">{formatPrice(product.price, "CLP")}</p>
           <ShoppingCartButton onClick={() => {}} />

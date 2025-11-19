@@ -66,7 +66,7 @@ export default function CardBackSide({ product, setIsFlipped, isFlipped }: Props
                   <div key={index} className="flex items-center justify-between text-[10px]">
                     <span className="text-text-secondary dark:text-stone-300 truncate">{material.materialType}</span>
                     <span className="font-semibold text-text-primary dark:text-stone-100 ml-1">
-                      {material.percentage}%
+                      {material.percentage.toFixed(1)}%
                     </span>
                   </div>
                 ))}
