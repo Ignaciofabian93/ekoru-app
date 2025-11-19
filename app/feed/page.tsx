@@ -16,6 +16,7 @@ import AdBanner from "@/ui/banners/adBanner";
 import SmallStoreCard from "@/ui/cards/store/smallStoreCard";
 import HeroCarousel from "@/ui/carousel/hero";
 import ProductCard from "@/ui/cards/product/productCard";
+import SecondHandList from "./_ui/seconHandList";
 // import SecondHandCard from "@/ui/cards/product/secondhand";
 // import ExchangeCard from "@/ui/cards/product/exchange";
 
@@ -29,9 +30,7 @@ export default function FeedPage() {
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-                Explora por Categorías
-              </h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">Explora por Categorías</h2>
               <p className="text-text-muted text-lg max-w-2xl mx-auto">
                 Encuentra productos ecológicos organizados por categorías
               </p>
@@ -66,6 +65,7 @@ export default function FeedPage() {
         <HorizontalScrollSection
           title="Tiendas Mejor Valoradas"
           description="Las tiendas con mejor reputación de nuestra comunidad"
+          href="/stores/storeCategories"
         >
           {bestRankedStores.map((store) => (
             <SmallStoreCard key={store.id} {...store} />
@@ -79,14 +79,10 @@ export default function FeedPage() {
         <HorizontalScrollSection
           title="Productos más populares"
           description="Los favoritos de nuestras tiendas destacadas"
+          href="/stores/storeCategories"
         >
           {bestStoreProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={{ ...product }}
-              favorites={[]}
-              toggleFavorite={() => {}}
-            />
+            <ProductCard key={product.id} product={{ ...product }} favorites={[]} toggleFavorite={() => {}} />
           ))}
         </HorizontalScrollSection>
 
@@ -94,16 +90,7 @@ export default function FeedPage() {
         <AdBanner {...ads[1]} />
 
         {/* Second Hand Products Section */}
-        <HorizontalScrollSection
-          title="Productos de Segunda Mano"
-          description="Dale una segunda vida a productos de calidad"
-          backgroundColor="bg-neutral-light/20"
-        >
-          <p>Segunda mano</p>
-          {/* {secondHandProducts.map((product) => (
-            <SecondHandCard key={product.id} product={{} as Product} />
-          ))} */}
-        </HorizontalScrollSection>
+        <SecondHandList />
 
         {/* Third Ad */}
         <AdBanner {...ads[2]} />
@@ -112,6 +99,7 @@ export default function FeedPage() {
         <HorizontalScrollSection
           title="Productos para Intercambio"
           description="Intercambia productos y contribuye a la economía circular"
+          href="/departments"
         >
           <p>Exchange</p>
           {/* {exchangeableProducts.map((product) => (

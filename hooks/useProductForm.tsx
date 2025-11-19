@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import {
   Department,
   DepartmentCategory,
@@ -20,6 +20,8 @@ import { calculateEnvironmentalImpact } from "@/utils/calculateEnvImpact";
 import { Badge } from "@/types/enums";
 import useSessionData from "./useSessionData";
 import useAlert from "./useAlert";
+import { compressImageClient } from "@/utils/imageCompress";
+import { ADD_PRODUCT, ADD_STORE_PRODUCT } from "@/graphql/product/mutation";
 
 export default function useProductForm() {
   const [isProductFormOpen, setIsProductFormOpen] = useState<boolean>(false);
@@ -35,6 +37,9 @@ export default function useProductForm() {
 
   const [storeCategorySelected, setStoreCategorySelected] = useState<StoreCategory | null>();
   const [storeSubcategorySelected, setStoreSubcategorySelected] = useState<StoreSubCategory | null>();
+
+  const [addProduct] = useMutation(ADD_PRODUCT);
+  const [addStoreProduct] = useMutation(ADD_STORE_PRODUCT);
 
   const [formData, setFormData] = useState<Partial<Product | StoreProduct>>(() => {
     // Initialize with type-specific fields based on seller type
@@ -155,13 +160,14 @@ export default function useProductForm() {
     fileInputRef.current?.click();
   };
 
-  // Function to prepare and upload product images (called during form submit)
-  const uploadProductImages = async (files: File[]): Promise<string[]> => {
+  // Function to prepare and upload product images (called after product creation with productId)
+  const uploadProductImages = async (files: File[], productId: number): Promise<string[]> => {
     const formDataToSend = new FormData();
     files.forEach((file) => {
       formDataToSend.append("files", file);
     });
     formDataToSend.append("userId", data.id);
+    formDataToSend.append("productId", productId.toString());
 
     const response = await fetch("/api/upload/product-images", {
       method: "POST",
@@ -175,12 +181,15 @@ export default function useProductForm() {
     }
 
     const result = await response.json();
+    console.log("Upload response from server:", result);
 
-    if (!result.imageUrls || !Array.isArray(result.imageUrls)) {
-      throw new Error("No se recibieron URLs de las imágenes del servidor");
+    // The gateway returns: { message, count, images: [{ fileName, imagePath, imageUrl, ... }] }
+    if (result.images && Array.isArray(result.images)) {
+      // Extract imagePath from each image object (this is what's stored in the database)
+      return result.images.map((img: { imagePath: string }) => img.imagePath);
     }
 
-    return result.imageUrls;
+    throw new Error("No se recibieron URLs de las imágenes del servidor");
   };
 
   // Form submission
@@ -220,36 +229,87 @@ export default function useProductForm() {
     setIsSubmitting(true);
 
     try {
-      // TODO: Handle image upload here
-      // 1. Filter out File objects from productImages
-      // 2. Compress them using compressImageClient
-      // 3. Upload using uploadProductImages (REST API)
-      // 4. Get back the image URLs
-      // 5. Combine with any existing string URLs if editing
+      // Step 1: Create the product first (without images) to get the product ID
+      let productId: number;
 
+      if (isPersonProfile) {
+        // Prepare Product input (without images initially)
+        const productInput = {
+          color: (formData as Product).color || null,
+          brand: (formData as Product).brand || "",
+          name: formData.name!,
+          description: formData.description!,
+          price: formData.price || 0,
+          images: [], // Empty array initially
+          isExchangeable: (formData as Product).isExchangeable || false,
+          interests: (formData as Product).interests || [],
+          isActive: true,
+          badges: formData.badges || [],
+          productCategoryId: Number(productCategorySelected!.id),
+          sellerId: data.id,
+          condition: (formData as Product).condition || null,
+          conditionDescription: (formData as Product).conditionDescription || null,
+        };
+
+        const result = await addProduct({
+          variables: { input: productInput },
+        });
+
+        productId = result.data.addProduct.id;
+      } else {
+        // Prepare StoreProduct input (without images initially)
+        const storeProductInput = {
+          sku: (formData as StoreProduct).sku || null,
+          barcode: (formData as StoreProduct).barcode || null,
+          color: (formData as StoreProduct).color || null,
+          brand: (formData as StoreProduct).brand || "",
+          name: formData.name!,
+          description: formData.description!,
+          price: formData.price || 0,
+          images: [], // Empty array initially
+          hasOffer: (formData as StoreProduct).hasOffer || false,
+          offerPrice: (formData as StoreProduct).offerPrice || null,
+          stock: (formData as StoreProduct).stock || 0,
+          isActive: true,
+          badges: formData.badges || [],
+          subcategoryId: storeSubcategorySelected!.id,
+          sellerId: data.id,
+          sustainabilityScore: null,
+          materialComposition: null,
+          recycledContent: null,
+          carbonFootprint: null,
+        };
+
+        const result = await addStoreProduct({
+          variables: { input: storeProductInput },
+        });
+
+        productId = result.data.addStoreProduct.id;
+      }
+
+      // Step 2: Handle image upload with the product ID
       const imageFiles = validImages.filter((img): img is File => img instanceof File);
 
-      console.log("Images to upload (File objects):", imageFiles);
-      console.log("Form data:", formData);
-
-      // Example of how you would handle this:
-      // if (imageFiles.length > 0) {
-      //   const compressedFiles = await Promise.all(
-      //     imageFiles.map(file => compressImageClient({ file, maxWidth: 1200, maxHeight: 1200 }))
-      //   );
-      //   const uploadedImageUrls = await uploadProductImages(compressedFiles);
-      //   // Then use uploadedImageUrls in your GraphQL mutation
-      // }
-
-      // TODO: Call your GraphQL mutation here with the product data
-      // The mutation should receive all form data EXCEPT images (since images are handled via REST)
+      if (imageFiles.length > 0) {
+        const compressedFiles = await Promise.all(
+          imageFiles.map((file) => compressImageClient({ file, maxWidth: 1200, maxHeight: 1200 }))
+        );
+        await uploadProductImages(compressedFiles, productId);
+      }
 
       notify("Producto creado exitosamente");
-      // Reset form or close modal
+      setFormData({
+        badges: [],
+        images: [],
+        name: "",
+        description: "",
+        price: 0,
+      });
       closeProductForm();
-    } catch {
-      console.error("Error submitting product");
-      notifyError("Error al crear el producto. Inténtalo de nuevo.");
+    } catch (error) {
+      console.error("Error submitting product:", error);
+      const errorMessage = error instanceof Error ? error.message : "Error desconocido";
+      notifyError(`Error al crear el producto: ${errorMessage}`);
     } finally {
       setIsSubmitting(false);
     }

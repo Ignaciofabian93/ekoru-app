@@ -1,0 +1,11 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#e5e7eb"/>
+  <g transform="translate(150, 100)">
+    <rect x="10" y="30" width="80" height="60" rx="8" fill="#9ca3af"/>
+    <circle cx="30" cy="50" r="8" fill="#6b7280"/>
+    <polyline points="10,70 30,50 50,60 90,30" stroke="#6b7280" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="200" y="220" font-family="Arial, sans-serif" font-size="14" fill="#6b7280" text-anchor="middle">
+    Imagen no disponible
+  </text>
+</svg>

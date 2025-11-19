@@ -1,4 +1,19 @@
 import { type Badge, type ProductSize, type WeightUnit, type ProductCondition } from "./enums";
+import { type Seller } from "./user";
+
+export type MaterialImpactBreakdown = {
+  materialType: string;
+  percentage: number;
+  weightKG: number;
+  co2SavingsKG: number;
+  waterSavingsLT: number;
+};
+
+export type EnvironmentalImpact = {
+  totalCo2SavingsKG: number;
+  totalWaterSavingsLT: number;
+  materialBreakdown: MaterialImpactBreakdown[];
+};
 
 export type Product = {
   id: number;
@@ -21,6 +36,9 @@ export type Product = {
   condition: ProductCondition;
   conditionDescription?: string;
   deletedAt?: string; // Soft delete - null means active
+  environmentalImpact?: EnvironmentalImpact;
+  seller?: Seller;
+  productCategory?: ProductCategory;
 };
 
 export type StoreProduct = {
