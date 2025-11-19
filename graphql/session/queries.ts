@@ -66,12 +66,15 @@ export const GET_ME = gql`
         weeklySummary
         twoFactorAuth
       }
-      sellerCategory {
+      sellerLevel {
         id
-        name
-        categoryDiscountAmount
-        pointsThreshold
-        level
+        levelName
+        minPoints
+        maxPoints
+        benefits
+        badgeIcon
+        createdAt
+        updatedAt
       }
       country {
         id

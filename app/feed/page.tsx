@@ -9,7 +9,7 @@ import {
   // exchangeableProducts,
   featuredCategories,
 } from "./mockups/data";
-import NewsLetter from "@/ui/newsletter/newsletter";
+// import NewsLetter from "@/ui/newsletter/newsletter";
 import HorizontalScrollSection from "@/ui/layout/horizontalScrollSection";
 import AdBanner from "@/ui/banners/adBanner";
 // import { getBadgeColor } from "@/utils/badgeColor";
@@ -108,7 +108,7 @@ export default function FeedPage() {
         </HorizontalScrollSection>
 
         {/* Newsletter/CTA Section */}
-        <NewsLetter />
+        {/* <NewsLetter /> */}
       </div>
     </MainLayout>
   );
