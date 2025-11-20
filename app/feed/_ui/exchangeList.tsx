@@ -2,15 +2,13 @@ import useProducts from "@/hooks/useProducts";
 import HorizontalScrollSection from "@/ui/layout/horizontalScrollSection";
 import ProductCardFlip from "@/ui/cards/product/marketplaceProduct/marketplaceCard";
 
-export default function SecondHandList() {
-  const { productsData } = useProducts({ isExchangeable: false });
-
-  console.log("products data:: ", productsData);
+export default function ExchangeList() {
+  const { productsData } = useProducts({ isExchangeable: true });
 
   return (
     <HorizontalScrollSection
-      title="Productos de Segunda Mano"
-      description="Dale una segunda vida a productos de calidad"
+      title="Productos Intercambiables"
+      description="Intercambia productos y contribuye a la economía circular"
       backgroundColor="bg-neutral-light/20"
       href="/departments"
     >

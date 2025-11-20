@@ -5,6 +5,7 @@ import { useState } from "react";
 import CardBackSide from "./backSide";
 import CardFrontSide from "./frontSide";
 import { useRouter } from "next/navigation";
+import EnvironmentalImpactModal from "@/ui/modals/environmentalImpactModal";
 
 type Props = {
   product: Product;
@@ -13,12 +14,13 @@ type Props = {
 export default function ProductCardFlip({ product }: Props) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [showImpactModal, setShowImpactModal] = useState(false);
   const router = useRouter();
 
   const productImage = getImageUrl(product.images?.[0]);
 
   return (
-    <article className="flex-shrink-0 w-[180px] md:w-[220px] h-[300px] card-flip-perspective">
+    <article className="flex-shrink-0 w-[180px] md:w-[220px] h-[300px] md:h-[330px] card-flip-perspective">
       <div className={`card-flip-inner ${isFlipped ? "card-flip-flipped" : ""}`}>
         {/* Front Side - Product Info */}
         <CardFrontSide
@@ -32,8 +34,22 @@ export default function ProductCardFlip({ product }: Props) {
         />
 
         {/* Back Side - Environmental Impact & Seller Info */}
-        <CardBackSide product={product} setIsFlipped={setIsFlipped} isFlipped={isFlipped} />
+        <CardBackSide
+          product={product}
+          setIsFlipped={setIsFlipped}
+          isFlipped={isFlipped}
+          setShowImpactModal={setShowImpactModal}
+        />
       </div>
+
+      {/* Environmental Impact Modal - Rendered outside card */}
+      {product.environmentalImpact && (
+        <EnvironmentalImpactModal
+          isOpen={showImpactModal}
+          onClose={() => setShowImpactModal(false)}
+          environmentalImpact={product.environmentalImpact}
+        />
+      )}
     </article>
   );
 }

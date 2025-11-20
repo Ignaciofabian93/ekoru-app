@@ -1,5 +1,6 @@
 "use client";
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { Title } from "../text/title";
 import { X } from "lucide-react";
@@ -45,7 +46,11 @@ export default function Modal({ isOpen, onClose, children, title, size = "md" }:
     };
   }, [isOpen, onClose]);
 
-  return (
+  // Don't render anything if not open
+  if (!isOpen) return null;
+
+  // Create portal to render modal at document body level
+  return createPortal(
     <AnimatePresence mode="wait" initial={false}>
       {isOpen && (
         <motion.div
@@ -93,6 +98,7 @@ export default function Modal({ isOpen, onClose, children, title, size = "md" }:
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

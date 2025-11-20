@@ -1,15 +1,16 @@
 import { Product } from "@/types/product";
 import { displaySellerName } from "@/utils/displaySellerName";
 import { sellerTypeTranslate } from "@/utils/sellerTypeTranslate";
-import { Droplets, Leaf, MapPin, Phone, RotateCcw, UserRound } from "lucide-react";
+import { Droplets, Leaf, MapPin, Phone, RotateCcw, UserRound, ChevronRight } from "lucide-react";
 
 type Props = {
   product: Product;
   setIsFlipped: (flipped: boolean) => void;
   isFlipped: boolean;
+  setShowImpactModal: (show: boolean) => void;
 };
 
-export default function CardBackSide({ product, setIsFlipped, isFlipped }: Props) {
+export default function CardBackSide({ product, setIsFlipped, isFlipped, setShowImpactModal }: Props) {
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat("es-CL", {
       minimumFractionDigits: 1,
@@ -62,7 +63,7 @@ export default function CardBackSide({ product, setIsFlipped, isFlipped }: Props
             {product.environmentalImpact.materialBreakdown.length > 0 && (
               <div className="space-y-1">
                 <p className="text-[9px] font-semibold text-text-muted dark:text-stone-400">Materiales:</p>
-                {product.environmentalImpact.materialBreakdown.map((material, index) => (
+                {product.environmentalImpact.materialBreakdown.slice(0, 2).map((material, index) => (
                   <div key={index} className="flex items-center justify-between text-[10px]">
                     <span className="text-text-secondary dark:text-stone-300 truncate">{material.materialType}</span>
                     <span className="font-semibold text-text-primary dark:text-stone-100 ml-1">
@@ -70,6 +71,15 @@ export default function CardBackSide({ product, setIsFlipped, isFlipped }: Props
                     </span>
                   </div>
                 ))}
+
+                {/* View More Button */}
+                <button
+                  onClick={() => setShowImpactModal(true)}
+                  className="w-full mt-2 py-1.5 px-2 bg-primary/10 hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 text-primary rounded-md text-[10px] font-semibold transition-colors flex items-center justify-center gap-1"
+                >
+                  Ver impacto completo
+                  <ChevronRight className="w-3 h-3" />
+                </button>
               </div>
             )}
           </div>

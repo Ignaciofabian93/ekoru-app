@@ -60,7 +60,7 @@ export default function CardFrontSide({
           className="absolute top-2 right-2 bg-primary hover:bg-primary/90 text-white p-1.5 rounded-full shadow-lg transition-all duration-200"
           aria-label="Ver impacto ambiental"
         >
-          <RotateCcw className="w-4 h-4" />
+          <RotateCcw className="w-3 h-3" />
         </button>
       </figure>
 
@@ -70,7 +70,7 @@ export default function CardFrontSide({
           {product.color && <span className="text-text-muted dark:text-stone-400 text-xs ml-2">{product.color}</span>}
         </header>
 
-        <h3 className="font-semibold text-lg mb-2 line-clamp-2">{product.name}</h3>
+        <h3 className="font-semibold text-lg mb-2 line-clamp-1">{product.name}</h3>
 
         <p className="text-text-muted text-sm mb-3 line-clamp-1">{product.description}</p>
         <footer className="flex items-center justify-between">

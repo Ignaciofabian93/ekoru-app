@@ -17,6 +17,7 @@ import SmallStoreCard from "@/ui/cards/store/smallStoreCard";
 import HeroCarousel from "@/ui/carousel/hero";
 import ProductCard from "@/ui/cards/product/productCard";
 import SecondHandList from "./_ui/seconHandList";
+import ExchangeList from "./_ui/exchangeList";
 // import SecondHandCard from "@/ui/cards/product/secondhand";
 // import ExchangeCard from "@/ui/cards/product/exchange";
 
@@ -63,9 +64,9 @@ export default function FeedPage() {
 
         {/* Best Ranked Stores Section */}
         <HorizontalScrollSection
-          title="Tiendas Mejor Valoradas"
-          description="Las tiendas con mejor reputación de nuestra comunidad"
-          href="/stores/storeCategories"
+          title="Tiendas Adheridas"
+          description="Tiendas adheridas a nuestra comunidad"
+          href="/stores"
         >
           {bestRankedStores.map((store) => (
             <SmallStoreCard key={store.id} {...store} />
@@ -77,8 +78,8 @@ export default function FeedPage() {
 
         {/* Best Store Products Section */}
         <HorizontalScrollSection
-          title="Productos más populares"
-          description="Los favoritos de nuestras tiendas destacadas"
+          title="Productos de tiendas sustentables"
+          description="Los mejores productos de nuestras tiendas adheridas"
           href="/stores/storeCategories"
         >
           {bestStoreProducts.map((product) => (
@@ -96,16 +97,7 @@ export default function FeedPage() {
         <AdBanner {...ads[2]} />
 
         {/* Exchangeable Products Section */}
-        <HorizontalScrollSection
-          title="Productos para Intercambio"
-          description="Intercambia productos y contribuye a la economía circular"
-          href="/departments"
-        >
-          <p>Exchange</p>
-          {/* {exchangeableProducts.map((product) => (
-            <ExchangeCard key={product.id} product={product} />
-          ))} */}
-        </HorizontalScrollSection>
+        <ExchangeList />
 
         {/* Newsletter/CTA Section */}
         {/* <NewsLetter /> */}

@@ -1,18 +1,27 @@
+import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_PRODUCTS } from "@/graphql/product/queries";
 import { Product } from "@/types/product";
-import { useState } from "react";
 
-export default function useProducts() {
+interface UseProductsArgs {
+  isExchangeable?: boolean;
+}
+
+export default function useProducts({ isExchangeable = false }: UseProductsArgs) {
   const [page] = useState(1);
   const [pageSize] = useState(20);
+  const filter = {
+    isExchangeable,
+    isActive: true,
+  };
+  const sort = { field: "CREATED_AT", order: "DESC" };
   const {
     data: productsData,
     error: productsError,
     loading: productsLoading,
   } = useQuery(GET_PRODUCTS, {
     fetchPolicy: "cache-first",
-    variables: { page, pageSize, isActive: true },
+    variables: { page, pageSize, filter, sort },
   });
 
   console.log("Products: ", productsData);
