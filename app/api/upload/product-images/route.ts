@@ -57,7 +57,6 @@ export async function POST(request: NextRequest) {
     // Forward to your GraphQL gateway REST endpoint
     const env = process.env.NODE_ENV;
     const gatewayUrl = env !== "development" ? process.env.NEXT_PUBLIC_GATEWAY_URL : "http://localhost:9000";
-    console.log("GATEWAY URL:: ", gatewayUrl);
 
     const response = await fetch(`${gatewayUrl}/api/product-images`, {
       method: "POST",

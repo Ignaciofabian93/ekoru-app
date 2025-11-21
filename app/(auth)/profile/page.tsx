@@ -7,14 +7,18 @@ import RecentActivity from "./_ui/recentActivity";
 import ProfileNavigation from "./_ui/profileNavigation";
 import ProfileHeader from "./_ui/profileHeader";
 import useSessionStore from "@/store/session";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function ProfilePage() {
-  const { data } = useSessionStore();
+  const { data, isLoading } = useSessionStore();
+  const router = useRouter();
 
-  if (!data.id) {
-    redirect("/feed");
-  }
+  useEffect(() => {
+    if (!isLoading && !data.id) {
+      router.replace("/feed");
+    }
+  }, [isLoading, data.id, router]);
 
   return (
     <MainLayout>

@@ -26,8 +26,6 @@ export default function DepartmentSlugPage() {
   const { marketData } = useCatalogStore();
   const departmentSlug = params.departmentSlug as string;
 
-  console.log("params:: ", params);
-
   // TODO: Map slug to actual department ID from your catalog
   // For now using "1" - replace with proper mapping
   const [departmentId, setDepartmentId] = useState<number | null>(null);

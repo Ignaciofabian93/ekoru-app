@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import type { BusinessProfile, PersonProfile, Seller } from "../types/user";
 
 type SessionStore = {
@@ -6,6 +7,11 @@ type SessionStore = {
   handleSession: (data: Seller) => void;
   edit: boolean;
   toggleEdit: () => void;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
+  clearSession: () => void;
+  _hasHydrated: boolean;
+  setHasHydrated: (state: boolean) => void;
 };
 
 export const defaultSeller: Seller = {
@@ -28,11 +34,27 @@ export const defaultSeller: Seller = {
   profile: {} as PersonProfile | BusinessProfile,
 };
 
-const useSessionStore = create<SessionStore>((set) => ({
-  data: defaultSeller,
-  handleSession: (data: Seller) => set(() => ({ data })),
-  edit: false,
-  toggleEdit: () => set((state) => ({ edit: !state.edit })),
-}));
+const useSessionStore = create<SessionStore>()(
+  persist(
+    (set) => ({
+      data: defaultSeller,
+      handleSession: (data: Seller) => set(() => ({ data })),
+      edit: false,
+      toggleEdit: () => set((state) => ({ edit: !state.edit })),
+      isLoading: false,
+      setIsLoading: (loading: boolean) => set(() => ({ isLoading: loading })),
+      clearSession: () => set(() => ({ data: defaultSeller })),
+      _hasHydrated: false,
+      setHasHydrated: (state: boolean) => set({ _hasHydrated: state }),
+    }),
+    {
+      name: "session-storage",
+      version: 1,
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
+    }
+  )
+);
 
 export default useSessionStore;

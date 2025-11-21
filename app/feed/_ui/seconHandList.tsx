@@ -5,8 +5,6 @@ import ProductCardFlip from "@/ui/cards/product/marketplaceProduct/marketplaceCa
 export default function SecondHandList() {
   const { productsData } = useProducts({ isExchangeable: false });
 
-  console.log("products data:: ", productsData);
-
   return (
     <HorizontalScrollSection
       title="Productos de Segunda Mano"

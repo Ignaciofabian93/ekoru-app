@@ -12,8 +12,6 @@ export default function ProductDetailsPage() {
   const params = useParams();
   const productId = Number(params.id);
 
-  console.log("product id:: ", productId);
-
   const { data, loading, error } = useQuery(GET_PRODUCT_BY_ID, {
     variables: { id: productId },
     skip: !productId,

@@ -1,11 +1,10 @@
 "use client";
-
+import { useState } from "react";
 import { Product } from "@/types/product";
 import { getBadgeColor } from "@/utils/badgeColor";
 import { badgeTranslate } from "@/utils/badgeTranslate";
 import { productConditionTranslate } from "@/utils/conditionTranslate";
 import { Heart, Share2, ShoppingCart, Package } from "lucide-react";
-import { useState } from "react";
 
 type Props = {
   product: Product;

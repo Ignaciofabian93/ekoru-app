@@ -24,8 +24,6 @@ export default function useProducts({ isExchangeable = false }: UseProductsArgs)
     variables: { page, pageSize, filter, sort },
   });
 
-  console.log("Products: ", productsData);
-
   return {
     productsData: (productsData?.getProducts.nodes as Product[]) || [],
     productsError,

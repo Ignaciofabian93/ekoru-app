@@ -181,7 +181,6 @@ export default function useProductForm() {
     }
 
     const result = await response.json();
-    console.log("Upload response from server:", result);
 
     // The gateway returns: { message, count, images: [{ fileName, imagePath, imageUrl, ... }] }
     if (result.images && Array.isArray(result.images)) {
@@ -314,8 +313,6 @@ export default function useProductForm() {
       setIsSubmitting(false);
     }
   };
-
-  console.log("FORM DATA:: ", formData);
 
   const {
     data: departments,

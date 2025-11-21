@@ -16,23 +16,34 @@ export default function SessionWrapper({
   token: string | undefined;
   refreshToken: string | undefined;
 }) {
-  const [loading, setLoading] = useState<boolean>(true);
   const [userFetched, setUserFetched] = useState<boolean>(false);
   const pathname = usePathname();
-  const { handleSession } = useSessionStore();
+  const { handleSession, setIsLoading, data, clearSession, _hasHydrated } = useSessionStore();
 
   const [GetMe, { loading: userLoading }] = useLazyQuery(GET_ME);
 
   useEffect(() => {
-    // If both tokens are missing, assume guest user
-    if (!token && !refreshToken) {
-      setLoading(false);
-      return;
-    }
+    // Wait for hydration before doing anything
+    if (!_hasHydrated) return;
 
-    // If token is missing but refreshToken exists, try to refresh
-    if (!token && refreshToken) {
-      (async () => {
+    const initSession = async () => {
+      // If both tokens are missing, clear session and mark as not loading
+      if (!token && !refreshToken) {
+        clearSession();
+        setIsLoading(false);
+        return;
+      }
+
+      // If we already have user data in the store and have a token, we're good
+      if (token && data.id && !userFetched) {
+        setUserFetched(true);
+        setIsLoading(false);
+        return;
+      }
+
+      // If token is missing but refreshToken exists, try to refresh
+      if (!token && refreshToken) {
+        setIsLoading(true);
         try {
           const refreshResponse = await RefreshToken();
           if (refreshResponse?.success) {
@@ -42,21 +53,20 @@ export default function SessionWrapper({
         } catch (error) {
           console.error("Error al intentar renovar el token:", error);
         }
-        setLoading(false);
-      })();
-      return;
-    }
+        clearSession();
+        setIsLoading(false);
+        return;
+      }
 
-    // If token exists, fetch user data (only once)
-    if (token && !userFetched) {
-      setUserFetched(true);
-      // Uncomment and adjust below to fetch user data
-      (async () => {
+      // If token exists, fetch user data (only once)
+      if (token && !userFetched) {
+        setUserFetched(true);
+        setIsLoading(true);
         try {
           const { data: userData, error } = await GetMe();
           if (userData) {
             handleSession(userData.me);
-            setLoading(false);
+            setIsLoading(false);
             return;
           }
           // If 401, try refresh
@@ -69,31 +79,30 @@ export default function SessionWrapper({
             const refreshResponse = await RefreshToken();
             if (refreshResponse?.success) {
               const { data: refreshedData } = await GetMe();
-              handleSession(refreshedData.me);
-              setLoading(false);
+              if (refreshedData) {
+                handleSession(refreshedData.me);
+              }
+              setIsLoading(false);
               return;
             }
           }
-          // If still not authenticated, assume guest
-          setLoading(false);
+          // If still not authenticated, clear session
+          clearSession();
+          setIsLoading(false);
         } catch (error) {
           console.error(error);
-          setLoading(false);
+          clearSession();
+          setIsLoading(false);
         }
-      })();
-      // For now, just simulate fetch
-      setTimeout(() => setLoading(false), 500);
-      return;
-    }
-    // If token exists and user already fetched
-    if (token && userFetched) {
-      setLoading(false);
-      return;
-    }
-  }, [token, refreshToken, userFetched, pathname]);
+        return;
+      }
+    };
 
-  // Optionally show loading spinner
-  if (loading || userLoading) {
+    initSession();
+  }, [token, refreshToken, userFetched, pathname, _hasHydrated]);
+
+  // Show loading while hydrating or fetching user
+  if (!_hasHydrated || userLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-white">
         <Loader2 className="w-16 h-16 animate-spin text-primary" />
